@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="adminHMD registration page">
+  <title>Register | adminHMD</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="../../assets/vendors/sweetalert/sweetalert2.css">
+  <link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+
+  <style>
+    /* Custom UI Polish Overrides */
+    :root {
+      --brand-primary: #4f46e5;
+      --brand-primary-hover: #4338ca;
+    }
+
+    body.auth-body {
+      min-height: 100vh;
+      background-color: #f8fafc;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .auth-container {
+      min-height: 100vh;
+    }
+
+    /* Layout Split */
+    .auth-sidebar-banner {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.95), rgba(15, 23, 42, 0.95)), 
+                  url('../assets/images/png/dasher-ui-bootstrap-5.jpg') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      color: #fff;
+    }
+
+    .auth-form-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 2rem;
+      max-width: 520px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Card & Inputs Polish */
+    .form-control, .form-select {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .form-control:focus {
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .input-group-text {
+      border-radius: 0.5rem;
+      background-color: #f8fafc;
+      border-color: #e2e8f0;
+      color: #64748b;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-primary);
+      border-color: var(--brand-primary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--brand-primary-hover);
+      border-color: var(--brand-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .theme-toggle-floating {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 1050;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .brand-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+
+<body class="auth-body">
+
+  <!-- Botón Theme Toggle Flotante -->
+  <button class="btn btn-white bg-white border theme-toggle-floating" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+    <i class="bi bi-moon-stars text-dark" data-theme-icon aria-hidden="true"></i>
+  </button>
+
+  <div class="container-fluid p-0">
+    <div class="row g-0 auth-container">
+      
+      <!-- LADO IZQUIERDO: Banner / Preview del Dashboard (Pantallas Medianas y Grandes) -->
+      <div class="col-lg-6 d-none d-lg-flex auth-sidebar-banner">
+        <div>
+          <a class="text-white text-decoration-none h4 d-flex align-items-center gap-2 mb-0" href="index.html">
+            <i class="bi bi-grid-1x2-fill"></i> adminHMD
+          </a>
+        </div>
+        <div class="my-auto pe-lg-5">
+          <h2 class="display-5 fw-bold mb-3">Gestión inteligente para tu inventario y dispositivos.</h2>
+          <p class="lead opacity-75">Controla hardware, licencias de software, monitores y redes en una plataforma centralizada y en tiempo real.</p>
+        </div>
+        <div class="small opacity-50">
+          &copy; 2026 adminHMD. Todos los derechos reservados.
+        </div>
+      </div>
+
+      <!-- LADO DERECHO: Formulario de Registro -->
+      <div class="col-lg-6 d-flex align-items-center position-relative">
+        <div class="auth-form-container">
+          
+          <!-- Logo Brand Versión Mobile -->
+          <div class="d-lg-none mb-4">
+            <a class="brand-logo" href="index.html">
+              <i class="bi bi-grid-1x2-fill"></i> adminHMD
+            </a>
+          </div>
+
+          <div class="mb-4">
+            <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 rounded-pill fw-semibold">Acceso Seguro</span>
+            <h1 class="h2 fw-bold text-dark mb-1">Crear Cuenta</h1>
+            <p class="text-muted">Ingresa tus datos para registrarte en el sistema.</p>
+          </div>
+
+          <!-- Formulario optimizado -->
+          <form id="registerForm" class="needs-validation" novalidate>
+            
+            <!-- Campo Nombre Completo -->
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="registerName">Nombre completo</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input class="form-control" id="registerName" name="registerName" type="text" placeholder="Ej. Carlos Mendoza" required>
+              </div>
+            </div>
+
+            <!-- Campo Email -->
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="registerEmail">Correo electrónico</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input class="form-control" id="registerEmail" name="registerEmail" type="email" placeholder="usuario@empresa.com" required>
+              </div>
+            </div>
+
+            <!-- Campo Contraseña con Toggle de Visibilidad -->
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="registerPassword">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input class="form-control" id="registerPassword" name="registerPassword" type="password" minlength="6" placeholder="Mínimo 6 caracteres" required>
+                <button class="btn btn-outline-secondary border" type="button" id="togglePassword">
+                  <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Checkbox Términos -->
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+              <label class="form-check-label text-muted small" for="terms">
+                Acepto los <a href="#" class="text-primary text-decoration-none fw-medium">Términos del Servicio</a> y la <a href="#" class="text-primary text-decoration-none fw-medium">Política de Privacidad</a>.
+              </label>
+            </div>
+
+            <!-- Botón Submit -->
+            <button class="btn btn-primary w-100 mb-3" type="submit" id="btnSubmit">
+              <i class="bi bi-person-plus-fill me-2"></i> Crear Cuenta
+            </button>
+
+          </form>
+
+          <!-- Footer Link -->
+          <div class="text-center mt-3">
+            <span class="text-muted small">¿Ya tienes una cuenta?</span> 
+            <a href="login.html" class="text-primary fw-bold text-decoration-none small">Iniciar sesión</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts según tu stack técnico -->
+  <script src="../../assets/vendors/jquery/jquery.js"></script>
+  <script src="../../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendors/jquery-validation/jquery.validate.js"></script>
+  <script src="../../assets/vendors/sweetalert/sweetalert2.all.js"></script>
+
+  <script>
+    $(document).ready(function() {
+
+      // 1. Mostrar / Ocultar Contraseña
+      $('#togglePassword').on('click', function() {
+        const passwordInput = $('#registerPassword');
+        const icon = $('#togglePasswordIcon');
+        
+        if (passwordInput.attr('type') === 'password') {
+          passwordInput.attr('type', 'text');
+          icon.removeClass('bi-eye').addClass('bi-eye-slash');
+        } else {
+          passwordInput.attr('type', 'password');
+          icon.removeClass('bi-eye-slash').addClass('bi-eye');
+        }
+      });
+
+      // 2. Validación Avanzada con jQuery Validate + Alerta con SweetAlert2
+      $('#registerForm').validate({
+        rules: {
+          registerName: { required: true, minlength: 3 },
+          registerEmail: { required: true, email: true },
+          registerPassword: { required: true, minlength: 6 },
+          terms: { required: true }
+        },
+        messages: {
+          registerName: "Por favor ingresa tu nombre completo",
+          registerEmail: "Ingresa un correo electrónico válido",
+          registerPassword: "La contraseña debe tener al menos 6 caracteres",
+          terms: "Debes aceptar los términos antes de continuar"
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.mb-3, .form-check').append(error);
+        },
+        highlight: function (element) {
+          $(element).addClass('is-invalid').removeClass('is-valid');
+        },
+        unhighlight: function (element) {
+          $(element).removeClass('is-invalid').addClass('is-valid');
+        },
+        submitHandler: function(form) {
+          // Feedback de carga
+          const $btn = $('#btnSubmit');
+          $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Creando cuenta...');
+
+          // Simulación de envío (Reemplazar con tu petición AJAX)
+          setTimeout(function() {
+            Swal.fire({
+              title: '¡Registro Exitoso!',
+              text: 'Tu cuenta ha sido creada correctamente. Serás redirigido al login.',
+              icon: 'success',
+              confirmButtonColor: '#4f46e5',
+              confirmButtonText: 'Ir al Login'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = 'login.html';
+              }
+            });
+            $btn.prop('disabled', false).html('<i class="bi bi-person-plus-fill me-2"></i> Crear Cuenta');
+          }, 1500);
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+.pyc
+src/controller/__pycache__
+src/model/__pycache__
+src/routers/__pycache__
+
