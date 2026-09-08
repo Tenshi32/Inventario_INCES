@@ -17,7 +17,7 @@ class DispositivosModel:
         "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas " \
         "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos " \
         "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " \
-        "ORDER BY dispositivos.id_dispositivo DESC"
+        "ORDER BY dispositivos.fecha_carga ASC"
         self.cursor.execute(sql)
 
         all_device = self.cursor.fetchall()
