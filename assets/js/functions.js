@@ -60,6 +60,7 @@ function initializeDataTable(IDtable) {
       table.column(5).search(this.value).draw();// Filtra normalmente
     }
   });
+  
 
   $('#filtroTipo').off('change').on('change', function () {
     if (this.value == "") {
