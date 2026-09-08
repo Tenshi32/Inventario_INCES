@@ -24,6 +24,9 @@ class DispositivosController:
     # crear dispositivo
     def crear_dispositivo(self, datos):
 
+        if 'id_dispositivo' not in datos:
+            datos['id_dispositivo'] = str(random.randint(10**5, 10**10 - 1))
+
         datos['posee_codigo'] = "No" if datos['cd_dispositivo'] == "" else "Si"
         datos['modelo_producto'] = "1" if datos['posee_modelo'] == "No" else datos['modelo_producto'] 
         datos['marca_producto'] = "1" if datos['posee_marca'] == "No" else datos['marca_producto'] 

@@ -1,7 +1,7 @@
 
 //------------------PLUGINS DE DECORACION-----------------------//
 function initializeTooltips(tooltipTriggerList) {
-  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
   })
 }
@@ -17,7 +17,7 @@ function initializeSelect2(selectId) {
 
 function initializeDataTable(IDtable) {
   const table = $(IDtable).DataTable({
-    pageLength: 10,
+    pageLength: 5,
     ordering: true,
     responsive: true,
     // Forzamos a DataTables a SOLO renderizar la tabla ('t'). 
@@ -53,6 +53,23 @@ function initializeDataTable(IDtable) {
     }
   });
 
+  $('#filtroEstado').off('change').on('change', function () {
+    if (this.value == "") {
+      table.column(5).search("").draw(); // Limpia el filtro interno y redibuja todo
+    } else {
+      table.column(5).search(this.value).draw();// Filtra normalmente
+    }
+  });
+  
+
+  $('#filtroTipo').off('change').on('change', function () {
+    if (this.value == "") {
+      table.column(1).search("").draw(); // Limpia el filtro interno y redibuja todo
+    } else {
+      table.column(1).search(this.value).draw();// Filtra normalmente
+    }
+  });
+
 }
 
 //--------------MENSAJE DE REPUESTA DEL SERVIDOR---------------//
@@ -60,7 +77,7 @@ function initializeDataTable(IDtable) {
 //Metodo de repuesta del servidor con Toast
 function initializeToast(message, estado) {
 
-  const ToastIcon = (estado == "danger") ? "exclamation-triangle-fill" : "check-circle"; 
+  const ToastIcon = (estado == "danger") ? "exclamation-triangle-fill" : "check-circle";
 
   const Toast = $("#MyToast")
   const ToartConted = `
@@ -93,10 +110,9 @@ function initializeToast(message, estado) {
 //-------------FUNCIONES PARA ACCIONES DE CRUD-----------------//
 
 // Accion para crear o editar cualquier Formulario
-function ActionCreateEdit(IDbuttom, IDForm, URL, Method, callback) {
+function ActionCreateEdit(IDForm, URL, Method, callback) {
   if (!$("#" + IDForm).valid()) return;
 
-  const action = $("#" + IDbuttom).attr('data-action');
   const formSw = document.getElementById(IDForm);
   const formData = (formSw instanceof FormData) ? formSw : new FormData(formSw);
 
@@ -135,7 +151,7 @@ function ActionToggle(statusActual, id, callback) {
 function PoseeCampos(IDselect, IDCampo, DivOculto) {
 
   const poseeMarca = $(IDselect).val();
-  if (poseeMarca === "Si" ) {
+  if (poseeMarca === "Si") {
 
     $(IDCampo).rules("add", {
       required: true
@@ -218,7 +234,7 @@ function optionsActiosUsuario(item, textoAccion, optionEditar) {
 }
 
 function optionsActios(item, textoAccion, optionEditar) {
-  
+
   icon = (item.id_tipo_status == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
   if (item.id_tipo_status !== 3) {
@@ -235,13 +251,13 @@ function optionsActios(item, textoAccion, optionEditar) {
         ${optionEditar}
 
         <div class="dropdown-divider border-gray-100"></div>
-          <a class="dropdown-item DispositivoToggle text-info py-1" 
+          <a class="dropdown-item Toggle text-info py-1" 
             data-id="${item.id_dispositivo}"
             data-status="${item.id_tipo_status}" >
             ${icon} ${textoAccion}
           </a >
 
-          <a class="dropdown-item DispositivoDelete text-danger py-1"
+          <a class="dropdown-item Toggle text-danger py-1"
             data-id="${item.id_dispositivo}"
             data-status="3">
             <i class="bi bi-trash"></i> Desincorporar

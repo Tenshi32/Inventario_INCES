@@ -13,7 +13,7 @@ from routers.dispositivos_router import dispositivos
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}) # Evita errores de bloqueo en el navegador 
-app.secret_key = 'insaiPOA2026'
+app.secret_key = '2026'
  
 
 #------------------- RUTAS ------------------

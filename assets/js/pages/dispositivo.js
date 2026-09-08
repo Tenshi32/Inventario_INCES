@@ -1,16 +1,4 @@
-function consultarDispositivo(forzarRecarga = false) {
-
-  const datosGuardados = sessionStorage.getItem("dispositivosData");
-
-  if (datosGuardados && !forzarRecarga) {
-    console.log("Cargando desde sessionStorage (Sin consumo de API)");
-    const data = JSON.parse(datosGuardados);
-    renderizarTablaDispositivos(data); // Función separada para renderizar
-    return;
-  }
-
-  console.log("Consultando API Flask por red...");
-  // 1. URL de tu servidor Flask
+function consultarDispositivo() {
   fetch("http://127.0.0.1:5000/Dispositivos/All", {
     method: "GET",
   })
@@ -23,99 +11,90 @@ function consultarDispositivo(forzarRecarga = false) {
       // 3. Guardar en sessionStorage transformando el JSON a string
       sessionStorage.setItem("dispositivosData", JSON.stringify(data));
 
-      // 4. Renderizar
-      renderizarTablaDispositivos(data);
+      const lista = Object.values(data);
+      const tabla = document.getElementById("tablaDispositivos");
 
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
+      let contenido = "";
+      let total = lista.length;
+      let operativos = 0;
+      let inoperativos = 0;
+      let ultimoCodigo = "-";
 
-function renderizarTablaDispositivos(data) {
+      if ($.fn.DataTable.isDataTable('#MyTable')) {
+        $('#MyTable').DataTable().destroy();
+      }
 
-  const lista = Object.values(data);
-  const tabla = document.getElementById("tablaDispositivos");
+      if (lista.length > 0) {
+        ultimoCodigo = lista[lista.length - 1].cd_dispositivo;
+      }
 
-  let contenido = "";
-  let total = lista.length;
-  let operativos = 0;
-  let inoperativos = 0;
-  let ultimoCodigo = "-";
+      lista.forEach(item => {
 
-  if ($.fn.DataTable.isDataTable('#MyTable')) {
-    $('#MyTable').DataTable().destroy();
-  }
+        if (item.id_status === 1) operativos++;
+        if (item.id_status === 2) inoperativos++;
 
-  if (lista.length > 0) {
-    ultimoCodigo = lista[lista.length - 1].cd_dispositivo;
-  }
+        let textoAccion = (item.id_status !== 1) ? 'Operativo' : 'Inoperativo';
 
-  lista.forEach(item => {
+        const optionEditar = `
+          <a class="dropdown-item py-2 DispositivoEditar text-primary" 
+             data-id_dispositivo="${item.id_dispositivo}"
+             data-cd_dispositivo="${item.cd_dispositivo}"
+             data-posee_marca="${item.posee_marca}"
+             data-marca="${item.id_marcas}"
+             data-posee_modelo="${item.posee_modelo}"
+             data-modelo="${item.id_modelo}"
+             data-posee_serial="${item.posee_serial}"
+             data-serial="${item.serial}"
+             data-id_tipo_dispositivo="${item.id_tipo_dispositivo}"
+             data-descripcion_general="${item.descripcion_general}"
+             data-observaciones_tecnicas="${item.observaciones_tecnicas}" 
+             data-status="${item.id_tipo_status}">
+             <i class="bi bi-pencil me-2"></i>Editar 
+          </a>
+        `;
 
-    if (item.id_status === 1) operativos++;
-    if (item.id_status === 2) inoperativos++;
+        // Agrega esto junto a tus otras opciones de la tabla (ej. optionEditar)
+        const optionDetalle = `
+          <a class="dropdown-item py-2 DispositivoVerDetalle text-info" 
+             href="#"
+             data-cd_dispositivo="${item.cd_dispositivo}"
+             data-tipo_dispositivo="${item.tipo_dispositivo}"
+             data-statu="${item.statu}"
+             data-id_status="${item.id_status}"
+             data-posee_codigo="${item.posee_codigo}"
+             data-posee_marca="${item.posee_marca}"
+             data-id_marca="${item.id_marca}"
+             data-marca="${item.marca}"
+             data-posee_modelo="${item.posee_modelo}"
+             data-id_modelo="${item.id_modelo}"
+             data-modelo="${item.modelo}"
+             data-posee_serial="${item.posee_serial}"
+             data-serial="${item.serial}"
+             data-descripcion_general="${item.descripcion_general}"
+             data-observaciones_tecnicas="${item.observaciones_tecnicas}"
+             data-fecha_carga="${item.fecha_carga}"
+             data-fecha_modificacion="${item.fecha_modificacion}">
+             <i class="bx bx-show me-2"></i>Ver Detalle 
+          </a>
+        `;
 
-    let textoAccion = (item.id_status !== 1) ? 'Operativo' : 'Inoperativo';
+        let Actions = optionEditar + optionDetalle;
 
-    const optionEditar = `
-      <a class="dropdown-item py-2 DispositivoEditar text-primary" 
-         data-id_dispositivo="${item.id_dispositivo}"
-         data-cd_dispositivo="${item.cd_dispositivo}"
-         data-posee_marca="${item.posee_marca}"
-         data-marca="${item.id_marcas}"
-         data-posee_modelo="${item.posee_modelo}"
-         data-modelo="${item.id_modelo}"
-         data-posee_serial="${item.posee_serial}"
-         data-serial="${item.serial}"
-         data-id_tipo_dispositivo="${item.id_tipo_dispositivo}"
-         data-descripcion_general="${item.descripcion_general}"
-         data-observaciones_tecnicas="${item.observaciones_tecnicas}" 
-         data-status="${item.id_tipo_status}">
-         <i class="bi bi-pencil me-2"></i>Editar 
-      </a>
-    `;
-
-    // Agrega esto junto a tus otras opciones de la tabla (ej. optionEditar)
-    const optionDetalle = `
-      <a class="dropdown-item py-2 DispositivoVerDetalleVerDetalle text-info" 
-         href="#"
-         data-cd_dispositivo="${item.cd_dispositivo}"
-         data-tipo_dispositivo="${item.tipo_dispositivo}"
-         data-statu="${item.statu}"
-         data-id_status="${item.id_status}"
-         data-posee_codigo="${item.posee_codigo}"
-         data-posee_marca="${item.posee_marca}"
-         data-id_marca="${item.id_marca}"
-         data-posee_modelo="${item.posee_modelo}"
-         data-id_modelo="${item.id_modelo}"
-         data-posee_serial="${item.posee_serial}"
-         data-serial="${item.serial || 'N/A'}"
-         data-descripcion="${item.descripcion_general || 'Sin descripción'}"
-         data-observaciones="${item.observaciones_tecnicas || 'Sin observaciones'}"
-         data-fecha_carga="${item.fecha_carga}"
-         data-fecha_modificacion="${item.fecha_modificacion}">
-         <i class="bx bx-show me-2"></i>Ver Detalle 
-      </a>
-    `;
-
-    let Actions = optionEditar + optionDetalle;
-
-    contenido += `
+        contenido += `
           <tr class="border-bottom border-gray-100">
             <td class="ps-4 py-3">
               <span class="fw-bold fs-6">${item.cd_dispositivo}</span>
             </td>
-            <td class="text-secondary fw-medium">${item.tipo_dispositivo || 'N/A'}</td>
+            <td class="text-secondary fw-medium">${item.tipo_dispositivo}</td>
         
 
-            <td class="text-secondary fw-medium">${item.marca || 'N/A'}</td>
+            <td class="text-secondary fw-medium">${item.marca}</td>
 
             <td>
-              <span class="badge bg-light text-dark border border-gray-200">${item.modelo || 'N/A'}</span>
+              <span class="badge bg-light text-dark border border-gray-200">${item.modelo}</span>
             </td>
 
-            <td class="text-muted font-monospace small">${item.serial || 'S/N'}</td>
+            <td class="text-muted font-monospace small">${item.serial}</td>
 
             <td class="text-center">
               <span class="badge rounded-pill ${estadoBadge(item.id_status)} px-3 py-2">
@@ -127,16 +106,22 @@ function renderizarTablaDispositivos(data) {
             </td>
           </tr>
         `;
-  });
 
-  tabla.innerHTML = contenido;
+      });
 
-  initializeDataTable('#MyTable');
-  if (document.getElementById("totalDevice")) document.getElementById("totalDevice").textContent = total;
-  if (document.getElementById("operativoCount")) document.getElementById("operativoCount").textContent = operativos;
-  if (document.getElementById("inoperativoCount")) document.getElementById("inoperativoCount").textContent = inoperativos;
-  if (document.getElementById("lastId")) document.getElementById("lastId").textContent = ultimoCodigo;
+      tabla.innerHTML = contenido;
 
+      initializeDataTable('#MyTable');
+
+      document.getElementById("totalDevice").textContent = total;
+      document.getElementById("operativoCount").textContent = operativos;
+      document.getElementById("inoperativoCount").textContent = inoperativos;
+      document.getElementById("lastId").textContent = ultimoCodigo;
+
+    })
+    .catch(error => {
+      console.error("Hubo un problema con la consulta:", error);
+    });
 }
 
 function consultarTipoDispositivo() {
@@ -155,16 +140,17 @@ function consultarTipoDispositivo() {
       // 3. Guardar en sessionStorage transformando el JSON a string
       sessionStorage.setItem("tipoDispositivosData", JSON.stringify(data));
 
-      // 4. Renderizar
-      SelectTipoDispositivos(data);
-
     })
     .catch(error => {
       console.error("Hubo un problema con la consulta:", error);
     });
 }
 
-function SelectTipoDispositivos(data) {
+function SelectTipoDispositivos() {
+
+  const datosGuardados = sessionStorage.getItem("tipoDispositivosData")
+
+  const data = JSON.parse(datosGuardados);
 
   const lista = Object.values(data);
   let contenido = ``;
@@ -181,6 +167,36 @@ function SelectTipoDispositivos(data) {
 
 }
 
+function FiltroTipoDispositivos() {
+  
+  const datosGuardados = sessionStorage.getItem("tipoDispositivosData")
+
+  const data = JSON.parse(datosGuardados);
+
+  const lista = Object.values(data);
+  let contenido = ``;
+
+  lista.forEach(item => {
+
+    if (item.tipo_dispositivo === "S/Categoria") {
+      contenido += `
+        <option value="" selected>${item.tipo_dispositivo}</option>
+      `;
+
+    } else {
+
+      contenido += `
+        <option value="${item.tipo_dispositivo}">${item.tipo_dispositivo}</option>
+      `;
+
+    }
+
+  });
+
+  document.getElementById("filtroTipo").innerHTML = contenido;
+
+}
+
 // Evento dependiente de Select Marca -> Modelos
 $(document).on("change", "#marca_producto", function () {
   const marcaId = $(this).val();
@@ -192,15 +208,15 @@ $(document).on("change", "#marca_producto", function () {
 });
 
 $(document).ready(function () {
+
   selectModelos("marca_producto", "marcas", "marca");
 
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   initializeTooltips(tooltipTriggerList);
 
-  initializeDataTable("#MyTable");
-
   consultarTipoDispositivo();
-
+  FiltroTipoDispositivos();
+  SelectTipoDispositivos();
   // Validación del Formulario
   $("#formDispositivo").validate({
     rules: {
@@ -266,7 +282,7 @@ $(document).ready(function () {
     }
   });
 
-  consultarDispositivo(true);
+  consultarDispositivo();
 });
 
 // SUBMIT UNIFICADO (CREAR / EDITAR)
@@ -279,19 +295,17 @@ $("#formDispositivo").on("submit", function (event) {
 
   if (accion === "edit") {
     ActionCreateEdit(
-      "buttomMaster",
       "formDispositivo",
-      "http://127.0.0.1:5000/Dispositivo/Editar",
+      "http://127.0.0.1:5000/Dispositivos/Editar",
       "PUT",
-      consultarDispositivo(true)
+      consultarDispositivo
     );
   } else {
     ActionCreateEdit(
-      "buttomMaster",
       "formDispositivo",
-      "http://127.0.0.1:5000/Dispositivo/Crear",
+      "http://127.0.0.1:5000/Dispositivos/Crear",
       "POST",
-      consultarDispositivo(true)
+      consultarDispositivo
     );
   }
 
@@ -341,7 +355,10 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", function (event) {
 
   // Manejo correcto del ID Hidden
   $("#id_dispositivo").remove();
+
   $("#formDispositivo").append(`<input type="hidden" id="id_dispositivo" name="id_dispositivo" value="${$(this).data("id_dispositivo")}">`);
+
+  $("#tipo_dispositivo").val($(this).data("id_tipo_dispositivo"));
 
   $("#cd_dispositivo").val($(this).data("cd_dispositivo"));
   $("#status").val($(this).data("status"));
@@ -380,7 +397,7 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", function (event) {
   $("#DispositivoModal").modal("show");
 });
 
-$(document).on("click", ".DispositivoVerDetalleVerDetalle", function (event) {
+$("#tablaDispositivos").on("click", ".DispositivoVerDetalle", function (event) {
   event.preventDefault();
 
   // 1. Extraer datos del elemento cliqueado
@@ -404,7 +421,7 @@ $(document).on("click", ".DispositivoVerDetalleVerDetalle", function (event) {
   // 3. Asignar estado aplicando clase dinámica según statusId
   const $badgeStatus = $("#detail_status");
   $badgeStatus.text(estadoTexto);
-  
+
   // Reutilizamos la función estadoBadge si existe, o asignamos directo
   if (typeof estadoBadge === "function") {
     $badgeStatus.attr("class", `badge rounded-pill ${estadoBadge(statusId)} px-3 py-2`);
@@ -415,22 +432,18 @@ $(document).on("click", ".DispositivoVerDetalleVerDetalle", function (event) {
   }
 
   // 4. Manejar campos de texto largo con fallback cuando están vacíos
-  $("#detail_descripcion").text(
-    descripcion && descripcion.trim() !== "" ? descripcion : "Sin información registrada."
-  );
-  
-  $("#detail_observaciones").text(
-    observaciones && observaciones.trim() !== "" ? observaciones : "Sin observaciones registradas."
-  );
+  $("#detail_descripcion").text(descripcion);
+
+  $("#detail_observaciones").text(observaciones);
 
   // 5. Mostrar el Modal
   $("#DispositivoDetallesModal").modal("show");
 });
 
 // Cambiar estado Operativo / Inoperativo
-$("#tablaDispositivos").on("click", ".DispositivoToggle", function (event) {
+$("#tablaDispositivos").on("click", ".Toggle", function (event) {
   const id = $(this).data("id");
   const statusActual = $(this).data("status");
 
-  ActionToggle(statusActual, id, consultarDispositivo(true));
+  ActionToggle(statusActual, id, consultarDispositivo);
 });

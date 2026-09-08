@@ -14,6 +14,8 @@ class DispositivosModel:
     def get_all_device(self):
         sql = "SELECT * FROM dispositivos " \
         "INNER JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo " \
+        "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas " \
+        "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos " \
         "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " \
         "ORDER BY dispositivos.id_dispositivo DESC"
         self.cursor.execute(sql)
@@ -31,7 +33,7 @@ class DispositivosModel:
 
     #buscador si existe dispositivo por tipo de categoria y valor (codigo o serial)
     def get_dispositivo_if_exist(self, tipo_categoria, valor):
-        sql = "SELECT cd_dispositivo FROM dispositivos WHERE id_categorias = %s AND (cd_dispositivo = %s OR serial = %s)"
+        sql = "SELECT cd_dispositivo FROM dispositivos WHERE id_tipo_dispositivo = %s AND (cd_dispositivo = %s OR serial = %s)"
         self.cursor.execute(sql, (tipo_categoria, valor, valor,))
 
         row = self.cursor.fetchone()
@@ -40,8 +42,8 @@ class DispositivosModel:
 
     # crear dispositivo
     def create_device(self, datos):
-        sql = "INSERT INTO dispositivos(id_dispositivo, posee_codigo, cd_dispositivo, posee_marca, posee_modelo, id_marca, id_modelo, id_categorias, posee_serial, serial, id_status) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO dispositivos(id_dispositivo, posee_codigo, cd_dispositivo, posee_marca, posee_modelo, id_marca, id_modelo, id_tipo_dispositivo, posee_serial, serial, descripcion_general, observaciones_tecnicas, id_status) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
       
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -55,7 +57,7 @@ class DispositivosModel:
     
     # editar dispositivo
     def update_device(self, datos):
-        sql = "UPDATE dispositivos SET posee_codigo=%s, cd_dispositivo=%s, posee_marca=%s, posee_modelo=%s, id_marca=%s, id_modelo=%s, id_categorias=%s, posee_serial=%s, serial=%s, id_status=%s \
+        sql = "UPDATE dispositivos SET posee_codigo=%s, cd_dispositivo=%s, posee_marca=%s, posee_modelo=%s, id_marca=%s, id_modelo=%s, id_tipo_dispositivo=%s, posee_serial=%s, serial=%s, descripcion_general=%s, observaciones_tecnicas=%s, id_status=%s \
         WHERE id_dispositivo=%s"
 
         try: 
