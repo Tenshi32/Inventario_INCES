@@ -145,6 +145,26 @@ function ActionToggle(statusActual, id, callback) {
   methodSend(FormnDepa, callback);
 }
 
+
+function ActionToggleDatosMaestros(statusActual, id, callback, EndPoint, campobd = null) {
+
+  const nuevoStatus = (statusActual == 1) ? 2 : (statusActual == 2) ? 1 : 3;
+
+  // Creamos el contenedor de datos manual
+  const datosManuales = new FormData();
+
+  datosManuales.append(campobd, id);
+  datosManuales.append("id_status", nuevoStatus);
+
+  const FormnDepa = {
+    UrlControl: "http://127.0.0.1:5000/"+ EndPoint +"/Toggle",
+    Formulario: datosManuales,
+    Method: "PUT",
+  };
+
+  methodSend(FormnDepa, callback);
+}
+
 //---------FUNCIONES DE CAMPOS PARA DISPOSITIVOS---------------//
 
 //Funcion para mostrar campos ocultos de Dispositivos

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="adminHMD authentication page">
+  <title>Login | adminHMD</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="../../assets/vendors/sweetalert/sweetalert2.css">
+  <link rel="stylesheet" href="../../assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+
+<body class="auth-body">
+
+  <!-- Botón Theme Toggle Flotante -->
+  <button class="btn btn-white bg-white border theme-toggle-floating" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">
+    <i class="bi bi-moon-stars text-dark" data-theme-icon aria-hidden="true"></i>
+  </button>
+
+  <div class="container-fluid p-0">
+    <div class="row g-0 auth-container">
+      
+      <!-- LADO IZQUIERDO: Banner / Preview del Dashboard -->
+      <div class="col-lg-6 d-none d-lg-flex auth-sidebar-banner">
+        <div>
+          <a class="text-white text-decoration-none h4 d-flex align-items-center gap-2 mb-0" href="index.html">
+            <i class="bi bi-grid-1x2-fill"></i> adminHMD
+          </a>
+        </div>
+        <div class="my-auto pe-lg-5">
+          <h2 class="display-5 fw-bold mb-3">Bienvenido de nuevo a tu panel de control.</h2>
+          <p class="lead opacity-75">Accede a tus reportes de inventario, estado de equipos y monitoreo de infraestructura en un solo lugar.</p>
+        </div>
+        <div class="small opacity-50">
+          &copy; 2026 adminHMD. Todos los derechos reservados.
+        </div>
+      </div>
+
+      <!-- LADO DERECHO: Formulario de Login -->
+      <div class="col-lg-6 d-flex align-items-center position-relative">
+        <div class="auth-form-container">
+          
+          <!-- Logo Brand Versión Mobile -->
+          <div class="d-lg-none mb-4">
+            <a class="brand-logo" href="index.html">
+              <i class="bi bi-grid-1x2-fill"></i> adminHMD
+            </a>
+          </div>
+
+          <div class="mb-4">
+            <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 rounded-pill fw-semibold">Acceso Seguro</span>
+            <h1 class="h2 fw-bold text-dark mb-1">Iniciar Sesión</h1>
+            <p class="text-muted">Ingresa tus credenciales para acceder al sistema.</p>
+          </div>
+
+          <!-- Formulario optimizado -->
+          <form id="loginForm" class="needs-validation" novalidate>
+            
+            <!-- Campo Email -->
+            <div class="mb-3">
+              <label class="form-label fw-medium" for="loginEmail">Correo electrónico</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input class="form-control" id="loginEmail" name="loginEmail" type="email" placeholder="usuario@empresa.com" required>
+              </div>
+            </div>
+
+            <!-- Campo Contraseña con 'Forgot Password?' y Toggle de Visibilidad -->
+            <div class="mb-3">
+
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label fw-medium mb-0" for="loginPassword">Contraseña</label>
+                <a class="small text-primary text-decoration-none fw-semibold" href="forgot-password.html">¿Olvidaste tu contraseña?</a>
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input class="form-control" id="loginPassword" name="loginPassword" type="password" minlength="6" placeholder="Tu contraseña" required>
+                <button class="btn btn-outline-secondary border" type="button" id="togglePassword">
+                  <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Checkbox Remember Me -->
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+              <label class="form-check-label text-muted small" for="rememberMe">
+                Recordar mi sesión en este equipo
+              </label>
+            </div>
+
+            <!-- Botón Submit -->
+            <button class="btn btn-primary w-100 mb-3" type="submit" id="btnSubmit">
+              <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../assets/vendors/jquery/jquery.js"></script>
+  <script src="../../assets/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/vendors/jquery-validation/jquery.validate.js"></script>
+  <script src="../../assets/vendors/sweetalert/sweetalert2.all.js"></script>
+  <script src="../assets/js/session.s"></script>
+
+  
+</body>
+</html>

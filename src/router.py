@@ -54,5 +54,11 @@ def tipo_servicios_route(accion):
 def tipo_dispositivos_route(accion):
     return tipo_dispositivos(accion)
 
+#------------------- TIPO DE CONSUMIBLES ------------------
+@app.route('/tipo_consumibles/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+def tipo_consumibles_route(accion):
+    return tipo_consumibles(accion)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

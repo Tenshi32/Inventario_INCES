@@ -1,0 +1,789 @@
+<main class="dashboard-content flex-grow-1 w-100">
+  <div class="container-fluid px-3 px-lg-4 py-4">
+    <div class="row g-3">
+
+      <div class="col-md-2">
+        <div class="sidebar-accordion bg-dark text-white p-3 rounded-4 shadow-sm">
+
+          <!-- Título opcional para la barra lateral -->
+          <h6 class="text-uppercase fs-7 text-secondary fw-bold px-2 mb-3"></h6>
+
+          <!-- MENÚ ACORDEÓN -->
+          <ul class="nav nav-pills flex-column mb-auto gap-1" id="sidebarMenu">
+
+            <!-- Marcas -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiMarcas" role="button" aria-expanded="false"
+                aria-controls="multiMarcas">
+                <span> Marcas</span> 
+              </a>
+            </li>
+
+            <!-- Modelos -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiModelos" role="button" aria-expanded="false"
+                aria-controls="multiModelos">
+                <span> Modelos</span> 
+              </a>
+            </li>
+
+            <!-- Categorias -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiCategorias" role="button" aria-expanded="false"
+                aria-controls="multiCategorias">
+                <span> Categorías</span> 
+              </a>
+            </li>
+
+            <!-- Departamentos -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiDepartamentos" role="button" aria-expanded="false"
+                aria-controls="multiDepartamentos">
+                <span>Departamentos</span> 
+              </a>
+            </li>
+
+            <!-- TipoConsumibles -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiTipoConsumibles" role="button" aria-expanded="false"
+                aria-controls="multiTipoConsumibles">
+                <span>Consumibles</span> 
+              </a>
+            </li>
+
+            <!-- TipoServicio -->
+            <li class="nav-item">
+              <a class="nav-link text-white d-flex align-items-center justify-content-between rounded-3 py-2 px-3"
+                data-bs-toggle="collapse" href="#multiTipoServicios" role="button" aria-expanded="false"
+                aria-controls="multiTipoServicios">
+                <span>Servicios</span> 
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-10">
+
+        <div class="collapse multi-collapse" id="multiMarcas">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <p class="eyebrow mb-0 text-uppercase text-muted fw-semibold small">Inventario</p>
+                <h1 class="h3 mb-0 fw-bold">Marcas</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivMarcas">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateMarcas">
+                  <i class="bi bi-plus-lg"></i> Nueva Marca
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableMarcas" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Marca</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaMarcas" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="MarcasModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelMarca"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formMarcas" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdMarca" name="createdMarca">
+
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Código de Activo <span
+                          class="text-danger h5">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
+                        <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej. MON-001"
+                          required onblur="ValidacionUnico('#cd_dispositivo', '#tipo_categoria')">
+                      </div>
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomMarca">
+                        <i class="bi bi-save me-1"></i> Guardar Marca
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse multi-collapse" id="multiModelos">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <h1 class="h3 mb-0 fw-bold">Modelos</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivModelos">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateModelos">
+                  <i class="bi bi-plus-lg"></i> Nueva Modelo
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableModelos" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Marca</th>
+                      <th class="py-3">Modelo</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaModelos" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="ModelosModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelModelo"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formModelos" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdModelo" name="createdModelo">
+
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label fw-semibold small">Marca <span class="text-danger h5">*</span></label>
+                        <select id="marca_modelo" name="marca_modelo" class="form-select">
+                          <option value="">Selecciona una Marca</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Modelo <span class="text-danger h5">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
+                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej. MON-001"
+                          required onblur="ValidacionUnico('#modelo')">
+                      </div>
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomModelo">
+                        <i class="bi bi-save me-1"></i> Guardar Modelo
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse multi-collapse" id="multiCategorias">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <h1 class="h3 mb-0 fw-bold">Tipo de Dispositivos</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivCategorias">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateCategorias">
+                  <i class="bi bi-plus-lg"></i> Nueva Categoria
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableCategorias" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Categoria</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaCategorias" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="CategoriasModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelCategoria"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formCategorias" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdCategoria" name="createdCategoria">
+
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Código de Activo <span
+                          class="text-danger h5">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
+                        <input type="text" class="form-control" id="categoria" name="categoria"
+                          placeholder="Ej. MON-001" required
+                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_categoria')">
+                      </div>
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomCategoria">
+                        <i class="bi bi-save me-1"></i> Guardar Categoria
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse multi-collapse" id="multiDepartamentos">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <h1 class="h3 mb-0 fw-bold">Departamento</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivDepartamentos">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateDepartamentos">
+                  <i class="bi bi-plus-lg"></i> Nueva Departamento
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableDepartamentos" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Departamento</th>
+                      <th class="py-3">Piso</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaDepartamentos" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="DepartamentosModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelDepartamento"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formDepartamentos" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdDepartamento" name="createdDepartamento">
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Código de la Dependencia <span
+                          class="text-danger h5">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
+                        <input type="text" class="form-control" id="codigoDepa" name="codigoDepa"
+                          placeholder="Ej. MON-001" required
+                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_Departamento')">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Nombre <span
+                          class="text-danger h5">*</span></label>
+                        <input type="text" class="form-control" id="departamento" name="departamento"
+                          placeholder="Ej. MON-001" required
+                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_Departamento')">
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label fw-semibold small">Piso<span
+                            class="text-danger h5">*</span></label>
+                        <select id="id_piso_depa" name="id_piso_depa" class="form-select" required>
+                          <option value="">Seleccione una opción</option>
+                          <option value="1">Sotano</option>
+                          <option value="2">Planta Baja</option>
+                          <option value="3">Piso 1</option>
+                          <option value="4">Piso 2</option>
+                          <option value="5">Piso 3</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label fw-semibold small">Estado <span
+                            class="text-danger h5">*</span></label>
+                        <select id="estado" name="estado" class="form-select" required>
+                          <option value="">Seleccione una opción</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomDepartamento">
+                        <i class="bi bi-save me-1"></i> Guardar Departamento
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse multi-collapse" id="multiTipoConsumibles">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <h1 class="h3 mb-0 fw-bold">Tipo de Consumible</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivConsumibles">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateConsumibles">
+                  <i class="bi bi-plus-lg"></i> Nueva Consumible
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableConsumibles" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Consumible</th>
+                      <th class="py-3">Piso</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaConsumibles" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="ConsumiblesModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelConsumible"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formConsumibles" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdConsumible" name="createdConsumible">
+
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Nombre <span
+                          class="text-danger h5">*</span></label>
+                        <input type="text" class="form-control" id="consumible" name="consumible"
+                          placeholder="Ej. MON-001" required
+                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_TipoConsumible')">
+              
+                    </div>
+
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label class="form-label fw-semibold small">Grupo de consumible<span
+                            class="text-danger h5">*</span></label>
+                        <select id="grupo_consumible" name="grupo_consumible" class="form-select" required>
+                          <option value="">Seleccione una opción</option>
+                          <option value="Cables">Cables</option>
+                          <option value="Impresora">Impresora</option>
+                          <option value="Almacenamiento">Almacenamiento</option>
+                          <option value="Red">Red</option>
+                          <option value="Rendimiento">Rendimiento</option>
+                          <option value="Energia">Energia</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomConsumible">
+                        <i class="bi bi-save me-1"></i> Guardar Consumible
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="collapse multi-collapse" id="multiTipoServicios">
+          <!-- PAGE HEADER -->
+          <div class="page-heading mb-4">
+            <div class="page-heading-copy d-flex align-items-center gap-3">
+              <span
+                class="page-icon fs-3 text-primary bg-primary-subtle p-2 rounded-3 d-inline-flex align-items-center justify-content-center"
+                style="width: 48px; height: 48px;">
+                <i class="bi bi-display" aria-hidden="true"></i>
+              </span>
+              <div>
+                <h1 class="h3 mb-0 fw-bold">Tipo de Servicio</h1>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE SECTION -->
+          <section class="card border-0 shadow-sm mb-4 p-4">
+            <div
+              class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+              <div
+                class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivServicios">
+                <div class="position-relative flex-grow-1">
+
+                  <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+                  <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                </div>
+                <button class="btn btn-primary px-4 text-nowrap" id="CreateServicios">
+                  <i class="bi bi-plus-lg"></i> Nueva Servicio
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body px-0 pb-0">
+              <div class="table-responsive">
+                <table id="MyTableServicios" class="table table-hover align-middle mb-0 text-nowrap w-100">
+                  <thead class="border-bottom border-top">
+                    <tr class="text-uppercase fs-7 fw-bold text-muted">
+                      <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                      <th class="py-3">Servicio</th>
+                      <th class="py-3">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaServicios" class="border-top-0">
+                    <!-- Carga dinámica vía JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- MODAL FORMULARIO -->
+          <div class="modal fade" id="ServiciosModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg">
+
+                <!-- Header Modal -->
+                <div class="modal-header border-bottom px-4 py-3">
+                  <div>
+                    <h5 class="modal-title fw-bold" id="ModalLabelServicio"></h5>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Body Modal -->
+                <div class="modal-body p-4">
+                  <form id="formServicios" class="row g-3">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                      <span
+                        class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                        (*) son obligatorios
+                      </span>
+                    </div>
+
+
+                    <input type="hidden" id="createdServicio" name="createdServicio">
+
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold small">Nombre <span
+                          class="text-danger h5">*</span></label>
+                        <input type="text" class="form-control" id="servicio" name="servicio"
+                          placeholder="Ej. MON-001" required
+                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_TipoConsumible')">
+              
+                    </div>
+
+                    <!-- Footer Modal Acciones -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary px-4" id="buttomServicio">
+                        <i class="bi bi-save me-1"></i> Guardar Servicio
+                      </button>
+                    </div>
+
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="../assets/js/dateMaster/DateMaster.js"></script>
+<script src="../assets/js/dateMaster/marca.js"></script>
+<script src="../assets/js/dateMaster/modelo.js"></script>
+<script src="../assets/js/dateMaster/categoria.js"></script>
+<script src="../assets/js/dateMaster/dependencia.js"></script>
+<script src="../assets/js/dateMaster/consumible.js"></script>
+<script src="../assets/js/dateMaster/servicio.js"></script>

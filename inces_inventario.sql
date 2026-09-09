@@ -59,6 +59,19 @@ CREATE TABLE `consumibles` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tipo_consumible`
+--
+
+CREATE TABLE `tipo_consumible` (
+  `id_tipo_consumible` int(11) NOT NULL,
+  `consumible` varchar(30) NOT NULL,
+  `grupo_consumible` enum('Cables','Impresora','Almacenamiento','Red','Rendimiento','Energia') NOT NULL,
+  `estado_consumible` enum('1','2') NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `dependencia`
 --
 

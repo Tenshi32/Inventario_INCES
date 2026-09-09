@@ -1,6 +1,6 @@
 from model.db_connect import DbConnect
 
-class DependenciasModel:
+class InternoModel:
 
     def __init__(self):
         self.conn = DbConnect().connect()
@@ -9,31 +9,28 @@ class DependenciasModel:
             raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
 
         self.cursor = self.conn.cursor(dictionary=True)
-
-    #buscador dependencia especifica por id
-    def get_dependencia(self, id):
-        sql = "SELECT * FROM dependencia WHERE id_dependencia = %s"
-        self.cursor.execute(sql, (id))
+ 
+    def get_interno(self, id):
+        sql = "SELECT * FROM interno " \
+        "INNER JOIN usuarios ON usuarios.cedula = interno.id_usuario_cedula"
+        self.cursor.execute(sql, (id, id))
 
         row = self.cursor.fetchone()
         return row
-
-    #buscador all de dependencias
-    def get_all_dependencias(self):
-        sql = "SELECT * FROM dependencia " \
-        "INNER JOIN pisos ON dependencia.id_piso = pisos.id_piso " \
-        "ORDER BY id_dependencia DESC"
+ 
+    def get_all_internos(self):
+        sql = "SELECT * FROM interno " \
+        "INNER JOIN usuarios ON usuarios.cedula = interno.id_usuario_cedula"
         self.cursor.execute(sql)
 
-        all_dependencias = self.cursor.fetchall()
-        return all_dependencias
+        all_internos = self.cursor.fetchall()
+        return all_internos
 
-
-    def create_dependencia(self, datos):
-        sql = "INSERT INTO dependencia (id_dependencia, nombre, descripcion, activo) " \
+    def create_interno(self, datos):
+        sql = "INSERT INTO interno (id_interno, id_usuario_cedula, password, id_rol_interno) " \
         "VALUES (%s, %s, %s, %s)"
-
-        try:
+      
+        try: 
             self.cursor.execute(sql, tuple(datos))
             self.conn.commit()
             return self.cursor.lastrowid
@@ -43,10 +40,10 @@ class DependenciasModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def update_dependencia(self, datos):
-        sql = "UPDATE dependencia SET nombre = %s, descripcion = %s, activo = %s " \
-        "WHERE id_dependencia = %s"
-
+    def update_interno(self, datos):
+        sql = "UPDATE interno SET id_usuario_cedula = %s, id_rol_interno = %s" \
+        "WHERE id_interno = %s"
+        
         try: 
             self.cursor.execute(sql, tuple(datos))
             self.conn.commit()
@@ -56,9 +53,9 @@ class DependenciasModel:
             self.conn.rollback()
             print(f"Error inesperado: {e}")
             return None
-
-    def delete_dependencia(self, id):
-        sql = "DELETE FROM dependencia WHERE id_dependencia = %s"
+        
+    def delete_interno(self, id):
+        sql = "DELETE FROM interno WHERE id_interno = %s"
         try: 
             self.cursor.execute(sql, (id))
             self.conn.commit()

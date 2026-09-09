@@ -1,6 +1,6 @@
-function consultarUsuario() {
+function consultarInterno() {
   // 1. URL de tu servidor Flask
-  fetch("http://localhost:5000/Usuario/All", {
+  fetch("http://localhost:5000/Interno/All", {
     method: "GET",
   })
     .then(response => {
@@ -12,7 +12,7 @@ function consultarUsuario() {
     .then(data => {
 
       const lista = Object.values(data);
-      const tabla = document.getElementById("tablaUsuario");
+      const tabla = document.getElementById("tablaInterno");
 
       let contenido = "";
       let total = lista.length;
@@ -52,6 +52,7 @@ function consultarUsuario() {
            data-status_usuario="${item.status_usuario}"
            data-cargo="${item.cargo}"
            data-telefono="${item.telefono}"
+           data-id_rol_interno="${item.id_rol_interno}"
 
            <i class="bi bi-pencil me-2"></i>Editar 
           </a>
@@ -138,8 +139,24 @@ function ValidacionUnicoUsuario(id_campo) {
 
 }
 
-
 $(document).ready(function () {
+
+  $('#togglePassword').on('click', function() {
+
+    const passwordInput = $('#password');
+    const icon = $('#togglePasswordIcon');
+    const iconLock = $('#toggleLockdIcon');
+    
+    if (passwordInput.attr('type') === 'password') {
+      passwordInput.attr('type', 'text');
+      icon.removeClass('bi-eye').addClass('bi-eye-slash');
+      iconLock.removeClass('bi-unlock').addClass('bi-lock');
+    } else {
+      passwordInput.attr('type', 'password');
+      icon.removeClass('bi-eye-slash').addClass('bi-eye');
+      iconLock.removeClass('bi-lock').addClass('bi-unlock');
+    }
+  });
 
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 
@@ -147,72 +164,51 @@ $(document).ready(function () {
 
   initializeDataTable("#MyTable")
 
-  $("#formUsuario").validate({
+  $.validator.addMethod("strongPassword", function (value, element) {
+    return this.optional(element) || /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/.test(value);
+  });
+
+  $("#formInterno").validate({
     rules: {
-      //Reglas de validacion para el "Dispositivo"
-      cd_dispositivo: {
-        minlength: 3,
-        maxlength: 20
-      },
-
-      status: {
+      id_usuario: {
         required: true,
-      },
-
-      posee_marca: {
-        required: true,
-      },
-      posee_modelo: {
-        required: true,
-      },
-      posee_serial: {
-        required: true,
-      },
-
-      serial_producto: {
+        digits: true,
         minlength: 6,
+        maxlength: 10
       },
-
-      //Reglas de validacion para el CPU
-
-
+      password: {
+        required: true,
+        minlength: 6,
+        strongPassword: true
+      },
+      passwordConfirm: {
+        required: true,
+        equalTo: "#password"
+      },
+      id_rol_interno: {
+        required: true
+      }
     },
 
     messages: {
-      cd_dispositivo: {
-        minlength: "El código debe tener al menos 3 caracteres",
-        maxlength: "El código no puede exceder 20 caracteres",
+      id_usuario: {
+        required: "La cédula es obligatoria.",
+        digits: "Ingrese solo números.",
+        minlength: "La cédula debe tener al menos 6 dígitos.",
+        maxlength: "La cédula no debe superar los 10 dígitos."
       },
-
-      status: {
-        required: "El estado es obligatorio"
+      password: {
+        required: "La contraseña es obligatoria.",
+        minlength: "La contraseña debe tener al menos 6 caracteres.",
+        strongPassword: "Debe incluir al menos una letra, un número y un carácter especial (!@#$%...)."
       },
-
-      tipo_mouse: {
-        required: "El tipo de Mouse es obligatorio"
+      passwordConfirm: {
+        required: "Debe confirmar la contraseña.",
+        equalTo: "Las contraseñas no coinciden."
       },
-
-      posee_marca: {
-        required: "Indique si posee o no marca",
-      },
-      posee_modelo: {
-        required: "Indique si posee o no modelo",
-      },
-      posee_serial: {
-        required: "Indique si posee o no número de serie",
-      },
-
-      marca_producto: {
-        required: "La marca es obligatoria",
-      },
-      modelo_producto: {
-        required: "El modelo es obligatorio",
-      },
-      serial_producto: {
-        required: "El número de serie es obligatorio",
-        minlength: "El número de serie debe tener al menos 6 caracteres",
-      },
-
+      id_rol_interno: {
+        required: "Seleccione un rol de interno."
+      }
     },
 
     errorElement: 'span',
@@ -228,14 +224,59 @@ $(document).ready(function () {
     }
   });
 
-  consultarUsuario()
+  consultarInterno()
 
 });
+
+function BuscarUsuario() {
+
+  fetch("http://localhost:5000/Usuario/Ratrear?valorBuscar=" + document.getElementById("id_usuario").value, {
+    method: "GET",
+  })
+    .then(response => {
+
+      if (!response.ok) throw new Error("Error en la red");
+      return response.json();
+
+    })
+    .then(data => {
+
+      const item = data;
+      const tabla = document.getElementById("datosUsuario");
+      console.log(item);
+      let contenido = "";
+
+      // Manejo de estados (Activo/Inactivo)
+      let textoStatus = (item.status_usuario !== 1) ? 'Activo' : 'Inactivo';
+
+      contenido = `
+                    <div class="card card-body">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold fs-6">${item.cedula}</span>
+                        <span class="badge ${item.status_usuario === 1 ? 'bg-success' : 'bg-danger'}">
+                          ${textoStatus}
+                        </span>
+                      </div>
+                      <div><strong>Nombre:</strong> ${item.nombre} ${item.apellido || ''}</div>
+                      <div><strong>Correo:</strong> ${item.correo || 'S/N'}</div>
+                      <div><strong>Cargo:</strong> ${item.cargo}</div>
+                      <div><strong>Teléfono:</strong> ${item.telefono}</div>
+                    </div>
+                  `;
+
+      // Inyectamos las filas
+      tabla.innerHTML = contenido;
+
+    })
+    .catch(error => {
+      console.error("Hubo un problema con la consulta:", error);
+    });
+}
 
 // ==========================================
 // CONTROLADOR ÚNICO DE ENVÍO (CREAR / EDITAR)
 // ==========================================
-$("#formUsuario").on("submit", function (event) {
+$("#formInterno").on("submit", function (event) {
   event.preventDefault(); // Evita que la página se recargue
 
   // Obtenemos la acción actual del botón maestro
@@ -245,22 +286,22 @@ $("#formUsuario").on("submit", function (event) {
     // Acción para EDITAR
     ActionCreateEdit(
       "buttomMaster",
-      "formUsuario",
-      "http://127.0.0.1:5000/Usuario/Editar",
+      "formInterno",
+      "http://127.0.0.1:5000/Interno/Editar",
       "PUT",
-      consultarUsuario
+      consultarInterno
     );
 
-    $("#UsuarioModal").modal("hide");
+    $("#InternoModal").modal("hide");
 
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
       "buttomMaster",
-      "formUsuario",
-      "http://127.0.0.1:5000/Usuario/Crear",
+      "formInterno",
+      "http://127.0.0.1:5000/Interno/Crear",
       "POST",
-      consultarUsuario
+      consultarInterno
     );
   }
 
@@ -270,65 +311,65 @@ $("#formUsuario").on("submit", function (event) {
 // ==========================================
 // 1. EVENTO PARA NUEVO REGISTRO (CREAR)
 // ==========================================
-$('#DivUsuario').on("click", "#openCreate", function (event) {
+$('#DivInterno').on("click", "#openCreate", function (event) {
   // Resetear el formulario completamente
-  const form = document.getElementById("formUsuario");
+  const form = document.getElementById("formInterno");
   if (form) form.reset();
 
-  $("#ModalLabel").text("Crear Usuario");
+  $("#ModalLabel").text("Crear Interno");
 
   // Forzar vaciado de inputs clave e hidden
   $("#created").val("");
-  $("#cedula").val("");
-  $("#status").val("1");
-  $("#nombre").val("");
-  $("#apellido").val("");
-  $("#cargo").val("");
-  $("#telefono").val("");
+
+  $("#passwordFields").show();
+  $("#passwordConfirmFields").show();
+
+  $("#password").val("");
+  $("#passwordConfirm").val("");
+  $("#id_rol_interno").val("1");
 
   // Configurar el botón maestro para creación
   $("#buttomMaster")
-    .text("Guardar Usuario")
+    .text("Guardar Interno")
     .removeClass("btn-warning")
     .addClass("btn-primary").attr("action", "create");
 
-  $("#UsuarioModal").modal("show");
+  $("#InternoModal").modal("show");
 });
 
 // ==========================================
 // 2. EVENTO PARA LLENAR EL FORMULARIO (EDITAR)
 // ==========================================
-$('#tablaUsuario').on("click", ".Editar", function (event) {
+$('#tablaInterno').on("click", ".Editar", function (event) {
   event.preventDefault();
 
-  const form = document.getElementById("formUsuario");
+  const form = document.getElementById("formInterno");
   if (form) form.reset();
 
-  $("#ModalLabel").text("Editar Usuario");
+  $("#ModalLabel").text("Editar Interno");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#created").val($(this).data("id"));
-  $("#cedula").val($(this).data("cedula"));
-  $("#status").val($(this).data("status_usuario"));
-  $("#nombre").val($(this).data("nombre"));
-  $("#correo").val($(this).data("correo"));
-  $("#apellido").val($(this).data("apellido"));
-  $("#cargo").val($(this).data("cargo"));
-  $("#telefono").val($(this).data("telefono"));
+  $("#created").val($(this).data("cedula"));
+  $("#id_usuario").val($(this).data("cedula"));
+
+  $("#passwordFields").hide();
+  $("#passwordConfirmFields").hide();
+
+  $("#id_rol_interno").val($(this).data("id_rol_interno"));
 
   // Cambiar el botón maestro para edición
   $("#buttomMaster")
-    .text("Editar Usuario")
+    .text("Editar Interno")
     .removeClass("btn-primary")
     .addClass("btn-warning")
     .attr("action", "edit");
 
   // Abrir el modal de forma segura
-  $("#UsuarioModal").modal("show");
+  $("#InternoModal").modal("show");
 });
 
 // Evento para Operativo/Inoperativo o Desincorporar departamento
-$('#tablaUsuario').on("click", ".Toggle", function (event) {
+$('#tablaInterno').on("click", ".Toggle", function (event) {
 
   const id = $(this).data("id");
   const statusActual = $(this).data("status");
@@ -343,9 +384,9 @@ $('#tablaUsuario').on("click", ".Toggle", function (event) {
   ActionCreateEdit(
     "buttomMaster",
     datosManuales,
-    "http://127.0.0.1:5000/Usuario/Toggle",
+    "http://127.0.0.1:5000/Interno/Toggle",
     "PUT",
-    consultarUsuario
+    consultarInterno
   );
 
 })
