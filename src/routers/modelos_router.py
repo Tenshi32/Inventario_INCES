@@ -18,10 +18,6 @@ def modelos(accion):
             marca = request.args.get('marca')
             answer = ctrl.modelos_for_device(marca)
             return jsonify(answer)
-        
-        if accion == 'ViewPeriodo':
-            answer = ctrl.listar()
-            return jsonify(answer)
 
     # POST -> Crear
     elif request.method == 'POST':
@@ -38,11 +34,3 @@ def modelos(accion):
             print("Datos que llegaron para editar Switch:", datos_recibidos)
             answer = ctrl.Edit_switch(datos_recibidos)
             return jsonify(answer)
-
-
-    # DELETE -> Toggle (same behavior)
-    elif request.method == 'DELETE':
-        datos_recibidos = request.form.to_dict()
-        print("Datos que llegaron para toggle lineamiento (DELETE):", datos_recibidos)
-        answer = ctrl.toggle(datos_recibidos)
-        return jsonify(answer)

@@ -81,10 +81,12 @@ $(document).ready(function () {
       $(element).removeClass('is-invalid');
     }
   });
+
   consultarCategorias()
   consultarMarcas()
   consultarModelos()
   consultarDepartamentos()
   consultarConsumibles()
   consultarServicios()
+  
 });

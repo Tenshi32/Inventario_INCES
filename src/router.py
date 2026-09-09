@@ -6,6 +6,7 @@ import os
 from routers.dependencias_router import dependencias
 from routers.tipo_servicios_router import tipo_servicios
 from routers.tipo_dispositivos_router import tipo_dispositivos
+from routers.tipo_consumibles_router import tipo_consumibles
 from routers.usuario_router import usuario
 from routers.marcas_router import marcas
 from routers.modelos_router import modelos

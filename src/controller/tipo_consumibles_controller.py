@@ -20,10 +20,10 @@ class TipoConsumiblesController:
         valores = [
             datos['consumible'],
             datos['grupo_consumible'],
-            datos['estado_consumible'],
+            1,
         ]
 
-        retorno = self.modelo.create_switch(valores)
+        retorno = self.modelo.create_tipo_consumibles(valores)
 
         if retorno is not None:
 
@@ -33,12 +33,12 @@ class TipoConsumiblesController:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
     
-    def Toggle_tipo_consumible(self, datos):
+    def toggle_tipo_consumible(self, datos):
         valores = [
             datos['status'],
             datos['id_tipo_consumible']
         ]
-        retorno = self.modelo.toggle_status_tipo_consumible(valores)
+        retorno = self.modelo.toggle_status_tipo_consumibles(valores)
 
         if retorno is not None:
 
@@ -48,23 +48,17 @@ class TipoConsumiblesController:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
 
-    def Edit_tipo_consumible(self, datos):
+    def editar_tipo_consumible(self, datos):
         valores = [
-            datos['cd_switches'],
-            datos['marca_producto'],
-            datos['posee_modelo'],
-            datos['modelo_producto'],
-            datos['posee_serial'],
-            datos['serial'],
-            datos['id_piso'],
-            datos['status'],
-            datos['created']
+            datos['consumible'],
+            datos['grupo_consumible'],
+            datos['id_tipo_consumible']
         ]
-        retorno = self.modelo.update_switch(valores)
+        retorno = self.modelo.update_tipo_consumibles(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito el switch de id: " + datos['created']}
+            return {"status": True, "mensaje": "se edito el tipo de consumible de id: " + datos['id_tipo_consumible']}
         
         else:
 
