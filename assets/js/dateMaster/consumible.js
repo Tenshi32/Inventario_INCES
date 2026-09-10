@@ -78,7 +78,6 @@ $("#buttomConsumible").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomConsumible",
       "formConsumibles",
       "http://127.0.0.1:5000/tipo_consumibles/Editar",
       "PUT",
@@ -87,7 +86,6 @@ $("#buttomConsumible").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomConsumible",
       "formConsumibles",
       "http://127.0.0.1:5000/tipo_consumibles/Crear",
       "POST",
@@ -110,7 +108,7 @@ $('#DivConsumibles').on("click", "#CreateConsumibles", function (event) {
   $("#ModalLabelConsumible").text("Crear Consumible");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdConsumible").val("");
+  $("#id_consumible").val("");
   
   $("#consumible").val("");
 
@@ -137,7 +135,7 @@ $('#tablaConsumibles').on("click", ".EditarConsumibles", function (event) {
   $("#ModalLabelConsumible").text("Editar Consumible");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdConsumible").val($(this).data("id"));
+  $("#id_consumible").val($(this).data("id"));
 
   $("#consumible").val($(this).data("consumible"));
   
@@ -152,4 +150,14 @@ $('#tablaConsumibles').on("click", ".EditarConsumibles", function (event) {
 
   // Abrir el modal de forma segura
   $("#ConsumiblesModal").modal("show");
+});
+
+$('#tablaConsumibles').on("click", ".ToggleConsumibles", function (event) {
+  event.preventDefault();
+
+  const id = $(this).data("id");
+  const statusActual = $(this).data("status");
+  
+  ActionToggleDatosMaestros(statusActual, id, consultarConsumibles, "tipo_consumibles", "id_tipo_dispositivo")
+
 });

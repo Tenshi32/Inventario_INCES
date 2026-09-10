@@ -6,8 +6,10 @@ import os
 from routers.dependencias_router import dependencias
 from routers.tipo_servicios_router import tipo_servicios
 from routers.tipo_dispositivos_router import tipo_dispositivos
+from routers.tipo_consumibles_router import tipo_consumibles
 from routers.usuario_router import usuario
 from routers.marcas_router import marcas
+from routers.estados_router import estados
 from routers.modelos_router import modelos
 from routers.dispositivos_router import dispositivos
 
@@ -58,6 +60,11 @@ def tipo_dispositivos_route(accion):
 @app.route('/tipo_consumibles/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def tipo_consumibles_route(accion):
     return tipo_consumibles(accion)
+
+#------------------- ESTADOS ------------------
+@app.route('/estados/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+def estados_route(accion):
+    return estados(accion)
 
 
 if __name__ == '__main__':

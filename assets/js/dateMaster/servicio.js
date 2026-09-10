@@ -23,6 +23,8 @@ function consultarServicios() {
 
       lista.forEach(item => {
 
+        icon = (item.estado_servicio == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+
         optionEditar = `
           <a class="btn btn-outline-primary EditarServicios" 
            data-id="${item.id_tipo_servicios}"
@@ -30,10 +32,10 @@ function consultarServicios() {
            <i class="bi bi-pencil"></i> 
           </a>
 
-          <a class="btn btn-outline-danger EliminarServicios" 
+          <a class="btn btn-outline-danger ToggleServicios" 
            data-status="${item.estado_servicio}" 
            data-id="${item.id_tipo_servicios}" >
-           <i class="bi bi-trash "></i> 
+           ${icon}
           </a>
           `
 
@@ -77,7 +79,6 @@ $("#buttomServicio").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomServicio",
       "formServicios",
       "http://127.0.0.1:5000/tipo_servicios/Editar",
       "PUT",
@@ -86,7 +87,6 @@ $("#buttomServicio").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomServicio",
       "formServicios",
       "http://127.0.0.1:5000/tipo_servicios/Crear",
       "POST",
@@ -109,7 +109,7 @@ $('#DivServicios').on("click", "#CreateServicios", function (event) {
   $("#ModalLabelServicio").text("Crear Servicio");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdServicio").val("");
+  $("#id_tipo_servicios").val("");
   
   $("#servicio").val("");
 
@@ -134,7 +134,7 @@ $('#tablaServicios').on("click", ".EditarServicios", function (event) {
   $("#ModalLabelServicio").text("Editar Servicio");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdServicio").val($(this).data("id"));
+  $("#id_tipo_servicios").val($(this).data("id"));
 
   $("#servicio").val($(this).data("servicio"));
   
@@ -149,7 +149,7 @@ $('#tablaServicios').on("click", ".EditarServicios", function (event) {
   $("#ServiciosModal").modal("show");
 });
 
-$('#tablaServicios').on("click", ".EliminarServicios", function (event) {
+$('#tablaServicios').on("click", ".ToggleServicios", function (event) {
   event.preventDefault();
 
   const id = $(this).data("id");

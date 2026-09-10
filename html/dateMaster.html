@@ -150,7 +150,7 @@
                     </div>
 
 
-                    <input type="hidden" id="createdMarca" name="createdMarca">
+                    <input type="hidden" id="id_marcas" name="id_marcas">
 
 
                     <div class="col-md-6">
@@ -159,7 +159,7 @@
                       <div class="input-group">
                         <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
                         <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej. MON-001"
-                          required onblur="ValidacionUnico('#cd_dispositivo', '#tipo_categoria')">
+                          required>
                       </div>
                     </div>
 
@@ -258,7 +258,7 @@
                     </div>
 
 
-                    <input type="hidden" id="createdModelo" name="createdModelo">
+                    <input type="hidden" id="id_modelo" name="id_modelo">
 
 
                     <div class="col-md-6">
@@ -275,7 +275,7 @@
                       <div class="input-group">
                         <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
                         <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej. MON-001"
-                          required onblur="ValidacionUnico('#modelo')">
+                          required>
                       </div>
                     </div>
 
@@ -373,7 +373,7 @@
                     </div>
 
 
-                    <input type="hidden" id="createdCategoria" name="createdCategoria">
+                    <input type="hidden" id="id_tipo_dispositivo" name="id_tipo_dispositivo">
 
 
                     <div class="col-md-6">
@@ -381,9 +381,8 @@
                           class="text-danger h5">*</span></label>
                       <div class="input-group">
                         <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
-                        <input type="text" class="form-control" id="categoria" name="categoria"
-                          placeholder="Ej. MON-001" required
-                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_categoria')">
+                        <input type="text" class="form-control" id="tipo_dispositivo" name="tipo_dispositivo"
+                          placeholder="Ej. MON-001" required>
                       </div>
                     </div>
 
@@ -482,32 +481,30 @@
                     </div>
 
 
-                    <input type="hidden" id="createdDepartamento" name="createdDepartamento">
+                    <input type="hidden" id="id_dependencia" name="id_dependencia">
 
                     <div class="col-md-6">
                       <label class="form-label fw-semibold small">Código de la Dependencia <span
                           class="text-danger h5">*</span></label>
                       <div class="input-group">
                         <span class="input-group-text text-muted"><i class="bi bi-code"></i></span>
-                        <input type="text" class="form-control" id="codigoDepa" name="codigoDepa"
-                          placeholder="Ej. MON-001" required
-                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_Departamento')">
+                        <input type="text" class="form-control" id="codigo" name="codigo"
+                          placeholder="Ej. MON-001" required>
                       </div>
                     </div>
 
                     <div class="col-md-6">
                       <label class="form-label fw-semibold small">Nombre <span
                           class="text-danger h5">*</span></label>
-                        <input type="text" class="form-control" id="departamento" name="departamento"
-                          placeholder="Ej. MON-001" required
-                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_Departamento')">
+                        <input type="text" class="form-control" id="dependencia" name="dependencia"
+                          placeholder="Ej. MON-001" required>
                     </div>
 
                     <div class="col-md-4">
                       <div class="form-group">
                         <label class="form-label fw-semibold small">Piso<span
                             class="text-danger h5">*</span></label>
-                        <select id="id_piso_depa" name="id_piso_depa" class="form-select" required>
+                        <select id="id_piso" name="id_piso" class="form-select" required>
                           <option value="">Seleccione una opción</option>
                           <option value="1">Sotano</option>
                           <option value="2">Planta Baja</option>
@@ -522,7 +519,7 @@
                       <div class="form-group">
                         <label class="form-label fw-semibold small">Estado <span
                             class="text-danger h5">*</span></label>
-                        <select id="estado" name="estado" class="form-select" required>
+                        <select id="estado_dependencia" name="estado_dependencia" class="form-select" required>
                           <option value="">Seleccione una opción</option>
                         </select>
                       </div>
@@ -623,7 +620,7 @@
                     </div>
 
 
-                    <input type="hidden" id="createdConsumible" name="createdConsumible">
+                    <input type="hidden" id="id_consumible" name="id_consumible">
 
 
                     <div class="col-md-6">
@@ -745,15 +742,14 @@
                     </div>
 
 
-                    <input type="hidden" id="createdServicio" name="createdServicio">
+                    <input type="hidden" id="id_tipo_servicios" name="id_tipo_servicios">
 
 
                     <div class="col-md-6">
                       <label class="form-label fw-semibold small">Nombre <span
                           class="text-danger h5">*</span></label>
                         <input type="text" class="form-control" id="servicio" name="servicio"
-                          placeholder="Ej. MON-001" required
-                          onblur="ValidacionUnico('#cd_dispositivo', '#tipo_TipoConsumible')">
+                          placeholder="Ej. MON-001" required >
               
                     </div>
 

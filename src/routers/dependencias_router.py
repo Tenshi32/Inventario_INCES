@@ -29,6 +29,12 @@ def dependencias(accion):
             print("Datos que llegaron para editar Dependencia:", datos_recibidos)
             answer = ctrl.editar_dependencia(datos_recibidos)
             return jsonify(answer)
+        
+        if accion == 'Toggle':
+            datos_recibidos = request.form.to_dict()
+            print("Datos que llegaron para editar Dependencia:", datos_recibidos)
+            answer = ctrl.toggle_dependencia(datos_recibidos)
+            return jsonify(answer)
 
 
     # DELETE -> Toggle (same behavior)

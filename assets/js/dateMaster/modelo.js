@@ -23,6 +23,8 @@ function consultarModelos() {
 
       lista.forEach(item => {
 
+        icon = (item.estado_modelo == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+
         optionEditar = `
           <a class="btn btn-outline-primary EditarModelos" 
            data-id="${item.id_modelos}"
@@ -31,9 +33,10 @@ function consultarModelos() {
            <i class="bi bi-pencil"></i> 
           </a>
 
-          <a class="btn btn-outline-danger EliminarModelos" 
+          <a class="btn btn-outline-danger ToggleModelos"
+          data-status="${item.estado_modelo}" 
            data-id="${item.id_modelos}" >
-           <i class="bi bi-trash "></i> 
+            ${icon}
           </a>
           `
 
@@ -82,7 +85,6 @@ $("#buttomModelo").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomModelo",
       "formModelos",
       "http://127.0.0.1:5000/modelos/Editar",
       "PUT",
@@ -91,7 +93,6 @@ $("#buttomModelo").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomModelo",
       "formModelos",
       "http://127.0.0.1:5000/modelos/Crear",
       "POST",
@@ -114,9 +115,9 @@ $('#DivModelos').on("click", "#CreateModelos", function (event) {
   $("#ModalLabelModelo").text("Crear Modelo");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdModelo").val("");
+  $("#id_modelo").val("");
   
-  $("#marca").val("");
+  $("#marca_modelo").val("");
   $("#modelo").val("");
 
   // Configurar el botón maestro para creación
@@ -140,7 +141,7 @@ $('#tablaModelos').on("click", ".EditarModelos", function (event) {
   $("#ModalLabelModelo").text("Editar Modelo");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdModelo").val($(this).data("id"));
+  $("#id_modelo").val($(this).data("id"));
 
   $("#modelo").val($(this).data("modelo"));
 
@@ -156,3 +157,14 @@ $('#tablaModelos').on("click", ".EditarModelos", function (event) {
   // Abrir el modal de forma segura
   $("#ModelosModal").modal("show");
 });
+
+$('#tablaModelos').on("click", ".ToggleModelos", function (event) {
+  event.preventDefault();
+
+  const id = $(this).data("id");
+  const statusActual = $(this).data("status");
+  
+  ActionToggleDatosMaestros(statusActual, id, consultarModelos, "modelos", "id_modelos")
+
+});
+

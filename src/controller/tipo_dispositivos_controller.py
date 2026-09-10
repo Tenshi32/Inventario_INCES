@@ -17,13 +17,12 @@ class TipoDispositivosController:
 
     def crear_tipo_dispositivo(self, datos):
 
-   
         valores = [
             datos['tipo_dispositivos'],
-            datos['estado_tipo_dispositivo'],
+            1,
         ]
 
-        retorno = self.modelo.create_switch(valores)
+        retorno = self.modelo.create_tipo_dispositivo(valores)
 
         if retorno is not None:
 
@@ -35,11 +34,10 @@ class TipoDispositivosController:
 
     def editar_tipo_dispositivo(self, datos):
         valores = [
+            datos['tipo_dispositivo'],
             datos['id_tipo_dispositivo'],
-            datos['tipo_dispositivos'],
-            datos['estado_tipo_dispositivo'],
         ]
-        retorno = self.modelo.update_switch(valores)
+        retorno = self.modelo.update_tipo_dispositivo(valores)
 
         if retorno is not None:
 
@@ -49,19 +47,18 @@ class TipoDispositivosController:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
 
-    def eliminar_tipo_dispositivo(self, datos):
+    def toggle_tipo_dispositivo(self, datos):
 
         valores = [
-            datos['id_tipo_dispositivo']
+            datos['id_status'],
+            datos['id_tipo_dispositivo'],
         ]
-
-        retorno = self.modelo.delete_switch(valores)
+        retorno = self.modelo.toggle_status_tipo_dispositivo(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se eliminó el tipo de dispositivo de id: " + datos['id_tipo_dispositivo']}
+            return {"status": True, "mensaje": "se edito el tipo de dispositivo de id: " + datos['id_tipo_dispositivo']}
         
         else:
 
-            return {"status": False, "mensaje": "No se pudo guardar el registro"}
-        
+            return {"status": False, "mensaje": "No se pudo guardar el registro"} 

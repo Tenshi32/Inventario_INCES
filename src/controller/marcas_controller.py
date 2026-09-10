@@ -18,19 +18,9 @@ class MarcasController:
 
     def crear_marca(self, datos):
 
-        if 'id_switches' not in datos:
-            datos['id_switches'] = str(random.randint(10**5, 10**10 - 1))
-
         valores = [
-            datos['id_switches'],
-            datos['cd_switches'],
             datos['marca'],
-            datos['posee_modelo'],
-            datos['modelo'],
-            datos['posee_serial'],
-            datos['serial'],
-            datos['id_piso'],
-            datos['status']
+            1,
         ]
         retorno = self.modelo.create_marca(valores)
 
@@ -42,12 +32,27 @@ class MarcasController:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
 
-    def Edit_marca(self, datos):
+    def editar_marca(self, datos):
         valores = [
             datos['marca'],
             datos['id_marcas']
         ]
         retorno = self.modelo.update_marca(valores)
+
+        if retorno is not None:
+
+            return {"status": True, "mensaje": "se edito la marca de id: " + datos['id_marcas']}
+        
+        else:
+
+            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+
+    def toggle_marca(self, datos):
+        valores = [
+            datos['id_status'],
+            datos['id_marcas']
+        ]
+        retorno = self.modelo.toggle_marca(valores)
 
         if retorno is not None:
 

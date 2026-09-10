@@ -23,15 +23,18 @@ function consultarMarcas() {
 
       lista.forEach(item => {
 
+        icon = (item.estado_marca == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+
         optionEditar = `
           <a class="btn btn-outline-primary EditarMarcas" 
            data-id="${item.id_marcas}"
            data-marca="${item.marca}">
            <i class="bi bi-pencil "></i> 
           </a>
-          <a class="btn btn-outline-danger EliminarMarcas" 
-           data-id="${item.id_marcas}" >
-           <i class="bi bi-trash "></i> 
+          <a class="btn btn-outline-danger ToggleMarcas" 
+           data-status="${item.estado_marca}"
+           data-id="${item.id_marcas}"> 
+           ${icon}
           </a>
           `
 
@@ -76,7 +79,6 @@ $("#buttomMarca").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomMarca",
       "formMarcas",
       "http://127.0.0.1:5000/marcas/Editar",
       "PUT",
@@ -85,7 +87,6 @@ $("#buttomMarca").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomMarca",
       "formMarcas",
       "http://127.0.0.1:5000/marcas/Crear",
       "POST",
@@ -108,7 +109,7 @@ $('#DivMarcas').on("click", "#CreateMarcas", function (event) {
   $("#ModalLabelMarca").text("Crear Marca");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdMarca").val("");
+  $("#id_Marca").val("");
   
   $("#marca").val("");
 
@@ -133,7 +134,7 @@ $('#tablaMarcas').on("click", ".EditarMarcas", function (event) {
   $("#ModalLabelMarca").text("Editar Marca");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdMarca").val($(this).data("id"));
+  $("#id_marcas").val($(this).data("id"));
 
   $("#marca").val($(this).data("marca"));
 
@@ -148,29 +149,12 @@ $('#tablaMarcas').on("click", ".EditarMarcas", function (event) {
   $("#MarcasModal").modal("show");
 });
 
-// =================================
-// 2. EVENTO PARA ELIMINAR LA OPCION
-// =================================
-$('#tablaMarcas').on("click", ".EliminarMarcas", function (event) {
+$('#tablaMarcas').on("click", ".ToggleMarcas", function (event) {
   event.preventDefault();
 
-  const form = document.getElementById("formMarcas");
-  if (form) form.reset();
+  const id = $(this).data("id");
+  const statusActual = $(this).data("status");
+  
+  ActionToggleDatosMaestros(statusActual, id, consultarMarcas, "marcas", "id_marcas")
 
-  $("#ModalLabelMarca").text("Editar Marca");
-
-  // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdMarca").val($(this).data("id"));
-
-  $("#marca").val($(this).data("marca"));
-
-  // Cambiar el botón maestro para edición
-  $("#buttomMarca")
-    .text("Editar Marca")
-    .removeClass("btn-primary")
-    .addClass("btn-warning")
-    .attr("action", "edit");
-
-  // Abrir el modal de forma segura
-  $("#MarcasModal").modal("show");
 });

@@ -21,7 +21,8 @@ class ModelosModel:
     #buscador all de modelos
     def get_all_modelos(self):
         sql = "SELECT * FROM modelos " \
-        "ORDER BY id_modelos DESC"
+        "INNER JOIN marcas ON modelos.id_marca = marcas.id_marcas " \
+        "WHERE modelos.estado_modelo != 3 ORDER BY id_modelos DESC"
         self.cursor.execute(sql)
 
         all_modelos = self.cursor.fetchall()
@@ -35,8 +36,8 @@ class ModelosModel:
         return model_list
 
     def create_modelo(self, datos):
-        sql = "INSERT INTO modelos (id_modelos, modelo) " \
-        "VALUES (%s, %s)"
+        sql = "INSERT INTO modelos (id_marca, modelo, estado_modelo) " \
+        "VALUES (%s, %s, %s)"
 
         try:
             self.cursor.execute(sql, tuple(datos))
@@ -49,7 +50,7 @@ class ModelosModel:
             return None
 
     def update_modelo(self, datos):
-        sql = "UPDATE modelos SET modelo = %s " \
+        sql = "UPDATE modelos SET id_marca = %s, modelo = %s " \
         "WHERE id_modelos = %s"
 
         try: 
@@ -62,10 +63,12 @@ class ModelosModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def delete_modelo(self, id):
-        sql = "DELETE FROM modelos WHERE id_modelos = %s"
+    def toggle_modelo(self, datos):
+        sql = "UPDATE modelos SET estado_modelo = %s " \
+        "WHERE id_modelos = %s"
+
         try: 
-            self.cursor.execute(sql, (id))
+            self.cursor.execute(sql, tuple(datos))
             self.conn.commit()
             return self.cursor.rowcount
 

@@ -26,9 +26,9 @@ class TipoDispositivosModel:
         tipo_dispositivos = self.cursor.fetchall()
         return tipo_dispositivos
 
-    def create_switch(self, datos):
-        sql = "INSERT INTO tipo_dispositivos(id_switches, id_dispositivo, id_tipo_servicio, npuertos, addpuertos, direccion_mac) " \
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    def create_tipo_dispositivo(self, datos):
+        sql = "INSERT INTO tipo_dispositivos(tipo_dispositivo) " \
+        "VALUES (%s)"
       
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -40,9 +40,9 @@ class TipoDispositivosModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def update_switch(self, datos):
-        sql = "UPDATE switches SET cd_switches = %s, id_marca = %s, posee_modelo = %s, id_modelo = %s, posee_serial = %s, serial = %s, id_piso = %s, status = %s " \
-        "WHERE id_switches = %s"
+    def update_tipo_dispositivo(self, datos):
+        sql = "UPDATE tipo_dispositivos SET tipo_dispositivo = %s" \
+        "WHERE id_tipo_dispositivo = %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -54,24 +54,12 @@ class TipoDispositivosModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def toggle_status_switch(self, datos):
-        sql = "UPDATE switches SET status = %s " \
-        "WHERE id_switches = %s"
+    def toggle_status_tipo_dispositivo(self, datos):
+        sql = "UPDATE tipo_dispositivos SET estado_tipo_dispositivo = %s " \
+        "WHERE id_tipo_dispositivo= %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))
-            self.conn.commit()
-            return self.cursor.rowcount
-
-        except Exception as e:
-            self.conn.rollback()
-            print(f"Error inesperado: {e}")
-            return None
-
-    def delete_switch(self, id):
-        sql = "DELETE FROM switches WHERE id_switches = %s"
-        try: 
-            self.cursor.execute(sql, (id))
             self.conn.commit()
             return self.cursor.rowcount
 

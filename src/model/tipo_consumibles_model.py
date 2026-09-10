@@ -12,24 +12,24 @@ class TipoConsumiblesModel:
 
     #buscador tipo_consumible especifico por id
     def get_tipo_consumible(self, id):
-        sql = "SELECT * FROM tipo_consumibles WHERE id_tipo_consumible = %s"
+        sql = "SELECT * FROM tipo_consumible WHERE id_tipo_consumible = %s"
         self.cursor.execute(sql, (id,))
 
         row = self.cursor.fetchone()
         return row
 
-    #buscador all de switches por piso
+    #buscador all de tipo_consumibles por piso
     def get_all_tipo_consumibles(self):
-        sql = "SELECT * FROM tipo_consumibles"
+        sql = "SELECT * FROM tipo_consumible"
         self.cursor.execute(sql)
 
         tipo_consumibles = self.cursor.fetchall()
         return tipo_consumibles
 
 
-    def create_switch(self, datos):
-        sql = "INSERT INTO switches(id_switches, id_dispositivo, id_tipo_servicio, npuertos, addpuertos, direccion_mac) " \
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    def create_tipo_consumibles(self, datos):
+        sql = "INSERT INTO tipo_consumible(consumibles, grupo_consumible) " \
+        "VALUES (%s, %s)"
       
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -41,9 +41,9 @@ class TipoConsumiblesModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def update_switch(self, datos):
-        sql = "UPDATE switches SET cd_switches = %s, id_marca = %s, posee_modelo = %s, id_modelo = %s, posee_serial = %s, serial = %s, id_piso = %s, status = %s " \
-        "WHERE id_switches = %s"
+    def update_tipo_consumibles(self, datos):
+        sql = "UPDATE tipo_consumible SET consumible = %s, grupo_consumible = %s" \
+        "WHERE id_tipo_consumibles = %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -55,24 +55,12 @@ class TipoConsumiblesModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def toggle_status_switch(self, datos):
-        sql = "UPDATE switches SET status = %s " \
-        "WHERE id_switches = %s"
+    def toggle_status_tipo_consumibles(self, datos):
+        sql = "UPDATE tipo_consumible SET estado_consumible = %s " \
+        "WHERE id_tipo_consumibles = %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))
-            self.conn.commit()
-            return self.cursor.rowcount
-
-        except Exception as e:
-            self.conn.rollback()
-            print(f"Error inesperado: {e}")
-            return None
-
-    def delete_switch(self, id):
-        sql = "DELETE FROM switches WHERE id_switches = %s"
-        try: 
-            self.cursor.execute(sql, (id))
             self.conn.commit()
             return self.cursor.rowcount
 

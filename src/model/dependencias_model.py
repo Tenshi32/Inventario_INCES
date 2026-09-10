@@ -30,8 +30,8 @@ class DependenciasModel:
 
 
     def create_dependencia(self, datos):
-        sql = "INSERT INTO dependencia (id_dependencia, nombre, descripcion, activo) " \
-        "VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO dependencia (dependencia, id_estado, id_piso, codigo, activo) " \
+        "VALUES (%s, %s, %s, %s, %s)"
 
         try:
             self.cursor.execute(sql, tuple(datos))
@@ -44,7 +44,7 @@ class DependenciasModel:
             return None
 
     def update_dependencia(self, datos):
-        sql = "UPDATE dependencia SET nombre = %s, descripcion = %s, activo = %s " \
+        sql = "UPDATE dependencia SET dependencia = %s, id_estado = %s, id_piso = %s, codigo = %s" \
         "WHERE id_dependencia = %s"
 
         try: 
@@ -57,10 +57,12 @@ class DependenciasModel:
             print(f"Error inesperado: {e}")
             return None
 
-    def delete_dependencia(self, id):
-        sql = "DELETE FROM dependencia WHERE id_dependencia = %s"
+    def toggle_dependencia(self, datos):
+        sql = "UPDATE dependencia SET activo = %s " \
+        "WHERE id_dependencia = %s"
+
         try: 
-            self.cursor.execute(sql, (id))
+            self.cursor.execute(sql, tuple(datos))
             self.conn.commit()
             return self.cursor.rowcount
 
