@@ -23,6 +23,8 @@ function consultarConsumibles() {
 
       lista.forEach(item => {
 
+        icon = (item.estado_consumible == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+
         optionEditar = `
           <a class="btn btn-outline-primary EditarConsumibles" 
            data-id="${item.id_tipo_consumible}"
@@ -31,9 +33,10 @@ function consultarConsumibles() {
            <i class="bi bi-pencil"></i> 
           </a>
 
-          <a class="btn btn-outline-danger EliminarConsumibles" 
+          <a class="btn btn-outline-danger ToggleConsumibles" 
+           data-status="${item.estado_consumible}"
            data-id="${item.id_tipo_consumible}" >
-           <i class="bi bi-trash "></i> 
+           ${icon}
           </a>
           `
 
@@ -44,7 +47,6 @@ function consultarConsumibles() {
                           </td>
 
                           <td class="text-secondary fw-medium">${item.consumible}</td>
-                          <td class="text-secondary fw-medium">${item.grupo_consumible}</td>
 
                           <td class="pe-4 text-end">
                            
@@ -108,7 +110,7 @@ $('#DivConsumibles').on("click", "#CreateConsumibles", function (event) {
   $("#ModalLabelConsumible").text("Crear Consumible");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#id_consumible").val("");
+  $("#id_tipo_consumible").val("");
   
   $("#consumible").val("");
 
@@ -135,7 +137,7 @@ $('#tablaConsumibles').on("click", ".EditarConsumibles", function (event) {
   $("#ModalLabelConsumible").text("Editar Consumible");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#id_consumible").val($(this).data("id"));
+  $("#id_tipo_consumible").val($(this).data("id"));
 
   $("#consumible").val($(this).data("consumible"));
   
@@ -158,6 +160,6 @@ $('#tablaConsumibles').on("click", ".ToggleConsumibles", function (event) {
   const id = $(this).data("id");
   const statusActual = $(this).data("status");
   
-  ActionToggleDatosMaestros(statusActual, id, consultarConsumibles, "tipo_consumibles", "id_tipo_dispositivo")
+  ActionToggleDatosMaestros(statusActual, id, consultarConsumibles, "tipo_consumibles", "id_tipo_consumible")
 
 });

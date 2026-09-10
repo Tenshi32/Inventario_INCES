@@ -518,11 +518,11 @@ function selectDependiente(selectId, nameTable, nameColumn, idForeignKey1) {
 
       lista.forEach(item => {
         // Manejo de estados (Activo/Inactivo)
-
+        let id_tabla = "id_" + nameTable
         let textoAccion = (item.status !== "Operativo") ? 'Operativo' : 'Inoperativo';
 
         contenido += `
-                <option value="${item.id_ + nameTable}">${item[nameColumn]}</option>
+                <option value="${item[id_tabla]}">${item[nameColumn]}</option>
             `;
       });
 
