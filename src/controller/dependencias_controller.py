@@ -18,20 +18,18 @@ class DependenciasController:
 
     def crear_dependencia(self, datos):
 
-        if 'id_dependencia' not in datos:
-            datos['id_dependencia'] = str(random.randint(10**5, 10**10 - 1))
-
         valores = [
-            datos['id_dependencia'],
-            datos['nombre'],
-            datos['descripcion'],
-            datos['activo'],
+            datos['dependencia'],
+            datos['estado_dependencia'],
+            datos['id_piso'],
+            datos['codigo'],
+            1,
         ]
         retorno = self.modelo.create_dependencia(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['id_dependencia']}
+            return {"status": True, "mensaje": "Registro creado id: " + datos['codigo']}
         
         else:
 
@@ -39,26 +37,29 @@ class DependenciasController:
 
     def editar_dependencia(self, datos):
         valores = [
-            datos['nombre'],
-            datos['descripcion'],
-            datos['activo'],
-            datos['id_dependencia']
+            datos['dependencia'],
+            datos['estado_dependencia'],
+            datos['id_piso'],
+            datos['codigo'],
+            datos['id_dependencia'],
         ]
         retorno = self.modelo.update_dependencia(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito la dependencia de id: " + datos['id_dependencia']}
+            return {"status": True, "mensaje": "se edito la dependencia de id: " + datos['codigo']}
         
         else:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
         
-    def eliminar_dependencia(self, datos):
+    def toggle_dependencia(self, datos):
+
         valores = [
-            datos['id_dependencia']
+            datos['id_status'],
+            datos['id_dependencia'],
         ]
-        retorno = self.modelo.delete_dependencia(valores)
+        retorno = self.modelo.toggle_dependencia(valores)
 
         if retorno is not None:
 

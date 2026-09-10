@@ -17,63 +17,47 @@ class TipoServiciosController:
 
     def crear_tipo_servicio(self, datos):
 
-        datos['id_tipo_servicio'] = str(random.randint(10**5, 10**10 - 1))
+        valores = [
+            #Datos del Switche
+            datos['servicio'],
+            1,
+        ]
 
-        dispositivos = self.controllerDispositivo.crear_dispositivos(datos)
-
-        if dispositivos is not None:
-            valores = [
-                #Datos del Switche
-                datos['id_switches'],
-                datos['id_dispositivo'],
-                datos['tipo_servicio'],
-                datos['n_puertos'],
-                datos['puertos_adicionales'],
-                datos['direccion_mac'],
-            ]
-
-            retorno = self.modelo.create_switch(valores)
+        retorno = self.modelo.create_tipo_servicio(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_dispositivo']}
+            return {"status": True, "mensaje": "Registro creado: " + datos['servicio']}
         
         else:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
     
-    def Toggle_switch(self, datos):
+    def toggle_tipo_servicio(self, datos):
         valores = [
-            datos['status'],
-            datos['id_switches']
+            datos['id_status'],
+            datos['id_tipo_servicios']
         ]
-        retorno = self.modelo.toggle_status_switch(valores)
+        retorno = self.modelo.toggle_status_tipo_servicio(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se cambio el estado al switch de id: " + datos['id_switches']}
+            return {"status": True, "mensaje": "se cambio el estado el tipo de servicio de id: " + datos['id_tipo_servicios']}
         
         else:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
 
-    def Edit_switch(self, datos):
+    def editar_tipo_servicio(self, datos):
         valores = [
-            datos['cd_switches'],
-            datos['marca_producto'],
-            datos['posee_modelo'],
-            datos['modelo_producto'],
-            datos['posee_serial'],
-            datos['serial'],
-            datos['id_piso'],
-            datos['status'],
-            datos['created']
+            datos['servicio'],
+            datos['id_tipo_servicios'],
         ]
-        retorno = self.modelo.update_switch(valores)
+        retorno = self.modelo.update_tipo_servicio(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito el switch de id: " + datos['created']}
+            return {"status": True, "mensaje": "se edito el tipo de servicio de id: " + datos['id_tipo_servicios']}
         
         else:
 

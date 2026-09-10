@@ -285,7 +285,6 @@ $("#formInterno").on("submit", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomMaster",
       "formInterno",
       "http://127.0.0.1:5000/Interno/Editar",
       "PUT",
@@ -297,7 +296,6 @@ $("#formInterno").on("submit", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomMaster",
       "formInterno",
       "http://127.0.0.1:5000/Interno/Crear",
       "POST",

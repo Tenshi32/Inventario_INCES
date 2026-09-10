@@ -23,6 +23,8 @@ function consultarMarcas() {
 
       lista.forEach(item => {
 
+        icon = (item.estado_marca == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+
         optionEditar = `
           <a class="btn btn-outline-primary EditarMarcas" 
            data-id="${item.id_marcas}"
@@ -30,9 +32,9 @@ function consultarMarcas() {
            <i class="bi bi-pencil "></i> 
           </a>
           <a class="btn btn-outline-danger ToggleMarcas" 
-           data-status="3"
-           data-id="${item.id_marcas}">
-           <i class="bi bi-trash "></i> 
+           data-status="${item.estado_marca}"
+           data-id="${item.id_marcas}"> 
+           ${icon}
           </a>
           `
 

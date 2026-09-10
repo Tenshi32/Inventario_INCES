@@ -23,14 +23,20 @@ def modelos(accion):
     elif request.method == 'POST':
         if accion == 'Crear':
             datos_recibidos = request.form.to_dict()
-            print("Datos que llegaron para crear Switch:", datos_recibidos)
-            answer = ctrl.crear_switch(datos_recibidos)
+            print("Datos que llegaron para crear Modelo:", datos_recibidos)
+            answer = ctrl.crear_modelo(datos_recibidos)
             return jsonify(answer)
 
     # PUT -> Editar / Toggle
     elif request.method == 'PUT':
         if accion == 'Editar':
             datos_recibidos = request.form.to_dict()
-            print("Datos que llegaron para editar Switch:", datos_recibidos)
-            answer = ctrl.Edit_switch(datos_recibidos)
+            print("Datos que llegaron para editar Modelo:", datos_recibidos)
+            answer = ctrl.editar_modelo(datos_recibidos)
+            return jsonify(answer)
+        
+        if accion == 'Toggle':
+            datos_recibidos = request.form.to_dict()
+            print("Datos que llegaron para editar Modelo:", datos_recibidos)
+            answer = ctrl.toggle_modelo(datos_recibidos)
             return jsonify(answer)

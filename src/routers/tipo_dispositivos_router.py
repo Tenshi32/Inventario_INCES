@@ -31,9 +31,8 @@ def tipo_dispositivos(accion):
             answer = ctrl.editar_tipo_dispositivo(datos_recibidos)
             return jsonify(answer)
 
-    # DELETE -> Toggle (same behavior)
-    elif request.method == 'DELETE':
-        datos_recibidos = request.form.to_dict()
-        print("Datos que llegaron para toggle Tipo de Dispositivo: ", datos_recibidos)
-        answer = ctrl.eliminar_tipo_dispositivo(datos_recibidos)
-        return jsonify(answer)
+        if accion == 'Toggle':
+            datos_recibidos = request.form.to_dict()
+            print("Datos que llegaron para editar Tipo de Dispositivo: ", datos_recibidos)
+            answer = ctrl.toggle_tipo_dispositivo(datos_recibidos)
+            return jsonify(answer)

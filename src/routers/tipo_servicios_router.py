@@ -37,15 +37,3 @@ def tipo_servicios(accion):
             answer = ctrl.toggle_tipo_servicio(datos_recibidos)
             return jsonify(answer)
             
-        if accion == 'Trash':
-            datos_recibidos = request.form.to_dict()
-            print("Datos que llegaron para Desincorporar Tipo de Servicio:", datos_recibidos)
-            answer = ctrl.trash_tipo_servicio(datos_recibidos)
-            return jsonify(answer)
-
-    # DELETE -> Toggle (same behavior)
-    elif request.method == 'DELETE':
-        datos_recibidos = request.form.to_dict()
-        print("Datos que llegaron para toggle Tipo de Servicio (DELETE):", datos_recibidos)
-        answer = ctrl.toggle_tipo_servicio(datos_recibidos)
-        return jsonify(answer)

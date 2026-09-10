@@ -86,6 +86,8 @@ $(document).ready(function () {
   consultarMarcas()
   consultarModelos()
   consultarDepartamentos()
+  consultarEstados()
+  SelectEstados()
   consultarConsumibles()
   consultarServicios()
   

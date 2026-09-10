@@ -244,7 +244,6 @@ $("#formUsuario").on("submit", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomMaster",
       "formUsuario",
       "http://127.0.0.1:5000/Usuario/Editar",
       "PUT",
@@ -256,7 +255,6 @@ $("#formUsuario").on("submit", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomMaster",
       "formUsuario",
       "http://127.0.0.1:5000/Usuario/Crear",
       "POST",

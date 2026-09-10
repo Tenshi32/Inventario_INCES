@@ -7,7 +7,6 @@ class ModelosController:
         # Instantiate the model here (lazy DB connection inside model)
         self.modelo = ModelosModel()
 
-
     def all_modelos(self):
         return self.modelo.get_all_modelos()
 
@@ -21,40 +20,47 @@ class ModelosController:
 
     def crear_modelo(self, datos):
 
-        if 'id_switches' not in datos:
-            datos['id_switches'] = str(random.randint(10**5, 10**10 - 1))
-
         valores = [
-            datos['id_switches'],
-            datos['cd_switches'],
-            datos['marca'],
-            datos['posee_modelo'],
+            datos['marca_modelo'],
             datos['modelo'],
-            datos['posee_serial'],
-            datos['serial'],
-            datos['id_piso'],
-            datos['status']
+            1,
         ]
-        retorno = self.modelo.create_marca(valores)
+        retorno = self.modelo.create_modelo(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_switches']}
+            return {"status": True, "mensaje": "Registro creado con nombre: " + datos['modelo']}
         
         else:
 
             return {"status": False, "mensaje": "No se pudo guardar el registro"}
 
-    def Edit_marca(self, datos):
+    def editar_modelo(self, datos):
         valores = [
-            datos['marca'],
-            datos['id_marcas']
+            datos['marca_modelo'],
+            datos['modelo'],
+            datos['id_modelo']
         ]
-        retorno = self.modelo.update_marca(valores)
+        retorno = self.modelo.update_modelo(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito la marca de id: " + datos['id_marcas']}
+            return {"status": True, "mensaje": "se edito el modelo de id: " + datos['id_modelo']}
+        
+        else:
+
+            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+        
+    def toggle_modelo(self, datos):
+        valores = [
+            datos['id_status'],
+            datos['id_modelos']
+        ]
+        retorno = self.modelo.toggle_modelo(valores)
+
+        if retorno is not None:
+
+            return {"status": True, "mensaje": "se edito el modelo de id: " + datos['id_modelos']}
         
         else:
 

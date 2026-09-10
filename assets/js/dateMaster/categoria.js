@@ -21,18 +21,22 @@ function consultarCategorias() {
         $('#MyTableCategorias').DataTable().destroy();
       }
 
+      
       lista.forEach(item => {
+        
+        icon = (item.estado_tipo_dispositivo == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
         optionEditar = `
           <a class="btn btn-outline-primary EditarCategorias" 
            data-id="${item.id_tipo_dispositivo}"
-           data-categoria="${item.tipo_dispositivo}" >
+           data-tipo_dispositivo="${item.tipo_dispositivo}" >
            <i class="bi bi-pencil"></i> 
           </a>
 
-          <a class="btn btn-outline-danger EliminarCategorias" 
-           data-id="${item.id_tipo_dispositivo}" >
-           <i class="bi bi-trash "></i> 
+          <a class="btn btn-outline-danger ToggleCategorias" 
+           data-status="${item.estado_tipo_dispositivo}"
+           data-id="${item.id_tipo_dispositivo}">
+           ${icon}
           </a>
           `
 
@@ -77,7 +81,6 @@ $("#buttomCategoria").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomCategoria",
       "formCategorias",
       "http://127.0.0.1:5000/tipo_dispositivos/Editar",
       "PUT",
@@ -86,7 +89,6 @@ $("#buttomCategoria").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomCategoria",
       "formCategorias",
       "http://127.0.0.1:5000/tipo_dispositivos/Crear",
       "POST",
@@ -109,9 +111,9 @@ $('#DivCategorias').on("click", "#CreateCategorias", function (event) {
   $("#ModalLabelCategoria").text("Crear Categoria");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdCategoria").val("");
+  $("#id_tipo_dispositivo").val("");
   
-  $("#categoria").val("");
+  $("#tipo_dispositivo").val("");
 
   // Configurar el botón maestro para creación
   $("#buttomCategoria")
@@ -134,9 +136,9 @@ $('#tablaCategorias').on("click", ".EditarCategorias", function (event) {
   $("#ModalLabelCategoria").text("Editar Categoria");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdCategoria").val($(this).data("id"));
+  $("#id_tipo_dispositivo").val($(this).data("id"));
 
-  $("#categoria").val($(this).data("categoria"));
+  $("#tipo_dispositivo").val($(this).data("tipo_dispositivo"));
 
 
   // Cambiar el botón maestro para edición
@@ -149,3 +151,16 @@ $('#tablaCategorias').on("click", ".EditarCategorias", function (event) {
   // Abrir el modal de forma segura
   $("#CategoriasModal").modal("show");
 });
+
+
+$('#tablaCategorias').on("click", ".ToggleCategorias", function (event) {
+  event.preventDefault();
+
+  const id = $(this).data("id");
+  const statusActual = $(this).data("status");
+  
+  ActionToggleDatosMaestros(statusActual, id, consultarCategorias, "tipo_dispositivos", "id_tipo_dispositivo")
+
+});
+
+

@@ -22,6 +22,8 @@ function consultarDepartamentos() {
       }
 
       lista.forEach(item => {
+        
+        icon = (item.activo == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
         optionEditar = `
           <a class="btn btn-outline-primary EditarDepartamentos" 
@@ -29,13 +31,14 @@ function consultarDepartamentos() {
            data-codigo="${item.codigo}"
            data-id_piso="${item.id_piso}"
            data-id_estado="${item.id_estado}"
-           data-departamento="${item.dependencia}" >
+           data-dependencia="${item.dependencia}" >
            <i class="bi bi-pencil"></i> 
           </a>
 
           <a class="btn btn-outline-danger ToggleDepartamentos" 
+           data-status="${item.activo}" 
            data-id="${item.id_dependencia}" >
-           <i class="bi bi-trash "></i> 
+           ${icon} 
           </a>
           `
 
@@ -81,7 +84,6 @@ $("#buttomDepartamento").on("click", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomDepartamento",
       "formDepartamentos",
       "http://127.0.0.1:5000/dependencia/Editar",
       "PUT",
@@ -90,7 +92,6 @@ $("#buttomDepartamento").on("click", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomDepartamento",
       "formDepartamentos",
       "http://127.0.0.1:5000/dependencia/Crear",
       "POST",
@@ -113,13 +114,15 @@ $('#DivDepartamentos').on("click", "#CreateDepartamentos", function (event) {
   $("#ModalLabelDepartamento").text("Crear Departamento");
 
   // Forzar vaciado de inputs clave e hidden
-  $("#createdDepartamento").val("");
+  $("#id_dependencia").val("");
   
-  $("#codigoDepa").val("");
+  $("#codigo").val("");
 
-  $("#departamento").val("");
+  $("#dependencia").val("");
 
-  $("#id_piso_depa").val("");
+  $("#id_piso").val("");
+
+  $("#estado_dependencia").val("");
 
   // Configurar el botón maestro para creación
   $("#buttomDepartamento")
@@ -129,6 +132,47 @@ $('#DivDepartamentos').on("click", "#CreateDepartamentos", function (event) {
 
   $("#DepartamentosModal").modal("show");
 });
+
+function consultarEstados() {
+
+  fetch("http://127.0.0.1:5000/estados/All", {
+    method: "GET",
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Error en la red");
+      return response.json();
+    })
+    .then(data => {
+
+      // 3. Guardar en sessionStorage transformando el JSON a string
+      sessionStorage.setItem("estadosData", JSON.stringify(data));
+
+    })
+    .catch(error => {
+      console.error("Hubo un problema con la consulta:", error);
+    });
+}
+
+function SelectEstados() {
+
+  const datosGuardados = sessionStorage.getItem("estadosData")
+
+  const data = JSON.parse(datosGuardados);
+
+  const lista = Object.values(data);
+  let contenido = ``;
+
+  lista.forEach(item => {
+
+    contenido += `
+      <option value="${item.id_estado}">${item.estado}</option>
+    `;
+
+  });
+
+  document.getElementById("estado_dependencia").innerHTML = contenido;
+
+}
 
 // ==========================================
 // 2. EVENTO PARA LLENAR EL FORMULARIO (EDITAR)
@@ -142,13 +186,15 @@ $('#tablaDepartamentos').on("click", ".EditarDepartamentos", function (event) {
   $("#ModalLabelDepartamento").text("Editar Departamento");
 
   // Llenar campos con los valores correspondientes de los data-attributes
-  $("#createdDepartamento").val($(this).data("id"));
+  $("#id_dependencia").val($(this).data("id"));
 
-  $("#codigoDepa").val($(this).data("codigo"));
+  $("#codigo").val($(this).data("codigo"));
 
-  $("#departamento").val($(this).data("departamento"));
+  $("#dependencia").val($(this).data("dependencia"));
 
-  $("#id_piso_depa").val($(this).data("id_piso"));
+  $("#id_piso").val($(this).data("id_piso"));
+
+  $("#estado_dependencia").val($(this).data("id_estado"));
 
   // Cambiar el botón maestro para edición
   $("#buttomDepartamento")
