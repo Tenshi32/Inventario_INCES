@@ -89,6 +89,7 @@
     </section>
 
     <section class="card border-0 shadow-sm mb-4 p-4">
+      <p class="text-muted"><i>Debe registrar a un empleado para poder agregarlo como usuario del sistema de inventario</i></p>
       <div
         class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
@@ -100,7 +101,10 @@
             <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
           </div>
           <button class="btn btn-primary px-4 text-nowrap" id="openCreate">
-            <i class="bi bi-plus-lg"></i> Nuevo Usuario
+            <i class="bi bi-plus-lg"></i> Nuevo Empleado
+          </button>
+          <button class="btn btn-primary px-4 text-nowrap" id="openRecreate">
+            <i class="bi bi-plus-lg"></i> Agregar Usuario
           </button>
         </div>
       </div>
@@ -153,7 +157,7 @@
                   <label class="form-label fw-semibold small">Cedula <span class="text-danger h5">*</span></label>
                   <div class="input-group">
                     <span class="input-group-text text-muted">V-</span>
-                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Ej. 29774456"
+                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Ej. 314848000"
                       required onblur="ValidacionUnicoUsuario('#cedula')">
                   </div>
                 </div>
@@ -161,7 +165,7 @@
 
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label fw-semibold small">Estado del Activo <span
+                  <label class="form-label fw-semibold small">Estado del Empleado <span
                       class="text-danger h5">*</span></label>
                   <select id="status" name="status" class="form-select" required>
                     <option value="1">Activo</option>
@@ -173,14 +177,14 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Nombre <span class="text-danger h5">*</span></label>
-                  <input class="form-control" id="nombre" name="nombre" placeholder="Ej. SN123456">
+                  <input class="form-control" id="nombre" name="nombre" placeholder="Ej. Juan">
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Apellido <span class="text-danger h5">*</span></label>
-                  <input class="form-control" id="apellido" name="apellido" placeholder="Ej. SN123456">
+                  <input class="form-control" id="apellido" name="apellido" placeholder="Ej. Gonzales">
                 </div>
               </div>
 
@@ -198,14 +202,14 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Correo <span class="text-danger h5">*</span></label>
-                  <input class="form-control" id="correo" name="correo" placeholder="Ej. SN123456">
+                  <input class="form-control" id="correo" name="correo" placeholder="Ej. ejemplo@gmail.com">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Telefono <span class="text-danger h5">*</span></label>
-                  <input class="form-control" id="telefono" name="telefono" placeholder="Ej. SN123456"
+                  <input class="form-control" id="telefono" name="telefono" placeholder="Ej. 0412-0000000"
                     onblur="ValidacionUnicoUsuario('#telefono')">
                 </div>
               </div>
@@ -213,6 +217,75 @@
               <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
                 <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary px-4" id="buttomMaster">Guardar Mouse</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="InternoModal" tabindex="-1" aria-labelledby="InternoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-bottom px-4">
+            <div>
+              <h5 class="modal-title fw-bold" id="ModalInterLabel">Crear Usuario (interno)</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="formInterno" class="row g-3">
+
+              <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                  <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                  (*) son obligatorios
+                </span>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Cedula <span class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text text-muted">V-</span>
+                    <input type="text" class="form-control" id="cedulaInterno" name="cedulaInterno" placeholder="Ej. 314848000"
+                      required onblur="ValidacionUnicoInterno('#cedulaInterno')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Nombre</label>
+                  <input class="form-control" id="nombreInterno" name="nombreInterno" disabled>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Apellido</label>
+                  <input class="form-control" id="apellidoInterno" name="apellidoInterno" disabled>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Contraseña <span class="text-danger h5">*</span></label>
+                  <input type="password" class="form-control" id="password" name="password">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Rol Interno <span class="text-danger h5">*</span></label>
+                  <select class="form-select" id="rol_in" name="rol_in">
+                    <option value="1">Técnico</option>
+                    <option value="2">Administrador</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary px-4" id="buttomInterno">Agregar Usuario</button>
               </div>
             </form>
           </div>

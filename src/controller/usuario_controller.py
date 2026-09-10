@@ -61,7 +61,7 @@ class UsuariosController:
         retorno = self.modelo.update_usuario(valores)
 
         if retorno is not None:
-            return {"status": True, "mensaje": f"Usuario editado con la cedula: V-{datos['cedula ']}"}
+            return {"status": True, "mensaje": f"Usuario editado con la cedula: V-{datos['cedula']}"}
         else:
             return {"status": False, "mensaje": "No se pudo editar el usuario"}
 

@@ -18,7 +18,7 @@ class UsuarioModel:
         return row
  
     def get_all_usuarios(self):
-        sql = "SELECT * FROM usuarios"
+        sql = "SELECT * FROM usuarios ORDER BY fecha_creacion DESC"
         self.cursor.execute(sql)
 
         all_usuarios = self.cursor.fetchall()

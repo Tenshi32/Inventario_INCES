@@ -137,6 +137,40 @@ function ValidacionUnicoUsuario(id_campo) {
   }
 
 }
+function ValidacionUnicoInterno(id_campo) {
+
+  const valorCampo = $(id_campo).val();
+
+  if (valorCampo.length >= 3) {
+
+    const url = "http://localhost:5000/Usuario/Existencia?valorBuscar=" + valorCampo ;
+
+    fetch(url, {
+      method: "GET",
+    })
+
+      .then(response => {
+        if (!response.ok) throw new Error("Error en la red");
+        return response.json();
+      })
+
+      .then(data => {
+        const lista = Object.values(data);
+          const name = lista[5];
+          const ape = lista[0];
+          console.log(lista);
+          $("#nombreInterno").val(name)
+          $("#apellidoInterno").val(ape)
+        
+      })
+
+      .catch(error => {
+        initializeToast("Hubo un problema con la consulta:" + error, "danger");
+        console.error("Hubo un problema con la consulta:", error);
+      });
+  }
+
+}
 
 
 $(document).ready(function () {
@@ -227,6 +261,44 @@ $(document).ready(function () {
       $(element).removeClass('is-invalid');
     }
   });
+  $("#formInterno").validate({
+    rules: {
+      //Reglas de validacion para el "Dispositivo"
+      cedulaInterno: {
+        minlength: 5,
+        maxlength: 13
+      },
+
+      password: {
+        required: true,
+        
+      },
+    },
+
+    messages: {
+      cedulaInterno: {
+        minlength: "Indique la cédula del empleado",
+        maxlength: "Indique la cédula del empleado",
+      },
+
+      password: {
+        required: "La contraseña debe poserr una mayúscula, minúscula y un número"
+      },
+
+    },
+
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
 
   consultarUsuario()
 
@@ -244,7 +316,6 @@ $("#formUsuario").on("submit", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomMaster",
       "formUsuario",
       "http://127.0.0.1:5000/Usuario/Editar",
       "PUT",
@@ -256,7 +327,6 @@ $("#formUsuario").on("submit", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomMaster",
       "formUsuario",
       "http://127.0.0.1:5000/Usuario/Crear",
       "POST",
@@ -275,7 +345,7 @@ $('#DivUsuario').on("click", "#openCreate", function (event) {
   const form = document.getElementById("formUsuario");
   if (form) form.reset();
 
-  $("#ModalLabel").text("Crear Usuario");
+  $("#ModalLabel").text("Crear Empleado");
 
   // Forzar vaciado de inputs clave e hidden
   $("#created").val("");
@@ -288,7 +358,7 @@ $('#DivUsuario').on("click", "#openCreate", function (event) {
 
   // Configurar el botón maestro para creación
   $("#buttomMaster")
-    .text("Guardar Usuario")
+    .text("Guardar Empleado")
     .removeClass("btn-warning")
     .addClass("btn-primary").attr("action", "create");
 
@@ -304,7 +374,7 @@ $('#tablaUsuario').on("click", ".Editar", function (event) {
   const form = document.getElementById("formUsuario");
   if (form) form.reset();
 
-  $("#ModalLabel").text("Editar Usuario");
+  $("#ModalLabel").text("Editar Empleado");
 
   // Llenar campos con los valores correspondientes de los data-attributes
   $("#created").val($(this).data("id"));
@@ -325,6 +395,24 @@ $('#tablaUsuario').on("click", ".Editar", function (event) {
 
   // Abrir el modal de forma segura
   $("#UsuarioModal").modal("show");
+});
+// ==========================================
+// 3. EVENTO PARA ABRIR FORMULARIO CREAR USUARIO (INTERNO)
+// ==========================================
+$('#DivUsuario').on("click", "#openRecreate", function (event) {
+  // Resetear el formulario completamente
+  const form = document.getElementById("formUsuario");
+  if (form) form.reset();
+
+  $("#ModalInterLabel").text("Crear Usuario (interno)");
+
+  // Configurar el botón maestro para creación
+  $("#buttomInterno")
+    .text("Agregar Usuario")
+    .removeClass("btn-warning")
+    .addClass("btn-primary").attr("action", "create");
+
+  $("#InternoModal").modal("show");
 });
 
 // Evento para Operativo/Inoperativo o Desincorporar departamento
@@ -349,3 +437,4 @@ $('#tablaUsuario').on("click", ".Toggle", function (event) {
   );
 
 })
+
