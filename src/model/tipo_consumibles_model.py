@@ -28,8 +28,8 @@ class TipoConsumiblesModel:
 
 
     def create_tipo_consumibles(self, datos):
-        sql = "INSERT INTO tipo_consumible(consumibles, grupo_consumible) " \
-        "VALUES (%s, %s)"
+        sql = "INSERT INTO tipo_consumible(consumible, grupo_consumible, estado_consumible) " \
+        "VALUES (%s, %s, %s)"
       
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -43,7 +43,7 @@ class TipoConsumiblesModel:
 
     def update_tipo_consumibles(self, datos):
         sql = "UPDATE tipo_consumible SET consumible = %s, grupo_consumible = %s" \
-        "WHERE id_tipo_consumibles = %s"
+        "WHERE id_tipo_consumible = %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -57,7 +57,7 @@ class TipoConsumiblesModel:
 
     def toggle_status_tipo_consumibles(self, datos):
         sql = "UPDATE tipo_consumible SET estado_consumible = %s " \
-        "WHERE id_tipo_consumibles = %s"
+        "WHERE id_tipo_consumible = %s"
 
         try: 
             self.cursor.execute(sql, tuple(datos))

@@ -168,7 +168,7 @@ function SelectTipoDispositivos() {
 }
 
 function FiltroTipoDispositivos() {
-  
+
   const datosGuardados = sessionStorage.getItem("tipoDispositivosData")
 
   const data = JSON.parse(datosGuardados);
@@ -178,16 +178,20 @@ function FiltroTipoDispositivos() {
 
   lista.forEach(item => {
 
-    if (item.tipo_dispositivo === "S/Categoria") {
-      contenido += `
-        <option value="" selected>${item.tipo_dispositivo}</option>
-      `;
+    if (item.estado_tipo_dispositivo == "1") {
 
-    } else {
+      if (item.tipo_dispositivo === "S/Categoria") {
+        contenido += `
+          <option value="" selected>${item.tipo_dispositivo}</option>
+        `;
 
-      contenido += `
-        <option value="${item.tipo_dispositivo}">${item.tipo_dispositivo}</option>
-      `;
+      } else {
+
+        contenido += `
+          <option value="${item.tipo_dispositivo}">${item.tipo_dispositivo}</option>
+        `;
+
+      }
 
     }
 
@@ -375,8 +379,10 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", function (event) {
   // Modelo
   const poseeModelo = $(this).data("posee_modelo");
   $("#posee_modelo").val(poseeModelo).trigger("change");
-  $("#modelo_producto").val($(this).data("modelo"));
-
+  if (poseeModelo === "Si") {
+    selectDependiente("modelo_producto", "modelos", "modelo", id_marca)
+    $("#modelo_producto").val($(this).data("modelo"));
+  }
   // Serial
   const poseeSerial = $(this).data("posee_serial");
   $("#posee_serial").val(poseeSerial).trigger("change");

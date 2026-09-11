@@ -27,7 +27,7 @@ class TipoConsumiblesController:
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_dispositivo']}
+            return {"status": True, "mensaje": "Registro creado : " + datos['consumible']}
         
         else:
 
@@ -35,7 +35,7 @@ class TipoConsumiblesController:
     
     def toggle_tipo_consumible(self, datos):
         valores = [
-            datos['status'],
+            datos['id_status'],
             datos['id_tipo_consumible']
         ]
         retorno = self.modelo.toggle_status_tipo_consumibles(valores)
