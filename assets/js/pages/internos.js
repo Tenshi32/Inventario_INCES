@@ -280,7 +280,7 @@ $("#formInterno").on("submit", function (event) {
   event.preventDefault(); // Evita que la página se recargue
 
   // Obtenemos la acción actual del botón maestro
-  const accion = $("#buttomMaster").attr("action");
+  const accion = $("#buttomInterno").attr("action");
 
   if (accion === "edit") {
     // Acción para EDITAR

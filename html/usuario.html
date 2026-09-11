@@ -4,9 +4,9 @@
       <div class="page-heading-copy">
         <span class="page-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
         <div>
-          <p class="eyebrow mb-1">Management</p>
-          <h1 class="h3 mb-1">Users</h1>
-          <p class="text-muted mb-0">Review accounts, roles, account status, and team ownership.</p>
+          <p class="eyebrow mb-1">Gestión</p>
+          <h1 class="h3 mb-1">Usuarios</h1>
+          <p class="text-muted mb-0">Cuentas, roles, estatus y datos sobre empleados.</p>
         </div>
       </div>
       <div class="heading-actions">
@@ -89,11 +89,13 @@
     </section>
 
     <section class="card border-0 shadow-sm mb-4 p-4">
-      <p class="text-muted"><i>Debe registrar a un empleado para poder agregarlo como usuario del sistema de inventario</i></p>
+      <p class="text-muted"><i>Debe registrar a un empleado para poder agregarlo como usuario del sistema de
+          inventario</i></p>
       <div
         class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
-        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivUsuario">
+        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto"
+          id="DivUsuario">
           <div class="position-relative flex-grow-1">
 
             <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
@@ -208,7 +210,7 @@
 
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label fw-semibold small">Telefono <span class="text-danger h5">*</span></label>
+                  <label class="form-label fw-semibold small">Telefono</label>
                   <input class="form-control" id="telefono" name="telefono" placeholder="Ej. 0412-0000000"
                     onblur="ValidacionUnicoUsuario('#telefono')">
                 </div>
@@ -248,8 +250,8 @@
                   <label class="form-label fw-semibold small">Cedula <span class="text-danger h5">*</span></label>
                   <div class="input-group">
                     <span class="input-group-text text-muted">V-</span>
-                    <input type="text" class="form-control" id="cedulaInterno" name="cedulaInterno" placeholder="Ej. 314848000"
-                      required onblur="ValidacionUnicoInterno('#cedulaInterno')">
+                    <input type="number" class="form-control" id="cedulaInterno" name="cedulaInterno"
+                      placeholder="Ej. 314848000" required onblur="ValidacionUnicoInterno('#cedulaInterno')">
                   </div>
                 </div>
               </div>
@@ -269,10 +271,33 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label fw-semibold small">Contraseña <span class="text-danger h5">*</span></label>
-                  <input type="password" class="form-control" id="password" name="password">
+                  <label class="form-label fw-semibold small" for="password">Contraseña <span
+                      class="text-danger h5">*</span></label>
+                  <div class="position-relative">
+                    <input type="password" class="form-control pe-5" id="password" name="password"
+                      placeholder="••••••••">
+                    <button type="button" id="togglePassword"
+                      class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none pe-3"
+                      style="border: none; background: transparent;">
+                      <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
+              <script>
+                document.getElementById('togglePassword').addEventListener('click', function () {
+                  const passwordInput = document.getElementById('password');
+                  const eyeIcon = document.getElementById('eyeIcon');
+
+                  // Cambiar el tipo de input
+                  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                  passwordInput.setAttribute('type', type);
+
+                  // Cambiar el ícono del ojo (bi-eye / bi-eye-slash)
+                  eyeIcon.classList.toggle('bi-eye');
+                  eyeIcon.classList.toggle('bi-eye-slash');
+                });
+              </script>
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Rol Interno <span class="text-danger h5">*</span></label>

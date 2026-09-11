@@ -151,7 +151,10 @@ function ValidacionUnicoInterno(id_campo) {
 
       .then(response => {
         if (!response.ok) throw new Error("Error en la red");
+        $("#apellidoInterno").val("")
+        $("#nombreInterno").val("")
         return response.json();
+
       })
 
       .then(data => {
@@ -165,7 +168,7 @@ function ValidacionUnicoInterno(id_campo) {
       })
 
       .catch(error => {
-        initializeToast("Hubo un problema con la consulta:" + error, "danger");
+        initializeToast("Hubo un problema con la consulta o el empleado no está registrado", "danger");
         console.error("Hubo un problema con la consulta:", error);
       });
   }
@@ -184,68 +187,67 @@ $(document).ready(function () {
   $("#formUsuario").validate({
     rules: {
       //Reglas de validacion para el "Dispositivo"
-      cd_dispositivo: {
-        minlength: 3,
-        maxlength: 20
+      cedula: {
+        minlength: 5,
+        maxlength: 10,
+        pattern: /^[0-9]{5,10}$/
       },
 
       status: {
         required: true,
       },
 
-      posee_marca: {
+      nombre: {
+        required: true,
+        pattern: /^[a-zA-ZÀ-ý\s]{1,45}$/,
+      },
+      apellido: {
+        required: true,
+        pattern: /^[a-zA-ZÀ-ý\s]{1,45}$/,
+      },
+      cargo: {
         required: true,
       },
-      posee_modelo: {
-        required: true,
-      },
-      posee_serial: {
-        required: true,
-      },
-
-      serial_producto: {
+      telefono: {
         minlength: 6,
+        pattern: /^(?:\d{4}-?\d{7}|\d{11})?$/
       },
-
-      //Reglas de validacion para el CPU
-
-
+      correo: {
+        required: true,
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      }
     },
 
     messages: {
-      cd_dispositivo: {
-        minlength: "El código debe tener al menos 3 caracteres",
-        maxlength: "El código no puede exceder 20 caracteres",
+      cedula: {
+        required: "La cédula es obligatoria",
+        minlength: "La cédula debe tener al menos 5 caracteres",
+        maxlength: "La cédula no puede exceder 10 caracteres",
+        pattern: "La cédula debe contener solo números",
       },
 
       status: {
-        required: "El estado es obligatorio"
+        required: "El estado del empleado es obligatorio"
       },
 
-      tipo_mouse: {
-        required: "El tipo de Mouse es obligatorio"
+      nombre: {
+        required: "El nombre es obligatorio"
       },
 
-      posee_marca: {
-        required: "Indique si posee o no marca",
+      apellido: {
+        required: "El apellido es obligatorio"
       },
-      posee_modelo: {
-        required: "Indique si posee o no modelo",
+      cargo: {
+        required: "El cargo es obligatorio"
       },
-      posee_serial: {
-        required: "Indique si posee o no número de serie",
+      telefono: {
+        minlength: "Indique el teléfono del empelado si lo posee",
+        pattern: "El teléfono debe contener solo números y puede incluir un guion"
       },
-
-      marca_producto: {
-        required: "La marca es obligatoria",
-      },
-      modelo_producto: {
-        required: "El modelo es obligatorio",
-      },
-      serial_producto: {
-        required: "El número de serie es obligatorio",
-        minlength: "El número de serie debe tener al menos 6 caracteres",
-      },
+      correo: {
+        required: "El correo debe tener un formato válido (ejemplo@gmail.com)",
+        pattern: "El correo debe tener un formato válido (ejemplo@gmail.com)"
+      }
 
     },
 
@@ -266,12 +268,15 @@ $(document).ready(function () {
       //Reglas de validacion para el "Dispositivo"
       cedulaInterno: {
         minlength: 5,
-        maxlength: 13
+        maxlength: 13,
+        pattern: /^[0-9]{5,13}$/,
       },
 
       password: {
         required: true,
-        
+        minlength: 6,
+        maxlength: 25,
+        pattern: /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d$@$!%*?&#.$($)$-$_]{6,}$/
       },
     },
 
@@ -279,10 +284,15 @@ $(document).ready(function () {
       cedulaInterno: {
         minlength: "Indique la cédula del empleado",
         maxlength: "Indique la cédula del empleado",
+        pattern: "Indique la cédula del empleado en números",
+        required: "Indique la cédula del empleado"
       },
 
       password: {
-        required: "La contraseña debe poserr una mayúscula, minúscula y un número"
+        required: "La contraseña debe poseer letras y números, mínimo 6 caracteres",
+        minlength: "La contraseña debe tener al menos 6 caracteres",
+        maxlength: "La contraseña no puede exceder 25 caracteres",
+        pattern: "La contraseña debe poseer letras y números, mínimo 6 caracteres"
       },
 
     },
