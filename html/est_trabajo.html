@@ -1,0 +1,403 @@
+<main class="dashboard-content flex-grow-1 w-100">
+  <div class="container-fluid px-3 px-lg-4 py-4">
+
+    <div class="page-heading mb-4">
+      <div class="page-heading-copy d-flex align-items-center gap-3"> <span class="page-icon fs-3"><i
+            class="bi bi-pc-display" aria-hidden="true"></i></span>
+        <div>
+          <p class="eyebrow mb-1 text-uppercase text-muted fw-semibold small">Inventario</p>
+          <h1 class="h3 mb-1">Estaciones de Trabajo</h1>
+
+        </div>
+      </div>
+    </div>
+
+    <section class="row g-4 mb-4">
+      <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-3 p-xl-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small fw-medium text-uppercase mb-1">Total</p>
+              <h2 class="fw-bold my-1" id="totalDevice">0</h2>
+              <p class="text-muted small mb-0"><i class="bi bi-layers me-1"></i> Estaciones de Trabajo registrados</p>
+            </div>
+            <div
+              class="rounded-circle bg-primary-subtle text-primary p-3 d-flex align-items-center justify-content-center"
+              style="width: 52px; height: 52px;">
+              <i class="bi bi-pc-display fs-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operativos -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-3 p-xl-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small fw-medium text-uppercase mb-1">Operativos</p>
+              <h2 class="fw-bold my-1 text-success" id="operativoCount">0</h2>
+              <p class="text-muted small mb-0"><i class="bi bi-check-circle me-1"></i> Listos para uso</p>
+            </div>
+            <div
+              class="rounded-circle bg-success-subtle text-success p-3 d-flex align-items-center justify-content-center"
+              style="width: 52px; height: 52px;">
+              <i class="bi bi-check2-square fs-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inoperativos -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-3 p-xl-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small fw-medium text-uppercase mb-1">Inoperativos</p>
+              <h2 class="fw-bold my-1 text-warning" id="inoperativoCount">0</h2>
+              <p class="text-muted small mb-0"><i class="bi bi-exclamation-triangle me-1"></i> Necesitan revisión</p>
+            </div>
+            <div
+              class="rounded-circle bg-warning-subtle text-warning p-3 d-flex align-items-center justify-content-center"
+              style="width: 52px; height: 52px;">
+              <i class="bi bi-exclamation-diamond fs-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Último Registro -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body p-3 p-xl-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small fw-medium text-uppercase mb-1">Último Registro</p>
+              <h2 class="fw-bold my-1" id="lastId">-</h2>
+              <p class="text-muted small mb-0"><i class="bi bi-clock-history me-1"></i> Código más reciente</p>
+            </div>
+            <div class="rounded-circle bg-info-subtle text-info p-3 d-flex align-items-center justify-content-center"
+              style="width: 52px; height: 52px;">
+              <i class="bi bi-tag fs-4"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="card border-0 shadow-sm mb-4 p-4">
+      <div
+        class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivEstTrabajo">
+          <div class="position-relative flex-grow-1">
+
+            <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
+
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+          </div>
+          <button class="btn btn-primary px-4 text-nowrap" id="openCreate">
+            <i class="bi bi-plus-lg"></i> Nueva Estacion de Trabajo
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table id="MyTable" class="table table-hover align-middle mb-0 text-nowrap">
+            <thead class="border-bottom border-gray-200">
+              <tr class="text-uppercase fs-7 fw-bold text-muted">
+                <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
+                <th class="py-3">Marca</th>
+                <th class="py-3">Modelo</th>
+                <th class="py-3">Serial</th>
+                <th class="py-3">Piso</th>
+                <th class="py-3 text-center">Status</th>
+                <th class="pe-4 py-3 text-end" style="width: 80px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaEstTrabajo" class="border-top-0">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="modal fade" id="EstTrabajoModal" tabindex="-1" aria-labelledby="EstTrabajoModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-bottom px-4">
+            <div>
+              <h5 class="modal-title fw-bold" id="ModalLabel"></h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="formEstTrabajo" class="row g-3">
+
+              <div class="col-12 d-flex justify-content-between align-items-center mb-0">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+                  <i class="bi bi-exclamation-circle me-1"></i> Los campos con
+                  (*) son obligatorios
+                </span>
+              </div>
+
+              <input type="hidden" id="created" name="created">
+              <input type="hidden" id="tipo_categoria" name="tipo_categoria" value="3">
+
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-primary text-white rounded-pill px-2.5 py-1 shadow-sm fw-bold">
+                  01
+                </span>
+                <h6 class="fw-bold mb-0 text-uppercase tracking-wide text-primary small">
+                  Información General
+                </h6>
+              </div>
+
+              <!-- Buscador de Usuario por Cedula -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Buscar Usuario (Cedula)<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <input class="form-control" id="id_usuario" name="id_usuario" placeholder="Ej: 29772294">
+                    <button class="btn btn-primary px-3 text-nowrap" id="SearchUser" type="button"
+                      onclick="BuscarUsuario()">
+                      <i class="bi bi-search"></i> Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Buscador de CPU por Codigo de Activo o Serial -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">CPU (Codigo o Serial)<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <input class="form-control" id="cd_cpu" name="cd_cpu" placeholder="Ej: 29772294">
+                    <button class="btn btn-primary px-3 text-nowrap" id="SearchCPU" type="button"
+                      onclick="BuscarCPU()">
+                      <i class="bi bi-search"></i> Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="datosUsuario"></div>
+
+              <div class="col-md-6" id="datosCPU"></div>
+
+              <!-- Buscador de Monitor por Codigo de Activo o Serial -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Monitor (Codigo o Serial)<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <input class="form-control" id="cd_monitor" name="cd_monitor" placeholder="Ej: 29772294">
+                    <button class="btn btn-primary px-3 text-nowrap" id="SearchMonitor" type="button"
+                      onclick="BuscarMonitor()">
+                      <i class="bi bi-search"></i> Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Buscador de Mouse por Codigo de Activo o Serial -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Mouse (Codigo o Serial)<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <input class="form-control" id="cd_mouse" name="cd_mouse" placeholder="Ej: 29772294">
+                    <button class="btn btn-primary px-3 text-nowrap" id="SearchMouse" type="button"
+                      onclick="BuscarMouse()">
+                      <i class="bi bi-search"></i> Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="datosMonitor"></div>
+
+              <div class="col-md-6" id="datosMouse"></div>
+
+              <!-- Buscador de Teclado por Codigo de Activo o Serial -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Teclado (Codigo o Serial)<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <input class="form-control" id="cd_teclado" name="cd_teclado" placeholder="Ej: 29772294">
+                    <button class="btn btn-primary px-3 text-nowrap" id="SearchTeclado" type="button"
+                      onclick="BuscarTeclado()">
+                      <i class="bi bi-search"></i> Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="datosTeclado"></div>
+
+              <!-- Buscador de Regulador por Codigo de Activo o Serial -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">¿Posee Regulador? <span
+                      class="text-danger h5">*</span></label>
+                  <select id="posee_regulador" name="posee_regulador" class="form-select" required
+                    onchange="PoseeCampos('#posee_regulador', '#cd_regulador', '#input_regulador')">
+                    <option value="Si">Si</option>
+                    <option value="No" selected>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Buscador de Corneta por Codigo de Activo o Serial -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">¿Posee Corneta? <span
+                      class="text-danger h5">*</span></label>
+                  <select id="posee_corneta" name="posee_corneta" class="form-select" required
+                    onchange="PoseeCampos('#posee_corneta', '#cd_corneta', '#input_corneta')">
+                    <option value="Si">Si</option>
+                    <option value="No" selected>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row g-3" id="input_regulador" style="display: none;">
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label fw-semibold small">Regulador (Codigo o Serial)<span
+                        class="text-danger h5">*</span></label>
+                    <div class="input-group">
+                      <input class="form-control" id="cd_regulador" name="cd_regulador" placeholder="Ej: 29772294">
+                      <button class="btn btn-primary px-3 text-nowrap" id="SearchRegulador" type="button"
+                        onclick="BuscarRegulador()">
+                        <i class="bi bi-search"></i> Buscar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6" id="datosRegulador"></div>
+
+              </div>
+
+              <div class="row g-3" id="input_corneta" style="display: none;">
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-label fw-semibold small">Corneta (Codigo o Serial)<span
+                        class="text-danger h5">*</span></label>
+                    <div class="input-group">
+                      <input class="form-control" id="cd_corneta" name="cd_corneta" placeholder="Ej: 29772294">
+                      <button class="btn btn-primary px-3 text-nowrap" id="SearchCorneta" type="button"
+                        onclick="BuscarCorneta()">
+                        <i class="bi bi-search"></i> Buscar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6" id="datosCorneta"></div>
+
+              </div>
+
+              <div class="col-12">
+                <hr class="my-2">
+              </div>
+
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span
+                  class="badge bg-primary-subtle text-primary rounded-circle p-1 d-inline-flex align-items-center justify-content-center"
+                  style="width: 24px; height: 24px;">4</span>
+                <p class="fw-bold mb-1">Detalles del Software</p>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Tipo de Sistema Operativo<span
+                      class="text-danger h5">*</span></label>
+                  <div class="input-group">
+                    <select id="tipo_so" name="tipo_so" class="form-select" required>
+                      <option value="Privado">Privado (Windows)</option>
+                      <option value="Libre">Libre (Linux)</option>
+                    </select>
+                    <span class="input-group-text text-muted"><i class="bi bi-disc"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Arquitectura<span class="text-danger h5">*</span></label>
+                  <select id="arquitectura" name="arquitectura" class="form-select" required>
+                    <option value="32-bit">32-bit</option>
+                    <option value="64-bit">64-bit</option>
+                    <option value="ARM">ARM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Distribucion del Sistema Operativo <span
+                      class="text-danger h5">*</span></label>
+                  <input class="form-control" id="tipo_distribucion" name="tipo_distribucion"
+                    placeholder="Ej: Windows 10">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Es Dual Boot?<span class="text-danger h5">*</span></label>
+                  <select id="es_dual_boot" name="es_dual_boot" class="form-select" required
+                    onchange="PoseeCampos('#es_dual_boot', '#segundo_so', '#input_segundo_so')">
+                    <option value="Si">Si</option>
+                    <option value="No" selected>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-4" id="input_segundo_so" style="display: none;">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Segundo Sistema Operativo <span
+                      class="text-danger h5">*</span></label>
+                  <input class="form-control" id="segundo_so" name="segundo_so" placeholder="Ej: Windows 10 64-bit">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small">Programas Adicionales </label>
+                  <input class="form-control" id="programas" name="programas" placeholder="Ej: Panda o 360, etc...">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold fs-6">Programas Predeterminados</span>
+                  </div>
+                  <div><strong>Libre-Office, Microsoft-Office, Anydesk, Google Chrome, Firefox, </strong></div>
+                </div>
+              </div>
+
+
+              <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary px-4" id="buttomMaster">Guardar Estacion de Trabajo</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+<script src="../assets/js/pages/est_trabajo.js"></script>

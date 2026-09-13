@@ -1,0 +1,69 @@
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `redes`
+--
+
+CREATE TABLE `redes` (
+  `id_red` bigint(12) NOT NULL,
+  `id_server` bigint(12) NOT NULL,
+  `cd_receptor` varchar(100) NOT NULL,
+  `tipo_puerto` enum('Emisor','Receptor','N/A') NOT NULL DEFAULT 'N/A',
+  `tipo_asignacion` enum('Impresora','Equipo','N/A') NOT NULL DEFAULT 'N/A',
+  `punto_switche` varchar(100) NOT NULL,
+  `punto_patchpanel` varchar(100) NOT NULL,
+  `descripcion` varchar(200) NOT NULL,
+  `estado_puerto` enum('Disponible','Ocupado','Vacio') NOT NULL DEFAULT 'Vacio',
+  `fecha_carga` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_modificacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Estructura de tabla para la tabla `es_trabajo`
+--
+
+CREATE TABLE `es_trabajo` (
+  `id_es_trabajo` bigint(12) NOT NULL,
+  `id_usuario` int(12) NOT NULL,
+  `id_hardware` bigint(12) NOT NULL,
+  `id_software` bigint(12) NOT NULL,
+  `en_red` enum('Si','No') NOT NULL DEFAULT 'No',
+  `id_redes` bigint(12) DEFAULT NULL,
+  `fecha_vinculo` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_modificacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `hardwares`
+--
+
+CREATE TABLE `hardwares` (
+  `id_hardware` bigint(12) NOT NULL,
+  `cd_cpu` bigint(12) NOT NULL,
+  `cd_monitor` bigint(12) NOT NULL,
+  `cd_mouse` bigint(12) NOT NULL,
+  `cd_teclado` bigint(12) NOT NULL,
+  `posee_regulador` enum('Si','No') NOT NULL DEFAULT 'No',
+  `cd_regulador` varchar(50) NOT NULL,
+  `posee_corneta` enum('Si','No') NOT NULL DEFAULT 'No',
+  `cd_corneta` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Estructura de tabla para la tabla `softwares`
+--
+
+CREATE TABLE `softwares` (
+  `id_software` bigint(12) NOT NULL,
+  `tipo_so` enum('Privado','Libre') NOT NULL DEFAULT 'Privado,
+  `tipo_distribucion` varchar(100) NOT NULL  DEFAULT 'Windows',
+  `arquitectura` enum('32-bit','64-bit','ARM') DEFAULT '64-bit',
+  `es_dual_boot` enum('Si','No') NOT NULL DEFAULT 'No',
+  `segundo_so` varchar(100) DEFAULT NULL,
+  `programas` varchar(1000) NOT NULL DEFAULT 'N/A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
