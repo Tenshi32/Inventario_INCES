@@ -33,32 +33,6 @@ document.addEventListener('keyup', e => {
   }
 });
 
-function consultarLineamientos() {
-    // 1. URL de tu servidor Flask
-    const url = "http://localhost:5000/Periodo/ViewPeriodo";
-
-    fetch(url, {
-        method: "GET", 
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Error en la red");
-        return response.json(); 
-    })
-    .then(data => {
-      const tabla = document.getElementById("ViewPeriodo");
-
-      if (data != null){
-        contenido = `Periodo Actual: <button type='button' class='btn btn-warning rounded-pill btn-lg'> ${data.rango}</button>`;
-      } else {
-        contenido = `No hay un periodo activo actualmente.`;
-      }
-      tabla.innerHTML = contenido;
-    })
-    .catch(error => {
-        console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
 function SessionActiva(){
   const nombre = sessionStorage.getItem('usuario_nombre') || '';
   $('.username').text(nombre);
