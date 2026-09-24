@@ -39,19 +39,11 @@ class SoftwareController:
 
             if retorno is not None:
 
-<<<<<<< HEAD
                 return {"status": True, "mensaje": "Registro creado id: " + datos['cd_dispositivo']}
             
             else:
 
                 return {"status": False, "mensaje": "No se pudo guardar el registro"}
-=======
-                return True
-            
-            else:
-
-                return False
->>>>>>> f48ec839b5eb5854cc65725cea8f6ee8137b9f81
 
     def Edit_software(self, datos):
 

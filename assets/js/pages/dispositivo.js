@@ -221,6 +221,7 @@ $(document).ready(function () {
   consultarTipoDispositivo();
   FiltroTipoDispositivos();
   SelectTipoDispositivos();
+  
   // Validación del Formulario
   $("#formDispositivo").validate({
     rules: {

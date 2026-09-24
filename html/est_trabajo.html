@@ -172,12 +172,12 @@
               <!-- Buscador de CPU por Codigo de Activo o Serial -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label fw-semibold small">CPU (Codigo o Serial)<span
+                  <label class="form-label fw-semibold small">PC (Codigo o Serial)<span
                       class="text-danger h5">*</span></label>
                   <div class="input-group">
                     <input class="form-control" id="cd_cpu" name="cd_cpu" placeholder="Ej: 29772294">
                     <button class="btn btn-primary px-3 text-nowrap" id="SearchCPU" type="button"
-                      onclick="BuscarCPU()">
+                      onclick="BuscarDispositivos(document.getElementById('cd_cpu'), 20, document.getElementById('datosCPU'))">
                       <i class="bi bi-search"></i> Buscar
                     </button>
                   </div>
@@ -196,7 +196,7 @@
                   <div class="input-group">
                     <input class="form-control" id="cd_monitor" name="cd_monitor" placeholder="Ej: 29772294">
                     <button class="btn btn-primary px-3 text-nowrap" id="SearchMonitor" type="button"
-                      onclick="BuscarMonitor()">
+                      onclick="BuscarDispositivos(document.getElementById('cd_monitor'), 17, document.getElementById('datosMonitor'))">
                       <i class="bi bi-search"></i> Buscar
                     </button>
                   </div>
@@ -211,7 +211,7 @@
                   <div class="input-group">
                     <input class="form-control" id="cd_mouse" name="cd_mouse" placeholder="Ej: 29772294">
                     <button class="btn btn-primary px-3 text-nowrap" id="SearchMouse" type="button"
-                      onclick="BuscarMouse()">
+                      onclick="BuscarDispositivos(document.getElementById('cd_mouse'), 18, document.getElementById('datosMouse'))">
                       <i class="bi bi-search"></i> Buscar
                     </button>
                   </div>
@@ -230,7 +230,7 @@
                   <div class="input-group">
                     <input class="form-control" id="cd_teclado" name="cd_teclado" placeholder="Ej: 29772294">
                     <button class="btn btn-primary px-3 text-nowrap" id="SearchTeclado" type="button"
-                      onclick="BuscarTeclado()">
+                      onclick="BuscarDispositivos(document.getElementById('cd_teclado'), 19, document.getElementById('datosTeclado'))">
                       <i class="bi bi-search"></i> Buscar
                     </button>
                   </div>
@@ -274,7 +274,7 @@
                     <div class="input-group">
                       <input class="form-control" id="cd_regulador" name="cd_regulador" placeholder="Ej: 29772294">
                       <button class="btn btn-primary px-3 text-nowrap" id="SearchRegulador" type="button"
-                        onclick="BuscarRegulador()">
+                        onclick="BuscarDispositivos(document.getElementById('cd_regulador'), 22, document.getElementById('datosRegulador'))">
                         <i class="bi bi-search"></i> Buscar
                       </button>
                     </div>
@@ -294,7 +294,7 @@
                     <div class="input-group">
                       <input class="form-control" id="cd_corneta" name="cd_corneta" placeholder="Ej: 29772294">
                       <button class="btn btn-primary px-3 text-nowrap" id="SearchCorneta" type="button"
-                        onclick="BuscarCorneta()">
+                        onclick="BuscarDispositivos(document.getElementById('cd_corneta'), 21, document.getElementById('datosCorneta'))">
                         <i class="bi bi-search"></i> Buscar
                       </button>
                     </div>

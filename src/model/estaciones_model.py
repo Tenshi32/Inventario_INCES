@@ -37,22 +37,15 @@ class EstacionTrabajoModel:
             "FROM es_trabajo "
             "LEFT JOIN usuarios ON usuarios.cedula = es_trabajo.id_usuario "
             "LEFT JOIN hardwares ON hardwares.id_hardware = es_trabajo.id_hardware "
+            "LEFT JOIN softwares ON softwares.id_software = es_trabajo.id_software "
 
-            "LEFT JOIN cpus ON cpus.id_cpu = hardwares.id_cpu "
-            "LEFT JOIN dispositivos d_cpu ON d_cpu.id_dispositivo = cpus.id_dispositivo "
-
-            "LEFT JOIN monitores ON monitores.id_monitor = hardwares.id_monitor "
-            "LEFT JOIN dispositivos d_mon ON d_mon.id_dispositivo = monitores.id_dispositivo "
-
-            "LEFT JOIN mouses ON mouses.id_mouse = hardwares.id_mouse "
-            "LEFT JOIN dispositivos d_mou ON d_mou.id_dispositivo = mouses.id_dispositivo "
-
-            "LEFT JOIN teclados ON teclados.id_teclado = hardwares.id_teclado "
-            "LEFT JOIN dispositivos d_tec ON d_tec.id_dispositivo = teclados.id_dispositivo "
-            
-            "LEFT JOIN softwares ON softwares.id_software = es_trabajo.id_software " 
+            "LEFT JOIN dispositivos d_cpu ON d_cpu.id_dispositivo = hardwares.cd_cpu "
+            "LEFT JOIN dispositivos d_mon ON d_mon.id_dispositivo = hardwares.cd_monitor "
+            "LEFT JOIN dispositivos d_mou ON d_mou.id_dispositivo = hardwares.cd_mouse "
+            "LEFT JOIN dispositivos d_tec ON d_tec.id_dispositivo = hardwares.cd_teclado "
             "ORDER BY es_trabajo.id_es_trabajo DESC"
         )
+        
         self.cursor.execute(sql)
 
         all_es_trabajo = self.cursor.fetchall()

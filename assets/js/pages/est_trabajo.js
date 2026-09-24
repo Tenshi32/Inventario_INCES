@@ -162,9 +162,9 @@ function BuscarUsuario() {
     });
 }
 
-function BuscarCPU() {
+function BuscarDispositivos(campo, valor, tabla) {
 
-  fetch("http://localhost:5000/CPU/Ratrear?valorBuscar=" + document.getElementById("cd_cpu").value, {
+  fetch("http://localhost:5000/Dispositivos/RatrearEstTrabajo?valorBuscar=" + campo.value + "&tipoCategoria=" + valor, {
     method: "GET",
   })
     .then(response => {
@@ -176,23 +176,28 @@ function BuscarCPU() {
     .then(data => {
 
       const item = data;
-      const tabla = document.getElementById("datosCPU");
+
       console.log(item);
       let contenido = "";
 
       contenido = `
                     <div class="card card-body">
                       <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.familia_procesador} ${item.modelo_procesador} ${item.velocidad_base}GHz</span>
+                        <span class="fw-bold fs-6"> ${item.cd_dispositivo}</span>
                         <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
                           ${item.statu}
                         </span>
                       </div>
-                      <input type="hidden" id="id_cpu" name="id_cpu" value="${item.id_cpu}">
-                      <div><strong>Disco Duro : </strong>${item.disco_duro}GB ${item.tipo_disco || ''} 
-                      <strong>RAM : </strong>${item.ram}GB ${item.tipo_ram} 
-                      <strong>Motherboard : </strong>${item.modelo_motherboard}</div>
-                      <div><strong>PC : </strong>${item.marca}  ${item.modelo} ${item.formato_caja}</div>
+
+                      <input type="hidden" id="id_${valor}" name="id_${valor}" value="${item.id_dispositivo}">
+                      <div>Marca : <strong>${item.marca} / ${item.modelo}</strong></div>
+                      <div>Serial : <strong>${item.serial} </strong></div>
+
+                      <div>
+                        descripcion : <strong>${item.descripcion_general}</strong>
+                        <br>
+                        observaciones : <strong>${item.observaciones_tecnicas}</strong>
+                      </div>
                     </div>
                   `;
       // Inyectamos las filas
@@ -203,218 +208,6 @@ function BuscarCPU() {
       console.error("Hubo un problema con la consulta:", error);
     });
 }
-
-function BuscarMonitor() {
-
-  fetch("http://localhost:5000/Monitores/Ratrear?valorBuscar=" + document.getElementById("cd_monitor").value, {
-    method: "GET",
-  })
-    .then(response => {
-
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-
-    })
-    .then(data => {
-
-      const item = data;
-      const tabla = document.getElementById("datosMonitor");
-      console.log(item);
-      let contenido = "";
-
-      contenido = `
-                   <div class="card card-body">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.tipo_panel} ${item.resolucion} ${item.pulgadas}"  </span>
-                        <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
-                          ${item.statu}
-                        </span>
-                      </div>
-                      <input type="hidden" id="id_monitor" name="id_monitor" value="${item.id_monitor}">
-                      <div> <strong>Tipo de Conexion :</strong> ${item.tipo_monitor}</div>
-                      <div><strong>Monitor : </strong>${item.marca}  ${item.modelo}</div>
-                    </div>
-                  `;
-
-      // Inyectamos las filas
-      tabla.innerHTML = contenido;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function BuscarMouse() {
-
-  fetch("http://localhost:5000/Mouses/Ratrear?valorBuscar=" + document.getElementById("cd_mouse").value, {
-    method: "GET",
-  })
-    .then(response => {
-
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-
-    })
-    .then(data => {
-
-      const item = data;
-      const tabla = document.getElementById("datosMouse");
-      console.log(item);
-      let contenido = "";
-
-      contenido = `
-                   <div class="card card-body">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.tecnologia_sensor} ${item.tipo_conexion} </span>
-                        <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
-                          ${item.statu}
-                        </span>
-                      </div>
-                      <input type="hidden" id="id_mouse" name="id_mouse" value="${item.id_mouse}">
-                      <div> <strong>Alimentación :</strong> ${item.tipo_alimentacion} </div>
-                      <div><strong>Mouse : </strong>${item.marca}  ${item.modelo}</div>
-                    </div>
-                  `;
-
-      // Inyectamos las filas
-      tabla.innerHTML = contenido;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function BuscarTeclado() {
-
-  fetch("http://localhost:5000/Teclados/Ratrear?valorBuscar=" + document.getElementById("cd_teclado").value, {
-    method: "GET",
-  })
-    .then(response => {
-
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-
-    })
-    .then(data => {
-
-      const item = data;
-      const tabla = document.getElementById("datosTeclado");
-      console.log(item);
-      let contenido = "";
-
-      // Manejo de estados (Activo/Inactivo)
-      let textoStatus = (item.status_usuario !== 1) ? 'Activo' : 'Inactivo';
-
-      contenido = `
-                   <div class="card card-body">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.tipo_mecanismo} ${item.tipo_teclado} </span>
-                        <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
-                          ${item.statu}
-                        </span>
-                      </div>
-                      <input type="hidden" id="id_teclado" name="id_teclado" value="${item.id_teclado}">
-                      <div> <strong>Distribución :</strong> ${item.distribucion_idioma} </div>
-                      <div><strong>Teclado : </strong>${item.marca}  ${item.modelo}</div>
-                    </div>
-                  `;
-
-      // Inyectamos las filas
-      tabla.innerHTML = contenido;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function BuscarRegulador() {
-
-  fetch("http://localhost:5000/Reguladores/Ratrear?valorBuscar=" + document.getElementById("cd_regulador").value, {
-    method: "GET",
-  })
-    .then(response => {
-
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-
-    })
-    .then(data => {
-
-      const item = data;
-      const tabla = document.getElementById("datosRegulador");
-      console.log(item);
-      let contenido = "";
-
-      contenido = `
-                   <div class="card card-body">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.capacidad_va}Vatios ${item.potencia_watts}Watts </span>
-                        <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
-                          ${item.statu}
-                        </span>
-                      </div>
-                      <input type="hidden" id="id_regulador" name="id_regulador" value="${item.id_regulador}">
-                      <div> ${item.cantidad_tomas} Tomas De ${item.voltaje_operacion}</div>
-                      <div><strong>Regulador : </strong>${item.marca}  ${item.modelo}</div>
-                    </div>
-                  `;
-
-      // Inyectamos las filas
-      tabla.innerHTML = contenido;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function BuscarCorneta() {
-
-  fetch("http://localhost:5000/Cornetas/Ratrear?valorBuscar=" + document.getElementById("cd_corneta").value, {
-    method: "GET",
-  })
-    .then(response => {
-
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-
-    })
-    .then(data => {
-
-      const item = data;
-      const tabla = document.getElementById("datosCorneta");
-      console.log(item);
-      let contenido = "";
-
-      // Manejo de estados (Activo/Inactivo)
-      let textoStatus = (item.status_usuario !== 1) ? 'Activo' : 'Inactivo';
-
-      contenido = `
-                   <div class="card card-body">
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold fs-6"> ${item.tipo_conexion} </span>
-                        <span class="badge ${item.id_status === 1 ? 'bg-success' : 'bg-danger'}">
-                          ${item.statu}
-                        </span>
-                      </div>
-                      <input type="hidden" id="id_corneta" name="id_corneta" value="${item.id_corneta}">
-                      <div> ${item.tipo_alimentacion}</div>
-                      <div><strong>Teclado : </strong>${item.marca}  ${item.modelo}</div>
-                    </div>
-                  `;
-
-      // Inyectamos las filas
-      tabla.innerHTML = contenido;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
 
 $(document).ready(function () {
 
@@ -571,7 +364,6 @@ $("#formEstTrabajo").on("submit", function (event) {
   if (accion === "edit") {
     // Acción para EDITAR
     ActionCreateEdit(
-      "buttomMaster",
       "formEstTrabajo",
       "http://127.0.0.1:5000/EstacionesTrabajo/Editar",
       "PUT",
@@ -583,7 +375,6 @@ $("#formEstTrabajo").on("submit", function (event) {
   } else {
     // Acción por defecto: CREAR (incluso si action no está definido aún)
     ActionCreateEdit(
-      "buttomMaster",
       "formEstTrabajo",
       "http://127.0.0.1:5000/EstacionesTrabajo/Crear",
       "POST",
@@ -659,7 +450,6 @@ $('#tablaEstTrabajo').on("click", ".Editar", function (event) {
 
   // Llenar campos con los valores correspondientes de los data-attributes
   $("#created").val($(this).data("id"));
-
 
   $("#id_usuario").val($(this).data("id_usuario"));
   $("#SearchUser").trigger("onclick");

@@ -16,20 +16,25 @@ class HardwareController:
 
     def crear_hardware(self, datos):
 
-        datos['posee_regulador'] = "No" if datos['cd_regulador'] == "" else datos['cd_regulador'] 
-        datos['posee_corneta'] = "No" if datos['cd_corneta'] == "" else datos['cd_corneta'] 
+        if 'id_22' not in datos or not datos['id_22']:
+            datos['id_22'] = ""
+            datos['posee_regulador'] = "No" if datos['id_22'] == "" else datos['id_22'] 
+            
+        if 'id_21' not in datos or not datos['id_21']:
+            datos['id_21'] = ""
+            datos['posee_corneta'] = "No" if datos['id_21'] == "" else datos['id_21'] 
             
         valores = [
             #Datos del Switche
             datos['id_hardware'],
-            datos['id_cpu'],
-            datos['id_monitor'],
-            datos['id_mouse'],
-            datos['id_teclado'],
+            datos['id_20'],
+            datos['id_17'],
+            datos['id_18'],
+            datos['id_19'],
             datos['posee_regulador'],
-            datos['cd_regulador'],
+            datos['id_22'],
             datos['posee_corneta'],
-            datos['cd_corneta'],
+            datos['id_21'],
         ]
 
         retorno = self.modelo.create_hardware(valores)
@@ -43,17 +48,20 @@ class HardwareController:
             return False
 
     def Edit_hardware(self, datos):
+
+        datos['posee_regulador'] = "No" if datos['id_22'] == "" else datos['id_22'] 
+        datos['posee_corneta'] = "No" if datos['id_21'] == "" else datos['id_21'] 
             
         valores = [
             #Datos del Switche
-            datos['id_cpu'],
-            datos['id_monitor'],
-            datos['id_mouse'],
-            datos['id_teclado'],
+            datos['id_20'],
+            datos['id_17'],
+            datos['id_18'],
+            datos['id_19'],
             datos['posee_regulador'],
-            datos['cd_regulador'],
+            datos['id_22'],
             datos['posee_corneta'],
-            datos['cd_corneta'],
+            datos['id_21'],
             datos['created'],
         ]
 

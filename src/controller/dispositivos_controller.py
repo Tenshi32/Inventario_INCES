@@ -16,6 +16,12 @@ class DispositivosController:
         if not id:
             return None
         return self.modelo.get_device(id)
+    
+    #buscador dispositivos especifico por id y tipo de categoria
+    def rastrear_dispositivo_est_trabajo(self, id, EstTrabajo):
+        if not id:
+            return None
+        return self.modelo.rastrear_dispositivo_est_trabajo(id, EstTrabajo)
 
     #buscador si existe dispositivo por tipo de categoria y valor (codigo o serial)
     def buscar_dispositivo_si_existe(self, tipo_dispositivo, valor):
@@ -113,7 +119,14 @@ class DispositivosController:
     # editar dispositivo
     def editar_dispositivo(self, datos):
 
-        valores = [
+        validaciones = self.validation_field(datos)
+        
+        if not validaciones["status"]:
+            
+            return validaciones
+        
+        else:
+            valores = [
             #Datos del Dispositivo
             datos['posee_codigo'],
             datos['cd_dispositivo'],
@@ -134,15 +147,15 @@ class DispositivosController:
             datos['id_dispositivo'],
         ]
 
-        retorno = self.modelo.update_device(valores)
+            retorno = self.modelo.update_device(valores)
 
-        if retorno is not None:
-
-            return {"status": True, "mensaje": "se edito el dispositivo de id: " + datos['id_dispositivo']}
-        
-        else:
-
-            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+            if retorno is not None:
+            
+                return {"status": True, "mensaje": "se edito el dispositivo de id: " + datos['id_dispositivo']}
+            
+            else:
+            
+                return {"status": False, "mensaje": "No se pudo guardar el registro"}
     
     # cambiar estado dispositivo
     def cambiar_estado_dispositivo(self, datos):
