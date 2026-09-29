@@ -6,7 +6,7 @@ $(document).on("click", "a[data-page]", function (e) {
 });
 
 $(document).ready(function() {
-    const pageToLoad = sessionStorage.getItem('lastPage') || 'home'; 
+    const pageToLoad = sessionStorage.getItem('lastPage') || 'dispositivos'; 
     loadContent(pageToLoad);
 
     const nombre = sessionStorage.getItem('usuario_nombre');

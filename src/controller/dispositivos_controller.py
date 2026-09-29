@@ -34,9 +34,8 @@ class DispositivosController:
             datos['id_dispositivo'] = str(random.randint(10**5, 10**10 - 1))
 
         campos_requeridos = [
-        'cd_dispositivo', 'posee_marca', 'posee_modelo', 
-        'marca_producto', 'modelo_producto', 'tipo_dispositivo', 
-        'posee_serial', 'serial_producto', 'status'
+        'posee_marca', 'posee_modelo', 'tipo_dispositivo', 
+        'posee_serial', 'status'
         ]
 
         for campo in campos_requeridos:
@@ -110,7 +109,7 @@ class DispositivosController:
 
             if retorno is not None:
 
-                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['cd_dispositivo']}
+                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo']}
 
             else:
 
