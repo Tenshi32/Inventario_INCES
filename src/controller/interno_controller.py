@@ -30,16 +30,16 @@ class InternosController:
             hex_dig = resultado.hexdigest()
 
             valores = [
-                datos['id_usuario'],
-                datos['id_usuario'],
+                datos['cedulaInterno'],
+                datos['cedulaInterno'],
                 hex_dig,
-                datos['id_rol_interno'],
+                datos['rol_in'],
             ]
 
             retorno = self.modelo.create_interno(valores)
 
             if retorno is not None:
-                return {"status": True, "mensaje": f"Interno creado con la cedula: V-{datos['id_usuario']}"}
+                return {"status": True, "mensaje": f"Interno creado con la cedula: V-{datos['cedulaInterno']}"}
             else:
                 return {"status": False, "mensaje": "No se pudo crear el interno"}
             

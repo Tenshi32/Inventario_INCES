@@ -256,49 +256,21 @@
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Nombre</label>
                   <input class="form-control" id="nombreInterno" name="nombreInterno" disabled>
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Apellido</label>
                   <input class="form-control" id="apellidoInterno" name="apellidoInterno" disabled>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label class="form-label fw-semibold small" for="password">Contraseña <span
-                      class="text-danger h5">*</span></label>
-                  <div class="position-relative">
-                    <input type="password" class="form-control pe-5" id="password" name="password"
-                      placeholder="••••••••">
-                    <button type="button" id="togglePassword"
-                      class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none pe-3"
-                      style="border: none; background: transparent;">
-                      <i class="bi bi-eye" id="eyeIcon"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <script>
-                document.getElementById('togglePassword').addEventListener('click', function () {
-                  const passwordInput = document.getElementById('password');
-                  const eyeIcon = document.getElementById('eyeIcon');
 
-                  // Cambiar el tipo de input
-                  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                  passwordInput.setAttribute('type', type);
-
-                  // Cambiar el ícono del ojo (bi-eye / bi-eye-slash)
-                  eyeIcon.classList.toggle('bi-eye');
-                  eyeIcon.classList.toggle('bi-eye-slash');
-                });
-              </script>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label class="form-label fw-semibold small">Rol Interno <span class="text-danger h5">*</span></label>
                   <select class="form-select" id="rol_in" name="rol_in">
@@ -307,18 +279,81 @@
                   </select>
                 </div>
               </div>
+              <!-- Campo Contraseña -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small" for="password">Contraseña <span
+                      class="text-danger h5">*</span></label>
+                  <div class="position-relative">
+                    <input type="password" class="form-control pe-5 paspass" id="password" name="password"
+                      placeholder="••••••••">
+                    <button type="button" id="togglePassword"
+                      class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none pe-3"
+                      style="border: none; background: transparent;">
+                      <i class="bi bi-eye eyeIcon"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Confirmar Contraseña -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label fw-semibold small" for="passwordConfirm">Confirmar Contraseña <span
+                      class="text-danger h5">*</span></label>
+                  <div class="position-relative">
+                    <input type="password" class="form-control pe-5 paspass" id="passwordConfirm" name="passwordConfirm"
+                      placeholder="••••••••">
+                    <button type="button" id="togglePassword2"
+                      class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none pe-3"
+                      style="border: none; background: transparent;">
+                      <i class="bi bi-eye eyeIcon"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <script>
+                // Seleccionamos ambos botones
+                const toggleButtons = [document.getElementById('togglePassword'), document.getElementById('togglePassword2')];
+
+                toggleButtons.forEach(button => {
+                  button.addEventListener('click', function () {
+                    const inputs = document.querySelectorAll('.paspass');
+                    const icons = document.querySelectorAll('.eyeIcon');
+
+                    // Verificamos el estado actual basándonos en el primer input
+                    const isPassword = inputs[0].getAttribute('type') === 'password';
+                    const newType = isPassword ? 'text' : 'password';
+
+                    // Cambiamos todos los inputs a la vez
+                    inputs.forEach(input => input.setAttribute('type', newType));
+
+                    // Sincronizamos todos los íconos de los ojos a la vez
+                    icons.forEach(icon => {
+                      icon.classList.toggle('bi-eye', !isPassword);
+                      icon.classList.toggle('bi-eye-slash', isPassword);
+                    });
+                  });
+                });
+              </script>
+
+
 
               <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
                 <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary px-4" id="buttomInterno">Agregar Usuario</button>
               </div>
-            </form>
           </div>
         </div>
+
+        </form>
       </div>
     </div>
+  </div>
+  </div>
 
   </div>
 </main>
 
 <script src="../assets/js/pages/usuario.js"></script>
+<!-- <script src="../assets/js/pages/internos.js"></script> -->

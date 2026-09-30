@@ -21,13 +21,6 @@ def dispositivos(accion):
             print("Datos que llegaron para buscar dispositivo por código:", valorBuscar, tipo_dispositivo)
             answer = ctrl.buscar_dispositivo_si_existe(tipo_dispositivo, valorBuscar)
             return jsonify(answer)
-        
-        if accion == 'RatrearEstTrabajo':
-            valorBuscar = request.args.get('valorBuscar')
-            tipoCategoria = request.args.get('tipoCategoria')
-            print("Datos que llegaron para buscar dispositivo por código:", valorBuscar, tipoCategoria)
-            answer = ctrl.rastrear_dispositivo_est_trabajo(valorBuscar, tipoCategoria)
-            return jsonify(answer)
 
     # POST -> Crear
     elif request.method == 'POST':

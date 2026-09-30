@@ -8,11 +8,12 @@ from routers.tipo_servicios_router import tipo_servicios
 from routers.tipo_dispositivos_router import tipo_dispositivos
 from routers.tipo_consumibles_router import tipo_consumibles
 from routers.usuario_router import usuario
+from routers.interno_router import interno
+from routers.login_router import login
 from routers.marcas_router import marcas
 from routers.estados_router import estados
 from routers.modelos_router import modelos
 from routers.dispositivos_router import dispositivos
-from routers.estaciones_router import estacionesTrabajo
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}) # Evita errores de bloqueo en el navegador 
@@ -32,6 +33,16 @@ def dependencias_route(accion):
 def usuario_route(accion):
     return usuario(accion)
 
+#------------------- INTERNO ------------------
+@app.route('/Interno/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+def interno_route(accion):
+    return interno(accion)
+
+#------------------- LOGIN ------------------
+@app.route('/Login/<accion>', methods=['POST', 'GET'])
+def login_route(accion):
+    return login(accion)
+
 #------------------- MODELOS ------------------
 @app.route('/modelos/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def modelos_route(accion):
@@ -46,11 +57,6 @@ def marcas_route(accion):
 @app.route('/Dispositivos/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def dispositivos_route(accion):
     return dispositivos(accion)
-
-#------------------- ESTACIONES DE TRABAJO ------------------
-@app.route('/EstacionesTrabajo/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
-def estaciones_trabajo_route(accion):
-    return estacionesTrabajo(accion)
 
 #------------------- TIPO DE SERVICIOS ------------------
 @app.route('/tipo_servicios/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])

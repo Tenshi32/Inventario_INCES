@@ -11,8 +11,8 @@ class UsuarioModel:
         self.cursor = self.conn.cursor(dictionary=True)
  
     def get_usuario(self, id):
-        sql = "SELECT * FROM usuarios WHERE cedula = %s OR telefono = %s "
-        self.cursor.execute(sql, (id, id))
+        sql = "SELECT * FROM usuarios WHERE cedula = %s "
+        self.cursor.execute(sql, (id,))
 
         row = self.cursor.fetchone()
         return row

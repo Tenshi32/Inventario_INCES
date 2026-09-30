@@ -51,8 +51,10 @@ body.auth-body {
 
 /* Layout Split */
 .auth-sidebar-banner {
+  /* background: linear-gradient(135deg, rgba(79, 70, 229, 0.95), rgba(15, 23, 42, 0.95)),  */
+              /* url('../assets/images/png/dasher-ui-bootstrap-5.jpg') center/cover no-repeat; */
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.95), rgba(15, 23, 42, 0.95)), 
-              url('../assets/images/png/dasher-ui-bootstrap-5.jpg') center/cover no-repeat;
+              url('../assets/images/png/dasher-ai.png') center/cover no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

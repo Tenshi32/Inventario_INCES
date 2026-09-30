@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-09-2026 a las 14:34:41
+-- Tiempo de generación: 09-09-2026 a las 16:23:59
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -68,7 +68,7 @@ CREATE TABLE `dependencia` (
   `id_estado` int(11) NOT NULL,
   `id_piso` int(2) NOT NULL DEFAULT 1,
   `codigo` varchar(50) NOT NULL,
-  `activo` enum('1','2','3') NOT NULL
+  `activo` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -76,55 +76,54 @@ CREATE TABLE `dependencia` (
 --
 
 INSERT INTO `dependencia` (`id_dependencia`, `dependencia`, `id_estado`, `id_piso`, `codigo`, `activo`) VALUES
-(1, 'Coordinación Programa Turismo', 4, 1, '447304021', '1'),
-(2, 'Coordinación Programa Penitenciario', 4, 1, '447306021', '1'),
-(3, 'Centro Formación Comercial La Victoria', 4, 1, '18', '1'),
-(4, 'Centro Formación Comercial Maracay', 4, 1, '19', '1'),
-(5, 'Centro Formación Industrial El Limón', 4, 1, '20', '1'),
-(6, 'Centro Polivalente Villa De Cura', 4, 1, '21', '1'),
-(7, 'Centro De Formación Textil', 4, 1, '22', '1'),
-(8, 'Centro Tecnologico Industrial La Victoria', 4, 1, '23', '1'),
-(9, 'Centro Tecnológico Industrial Maracay', 4, 1, '24', '1'),
-(10, 'Centro De Formación Construcción', 4, 1, '25', '1'),
-(11, 'Centro Nacional De Mecánica Automotriz', 4, 1, '26', '1'),
-(12, 'Centro Polivalente Bermudez', 4, 1, '27', '1'),
-(13, 'Centro Polivalente Cagua', 4, 1, '28', '1'),
-(14, 'Centro Polivalente Ocumare De La Costa', 4, 1, '29', '1'),
-(15, 'C, F, S, A, La Providencia', 4, 1, '30', '1'),
-(16, 'C, F, S, A, Colonia Tovar', 4, 1, '31', '1'),
-(17, 'C, F, S, A, La Morita', 4, 1, '794', '1'),
-(18, 'C,F,S Construcción', 4, 1, '931', '1'),
-(19, 'C, F, S, Metal Minero La Victoria', 4, 1, '372', '1'),
-(20, 'C, F, S, Cema', 4, 1, '771', '1'),
-(21, 'C, F, S, Ocumare', 4, 1, '837', '1'),
-(22, 'C, F, S, Maracay', 4, 1, '873', '1'),
-(23, 'C, F, S, Textil', 4, 1, '850', '1'),
-(24, 'C, F, S, Bermudez', 4, 1, '634', '1'),
-(25, 'C, F, S, Cagua', 4, 1, '519', '1'),
-(26, 'C, F, S, Comercial La Victoria', 4, 1, '594', '1'),
-(27, 'C, F, S, El Limón', 4, 1, '413', '1'),
-(28, 'C, F, S, Metalminero Maracay', 4, 1, '182', '1'),
-(29, 'C, F, S, Programa Turismo', 4, 1, '474', '1'),
-(30, 'C, F, S, Villa Cura', 4, 1, '822', '1'),
-(31, 'CCFPI', 4, 1, '789', '1'),
-(32, 'Cema ', 4, 1, '476', '1'),
-(33, 'División De Administración', 4, 1, '4', '1'),
-(34, 'División De Sercio Y Mantenimineto ', 4, 1, '5', '1'),
-(35, 'División De Informatica', 4, 1, '6', '1'),
-(36, 'División De Formacion Profesional', 4, 1, '7', '1'),
-(37, 'División De Seguridad', 4, 1, '8', '1'),
-(38, 'División De Talento Humano ', 4, 1, '3', '1'),
-(39, 'Sede La Romana', 4, 1, '817', '1'),
-(40, 'Sede Regional Aragua ', 4, 1, '754', '1'),
-(41, 'Tributos Aragua', 4, 1, '319', '1'),
-(42, 'Unidad De Planificación', 4, 1, '2', '2'),
-(43, 'Unidad De Tecnología Educativa', 4, 1, '9', '1'),
-(44, 'Unidad De Adiestramiento De Empresa', 4, 1, '13', '1'),
-(45, 'Unidad De Formación Delegada', 4, 1, '14', '1'),
-(46, 'Unidad Programa Navional Aprendisaje', 4, 1, '15', '1'),
-(47, 'Unidades Móviles', 4, 1, '16', '1'),
-(48, 'Coordinación Programa Ferroviario', 4, 1, '33', '1'),
-(49, 'sadfasdf', 4, 1, 'fsdf', '1');
+(1, 'Coordinación Programa Turismo', 4, 1, '447304021', 1),
+(2, 'Coordinación Programa Penitenciario', 4, 1, '447306021', 1),
+(3, 'Centro Formación Comercial La Victoria', 4, 1, '18', 1),
+(4, 'Centro Formación Comercial Maracay', 4, 1, '19', 1),
+(5, 'Centro Formación Industrial El Limón', 4, 1, '20', 1),
+(6, 'Centro Polivalente Villa De Cura', 4, 1, '21', 1),
+(7, 'Centro De Formación Textil', 4, 1, '22', 1),
+(8, 'Centro Tecnologico Industrial La Victoria', 4, 1, '23', 1),
+(9, 'Centro Tecnológico Industrial Maracay', 4, 1, '24', 1),
+(10, 'Centro De Formación Construcción', 4, 1, '25', 1),
+(11, 'Centro Nacional De Mecánica Automotriz', 4, 1, '26', 1),
+(12, 'Centro Polivalente Bermudez', 4, 1, '27', 1),
+(13, 'Centro Polivalente Cagua', 4, 1, '28', 1),
+(14, 'Centro Polivalente Ocumare De La Costa', 4, 1, '29', 1),
+(15, 'C, F, S, A, La Providencia', 4, 1, '30', 1),
+(16, 'C, F, S, A, Colonia Tovar', 4, 1, '31', 1),
+(17, 'C, F, S, A, La Morita', 4, 1, '794', 1),
+(18, 'C,F,S Construcción', 4, 1, '931', 1),
+(19, 'C, F, S, Metal Minero La Victoria', 4, 1, '372', 1),
+(20, 'C, F, S, Cema', 4, 1, '771', 1),
+(21, 'C, F, S, Ocumare', 4, 1, '837', 1),
+(22, 'C, F, S, Maracay', 4, 1, '873', 1),
+(23, 'C, F, S, Textil', 4, 1, '850', 1),
+(24, 'C, F, S, Bermudez', 4, 1, '634', 1),
+(25, 'C, F, S, Cagua', 4, 1, '519', 1),
+(26, 'C, F, S, Comercial La Victoria', 4, 1, '594', 1),
+(27, 'C, F, S, El Limón', 4, 1, '413', 1),
+(28, 'C, F, S, Metalminero Maracay', 4, 1, '182', 1),
+(29, 'C, F, S, Programa Turismo', 4, 1, '474', 1),
+(30, 'C, F, S, Villa Cura', 4, 1, '822', 1),
+(31, 'CCFPI', 4, 1, '789', 1),
+(32, 'Cema ', 4, 1, '476', 1),
+(33, 'División De Administración', 4, 1, '4', 1),
+(34, 'División De Sercio Y Mantenimineto ', 4, 1, '5', 1),
+(35, 'División De Informatica', 4, 1, '6', 1),
+(36, 'División De Formacion Profesional', 4, 1, '7', 1),
+(37, 'División De Seguridad', 4, 1, '8', 1),
+(38, 'División De Talento Humano ', 4, 1, '3', 1),
+(39, 'Sede La Romana', 4, 1, '817', 1),
+(40, 'Sede Regional Aragua ', 4, 1, '754', 1),
+(41, 'Tributos Aragua', 4, 1, '319', 1),
+(42, 'Unidad De Planificación', 4, 1, '2', 1),
+(43, 'Unidad De Tecnología Educativa', 4, 1, '9', 1),
+(44, 'Unidad De Adiestramiento De Empresa', 4, 1, '13', 1),
+(45, 'Unidad De Formación Delegada', 4, 1, '14', 1),
+(46, 'Unidad Programa Navional Aprendisaje', 4, 1, '15', 1),
+(47, 'Unidades Móviles', 4, 1, '16', 1),
+(48, 'Coordinación Programa Ferroviario', 4, 1, '33', 1);
 
 -- --------------------------------------------------------
 
@@ -156,7 +155,7 @@ CREATE TABLE `dispositivos` (
 
 INSERT INTO `dispositivos` (`id_dispositivo`, `posee_codigo`, `cd_dispositivo`, `posee_marca`, `posee_modelo`, `id_marca`, `id_modelo`, `id_tipo_dispositivo`, `posee_serial`, `serial`, `descripcion_general`, `observaciones_tecnicas`, `id_status`, `fecha_carga`, `fecha_modificacion`) VALUES
 (2517192072, 'Si', 'P-HDGSKJ2341', 'Si', 'No', 53, 1, 4, 'No', '', 'dfasdfas', 'dfasdfadf', 2, '2026-07-28 09:22:11', '2026-09-07 09:02:15'),
-(3572403340, 'Si', '66466', 'Si', 'Si', 2, 2, 20, 'Si', 'vnbv57567', 'FA', 'ASDFASDF', 1, '2026-07-30 08:15:51', '2026-09-10 08:42:46'),
+(3572403340, 'Si', '66466', 'Si', 'No', 1, 1, 20, 'Si', 'vnbv57567', 'FA', 'ASDFASDF', 1, '2026-07-30 08:15:51', '2026-09-08 13:13:25'),
 (5247695979, 'Si', '66466', 'Si', 'No', 56, 1, 19, 'Si', 'kjhlfghlsdkfjgh', '', '', 3, '2026-07-27 14:06:18', '2026-09-08 13:15:04'),
 (5698727685, 'Si', 'UP-5415315', 'Si', 'No', 50, 1, 9, 'Si', 'SN218641', 'UPS Ubicado en la division de informatica', 'Ups con conectores a puertos USB\r\n3 conectores con aberturas con tierra\r\n2 conectores basicos', 1, '2026-09-08 10:27:51', '2026-09-08 10:27:51'),
 (6044969667, 'Si', 'P-MNOR2131', 'Si', 'No', 50, 1, 6, 'Si', 'vnbv57567', 'DFASDF', 'DSFASDF', 1, '2026-09-07 08:35:17', '2026-09-08 10:40:14'),
@@ -208,41 +207,6 @@ INSERT INTO `estados` (`id_estado`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `es_trabajo`
---
-
-CREATE TABLE `es_trabajo` (
-  `id_es_trabajo` bigint(12) NOT NULL,
-  `id_usuario` int(12) NOT NULL,
-  `id_hardware` bigint(12) NOT NULL,
-  `id_software` bigint(12) NOT NULL,
-  `en_red` enum('Si','No') NOT NULL DEFAULT 'No',
-  `id_redes` bigint(12) DEFAULT NULL,
-  `fecha_vinculo` datetime NOT NULL DEFAULT current_timestamp(),
-  `fecha_modificacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `hardwares`
---
-
-CREATE TABLE `hardwares` (
-  `id_hardware` bigint(12) NOT NULL,
-  `cd_cpu` bigint(12) NOT NULL,
-  `cd_monitor` bigint(12) NOT NULL,
-  `cd_mouse` bigint(12) NOT NULL,
-  `cd_teclado` bigint(12) NOT NULL,
-  `posee_regulador` enum('Si','No') NOT NULL DEFAULT 'No',
-  `cd_regulador` varchar(50) NOT NULL,
-  `posee_corneta` enum('Si','No') NOT NULL DEFAULT 'No',
-  `cd_corneta` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `interno`
 --
 
@@ -290,7 +254,7 @@ INSERT INTO `marcas` (`id_marcas`, `marca`, `estado_marca`) VALUES
 (18, 'HIUNDAY', '1'),
 (19, 'GENIUS', '1'),
 (20, 'PA', '1'),
-(21, 'Q', '2'),
+(21, 'Q', '1'),
 (22, 'BENQ', '1'),
 (23, 'AITEG', '1'),
 (24, 'EE', '1'),
@@ -355,8 +319,7 @@ CREATE TABLE `modelos` (
 --
 
 INSERT INTO `modelos` (`id_modelos`, `id_marca`, `modelo`, `estado_modelo`) VALUES
-(1, 1, 'S/Modelo', '1'),
-(2, 2, 'E1110-01', '1');
+(1, 1, 'S/Modelo', '1');
 
 -- --------------------------------------------------------
 
@@ -423,11 +386,13 @@ INSERT INTO `rol` (`id_rol`, `nombre_rol`) VALUES
 
 CREATE TABLE `softwares` (
   `id_software` bigint(12) NOT NULL,
-  `tipo_so` enum('Privado','Libre') NOT NULL DEFAULT 'Privado',
-  `tipo_distribucion` varchar(100) NOT NULL DEFAULT 'Windows 10',
+  `tipo_so` enum('Privado','Libre') NOT NULL,
+  `tipo_particion` enum('Windows/Linux','Windows','Linux') NOT NULL,
+  `tipo_distribucion` varchar(100) NOT NULL,
   `arquitectura` enum('32-bit','64-bit','ARM') DEFAULT '64-bit',
   `es_dual_boot` enum('Si','No') NOT NULL DEFAULT 'No',
   `segundo_so` varchar(100) DEFAULT NULL,
+  `version` varchar(100) NOT NULL,
   `programas` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -443,14 +408,6 @@ CREATE TABLE `tipo_consumible` (
   `grupo_consumible` enum('Cables','Impresora','Almacenamiento','Red','Rendimiento','Energia') NOT NULL,
   `estado_consumible` enum('1','2') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tipo_consumible`
---
-
-INSERT INTO `tipo_consumible` (`id_tipo_consumible`, `consumible`, `grupo_consumible`, `estado_consumible`) VALUES
-(1, 'Cable UTPs', 'Cables', '1'),
-(2, 'Bateria 3V', 'Energia', '1');
 
 -- --------------------------------------------------------
 
@@ -482,13 +439,13 @@ INSERT INTO `tipo_dispositivos` (`id_tipo_dispositivo`, `tipo_dispositivo`, `est
 (11, 'Router', '1'),
 (12, 'Patch Panel', '1'),
 (13, 'Rack', '1'),
-(14, 'Organizador de Cables', '2'),
+(14, 'Organizador de Cables', '1'),
 (15, 'Model', '1'),
-(16, 'CPU', '2'),
+(16, 'CPU', '1'),
 (17, 'Monitor', '1'),
 (18, 'Mouses', '1'),
 (19, 'Teclado', '1'),
-(20, 'PC', '1');
+(20, 'CPU', '1');
 
 -- --------------------------------------------------------
 
@@ -508,7 +465,7 @@ CREATE TABLE `tipo_servicios` (
 
 INSERT INTO `tipo_servicios` (`id_tipo_servicios`, `servicio`, `estado_servicio`) VALUES
 (1, 'S/Servicio', '1'),
-(2, 'Metro Ethernet', '2'),
+(2, 'Metro Ethernet', '1'),
 (3, 'Fibra ABBA Plus', '1');
 
 -- --------------------------------------------------------
@@ -552,7 +509,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`cedula`, `nombre`, `apellido`, `correo`, `cargo`, `telefono`, `status_usuario`) VALUES
-(29772294, 'angel', 'leon', 'ggffd@gmail.com', 'Jefe', '21312423412', '1'),
+(29772294, 'angel', 'leon', 'ggffd@gmail.com', 'HDD', '21312423412', '1'),
 (200099224, 'INCES', 'ARAGUA', NULL, 'Instituciòn', '0000-000-00-00', '1');
 
 --
@@ -678,22 +635,10 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `dependencia`
---
-ALTER TABLE `dependencia`
-  MODIFY `id_dependencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
-
---
 -- AUTO_INCREMENT de la tabla `marcas`
 --
 ALTER TABLE `marcas`
   MODIFY `id_marcas` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
-
---
--- AUTO_INCREMENT de la tabla `modelos`
---
-ALTER TABLE `modelos`
-  MODIFY `id_modelos` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `pisos`
@@ -705,7 +650,7 @@ ALTER TABLE `pisos`
 -- AUTO_INCREMENT de la tabla `tipo_consumible`
 --
 ALTER TABLE `tipo_consumible`
-  MODIFY `id_tipo_consumible` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_tipo_consumible` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_dispositivos`

@@ -30,18 +30,6 @@ class DispositivosModel:
 
         row = self.cursor.fetchone()
         return row
-    
-        #buscador dispositivos especifico por id
-    def rastrear_dispositivo_est_trabajo(self, id, EstTrabajo):
-        sql = "SELECT * FROM dispositivos " \
-        "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas " \
-        "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos " \
-        "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " \
-        "WHERE id_tipo_dispositivo = %s AND (cd_dispositivo = %s OR serial = %s)"
-        self.cursor.execute(sql, (EstTrabajo, id, id))
-
-        row = self.cursor.fetchone()
-        return row
 
     #buscador si existe dispositivo por tipo de categoria y valor (codigo o serial)
     def get_dispositivo_if_exist(self, tipo_categoria, valor):
