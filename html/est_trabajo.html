@@ -87,7 +87,8 @@
       <div
         class="card-header bg-transparent border-0 pt-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
 
-        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto" id="DivEstTrabajo">
+        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 w-100 w-md-auto"
+          id="DivEstTrabajo">
           <div class="position-relative flex-grow-1">
 
             <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar...">
@@ -106,11 +107,10 @@
             <thead class="border-bottom border-gray-200">
               <tr class="text-uppercase fs-7 fw-bold text-muted">
                 <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
-                <th class="py-3">Marca</th>
-                <th class="py-3">Modelo</th>
-                <th class="py-3">Serial</th>
-                <th class="py-3">Piso</th>
-                <th class="py-3 text-center">Status</th>
+                <th class="py-3">Usuario</th>
+                <th class="py-3">Sistema Operativo</th>
+                <th class="py-3">Codigo Case</th>
+                <th class="py-3">En Red ?</th>
                 <th class="pe-4 py-3 text-end" style="width: 80px;">Acciones</th>
               </tr>
             </thead>
@@ -388,9 +388,81 @@
 
               <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
                 <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary px-4" id="buttomMaster">Guardar Estacion de Trabajo</button>
+                <button type="submit" class="btn btn-primary px-4" id="buttomMaster">Guardar Estacion de
+                  Trabajo</button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="EstTrabajoVerDetalles" tabindex="-1" aria-labelledby="EstTrabajoVerDetallesLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-bottom px-4">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-info-circle text-primary fs-5"></i>
+              <h5 class="modal-title fw-bold" id="DetallesModalLabel">Detalles del Dispositivo</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="row g-3">
+              <div class="col-6">
+                <p class="text-muted small mb-0">Usuario </p>
+                <p class="fw-bold fs-6 mb-0" id="id_usuario_ver">-</p>
+                <div class="col-md-6" id="datosUsuario_ver"></div>
+              </div>
+              <div class="col-6">
+                <p class="text-muted small mb-0">PC</p>
+                <p class="fw-bold fs-6 mb-0" id="cd_cpu_ver">-</p>
+                <div class="col-md-6" id="datosCPU_ver"></div>
+              </div>
+              <div class="col-6">
+                <p class="text-muted small mb-0">Monitor</p>
+                <span id="cd_monitor_ver" class="badge bg-secondary">-</span>
+                <div class="col-md-6" id="datosMonitor_ver"></div>
+              </div>
+              <div class="col-6">
+                <p class="text-muted small mb-0">Mouse</p>
+                <p class="fw-semibold mb-0" id="cd_mouse_ver">-</p>
+                <div class="col-md-6" id="datosMouse_ver"></div>
+              </div>
+              <div class="col-6">
+                <p class="text-muted small mb-0">Teclado</p>
+                <p class="fw-semibold mb-0" id="cd_teclado_ver">-</p>
+                <div class="col-md-6" id="datosTeclado_ver"></div>
+              </div>
+
+              <div class="col-6">
+                <p class="text-muted small mb-0">¿Posee Corneta?</p>
+                <p class="fw-semibold mb-0" id="posee_corneta_ver">-</p>
+                <div class="col-md-6" id="datosCorneta_ver"></div>
+              </div>
+
+              <div class="col-6">
+                <p class="text-muted small mb-0">¿Posee Regulador?</p>
+                <p class="fw-semibold mb-0" id="posee_regulador_ver">-</p>
+                <div class="col-md-6" id="datosRegulador_ver"></div>
+              </div>
+
+              <div class="col-12">
+                <hr class="my-1">
+              </div>
+              <div class="col-12">
+                <p class="text-muted small mb-0">Descripción General</p>
+                <p class="p-2 fw-semibold mb-0" id="detail_descripcion"></p>
+              </div>
+              <div class="col-12">
+                <p class="text-muted small mb-0">Observaciones Técnicas</p>
+                <p class="p-2 fw-semibold mb-0" id="detail_observaciones"></p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-top px-4 py-2">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
@@ -401,3 +473,94 @@
 
 
 <script src="../assets/js/pages/est_trabajo.js"></script>
+
+<!-- 
+    
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span
+                class="badge bg-primary-subtle text-primary rounded-circle p-1 d-inline-flex align-items-center justify-content-center"
+                style="width: 24px; height: 24px;">4</span>
+              <p class="fw-bold mb-1">Detalles del Software</p>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Tipo de Sistema Operativo<span
+                    class="text-danger h5">*</span></label>
+                <div class="input-group">
+                  <select id="tipo_so" name="tipo_so" class="form-select" required>
+                    <option value="Privado">Privado (Windows)</option>
+                    <option value="Libre">Libre (Linux)</option>
+                  </select>
+                  <span class="input-group-text text-muted"><i class="bi bi-disc"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Arquitectura<span class="text-danger h5">*</span></label>
+                <select id="arquitectura" name="arquitectura" class="form-select" required>
+                  <option value="32-bit">32-bit</option>
+                  <option value="64-bit">64-bit</option>
+                  <option value="ARM">ARM</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Distribucion del Sistema Operativo <span
+                    class="text-danger h5">*</span></label>
+                <input class="form-control" id="tipo_distribucion" name="tipo_distribucion"
+                  placeholder="Ej: Windows 10">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Es Dual Boot?<span class="text-danger h5">*</span></label>
+                <select id="es_dual_boot" name="es_dual_boot" class="form-select" required
+                  onchange="PoseeCampos('#es_dual_boot', '#segundo_so', '#input_segundo_so')">
+                  <option value="Si">Si</option>
+                  <option value="No" selected>No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-4" id="input_segundo_so" style="display: none;">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Segundo Sistema Operativo <span
+                    class="text-danger h5">*</span></label>
+                <input class="form-control" id="segundo_so" name="segundo_so" placeholder="Ej: Windows 10 64-bit">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label fw-semibold small">Programas Adicionales </label>
+                <input class="form-control" id="programas" name="programas" placeholder="Ej: Panda o 360, etc...">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="fw-bold fs-6">Programas Predeterminados</span>
+                </div>
+                <div><strong>Libre-Office, Microsoft-Office, Anydesk, Google Chrome, Firefox, </strong></div>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+              <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+-->

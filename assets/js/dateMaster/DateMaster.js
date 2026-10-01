@@ -25,4 +25,8 @@ $(".sidebar-accordion").on("click", ".btnDM", function () {
     $("#multiMarcas").collapse("show");
   }
 
+  $(".nav-link").removeClass("active");
+
+  tablaver.closest(".nav-link").addClass("active");
+
 });

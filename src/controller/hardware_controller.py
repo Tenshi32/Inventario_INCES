@@ -27,14 +27,14 @@ class HardwareController:
         valores = [
             #Datos del Switche
             datos['id_hardware'],
-            datos['id_20'],
-            datos['id_17'],
-            datos['id_18'],
-            datos['id_19'],
+            datos['id_20'], # PC
+            datos['id_17'], # Monitor
+            datos['id_18'], # Mouses
+            datos['id_19'], # Teclado
             datos['posee_regulador'],
-            datos['id_22'],
+            datos['id_22'], # Regulador
             datos['posee_corneta'],
-            datos['id_21'],
+            datos['id_21'], # Corneta
         ]
 
         retorno = self.modelo.create_hardware(valores)
@@ -49,8 +49,13 @@ class HardwareController:
 
     def Edit_hardware(self, datos):
 
-        datos['posee_regulador'] = "No" if datos['id_22'] == "" else datos['id_22'] 
-        datos['posee_corneta'] = "No" if datos['id_21'] == "" else datos['id_21'] 
+        if 'id_22' not in datos or not datos['id_22']:
+            datos['id_22'] = ""
+            datos['posee_regulador'] = "No" if datos['id_22'] == "" else datos['id_22'] 
+            
+        if 'id_21' not in datos or not datos['id_21']:
+            datos['id_21'] = ""
+            datos['posee_corneta'] = "No" if datos['id_21'] == "" else datos['id_21'] 
             
         valores = [
             #Datos del Switche
@@ -69,9 +74,9 @@ class HardwareController:
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito el hardware de id: " + datos['created']}
+            return True
             
         else:
 
-            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+            return False
         

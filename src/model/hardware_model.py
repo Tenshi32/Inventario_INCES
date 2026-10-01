@@ -43,7 +43,7 @@ class HardawareModel:
         return all_hardware
 
     def create_hardware(self, datos):
-        sql = "INSERT INTO hardwares(id_hardware, id_cpu, id_monitor, id_mouse, id_teclado, posee_regulador, cd_regulador, posee_corneta, cd_corneta) " \
+        sql = "INSERT INTO hardwares(id_hardware, cd_pc, cd_monitor, cd_mouse, cd_teclado, posee_regulador, cd_regulador, posee_corneta, cd_corneta) " \
         "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
       
         try: 
@@ -57,7 +57,7 @@ class HardawareModel:
             return None
 
     def update_hardware(self, datos):
-        sql = "UPDATE hardwares SET id_cpu = %s, id_monitor = %s, id_mouse = %s, id_teclado = %s, " \
+        sql = "UPDATE hardwares SET cd_pc = %s, cd_monitor = %s, cd_mouse = %s, cd_teclado = %s, " \
         "posee_regulador = %s, cd_regulador = %s, posee_corneta = %s, cd_corneta = %s " \
         "WHERE id_hardware= %s"
 

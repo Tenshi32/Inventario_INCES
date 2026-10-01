@@ -27,7 +27,6 @@ class SoftwareController:
                 #Datos del softwares
                 datos['id_softwares'],
                 datos['tipo_so'],
-                datos['tipo_particion'],
                 datos['tipo_distribucion'],
                 datos['arquitectura'],
                 datos['es_dual_boot'],
@@ -39,20 +38,20 @@ class SoftwareController:
 
             if retorno is not None:
 
-                return {"status": True, "mensaje": "Registro creado id: " + datos['cd_dispositivo']}
-            
+                return True
+
             else:
 
-                return {"status": False, "mensaje": "No se pudo guardar el registro"}
+                return False
 
     def Edit_software(self, datos):
 
         datos['tipo_particion'] = "Windows" if datos['tipo_so'] == "Privado" else "Linux"
+        datos['segundo_so'] = None if datos['es_dual_boot'] == "No" else datos['segundo_so']
 
         valores = [
             #Datos del softwares
             datos['tipo_so'],
-            datos['tipo_particion'],
             datos['tipo_distribucion'],
             datos['arquitectura'],
             datos['es_dual_boot'],
@@ -65,9 +64,9 @@ class SoftwareController:
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "se edito el softwares de id: " + datos['created']}
-        
-        else:
+            return True
 
-            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+        else:
+            
+            return False
         

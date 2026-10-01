@@ -387,7 +387,7 @@ async function loadContent(pageName, elementClicked = null) {
   } catch (error) {
 
     // Equivalente al include del 404.php
-    $.get("404.php", function (data) {
+    $.get("404.html", function (data) {
       contentArea.html(data);
     });
 

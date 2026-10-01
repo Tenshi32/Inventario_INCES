@@ -29,8 +29,8 @@ class EstacionTrabajoModel:
     #buscador all de estacion_trabajo
     def get_all_station_work(self):
         sql = (
-            "SELECT hardwares.* , es_trabajo.* , softwares.*, "
-            "d_cpu.cd_dispositivo AS cd_cpu, "
+            "SELECT usuarios.* , hardwares.* , es_trabajo.* , softwares.*, "
+            "d_pc.cd_dispositivo AS cd_pc, "
             "d_mon.cd_dispositivo AS cd_monitor, "
             "d_mou.cd_dispositivo AS cd_mouse, "
             "d_tec.cd_dispositivo AS cd_teclado "
@@ -39,7 +39,7 @@ class EstacionTrabajoModel:
             "LEFT JOIN hardwares ON hardwares.id_hardware = es_trabajo.id_hardware "
             "LEFT JOIN softwares ON softwares.id_software = es_trabajo.id_software "
 
-            "LEFT JOIN dispositivos d_cpu ON d_cpu.id_dispositivo = hardwares.cd_cpu "
+            "LEFT JOIN dispositivos d_pc ON d_pc.id_dispositivo = hardwares.cd_pc "
             "LEFT JOIN dispositivos d_mon ON d_mon.id_dispositivo = hardwares.cd_monitor "
             "LEFT JOIN dispositivos d_mou ON d_mou.id_dispositivo = hardwares.cd_mouse "
             "LEFT JOIN dispositivos d_tec ON d_tec.id_dispositivo = hardwares.cd_teclado "

@@ -31,8 +31,8 @@ class SoftwareModel:
         return all_softwares
 
     def create_software(self, datos):
-        sql = "INSERT INTO softwares(id_software, tipo_so, tipo_particion, tipo_distribucion, arquitectura, es_dual_boot, segundo_so, programas) " \
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO softwares(id_software, tipo_so, tipo_distribucion, arquitectura, es_dual_boot, segundo_so, programas) " \
+        "VALUES (%s, %s, %s, %s, %s, %s, %s)"
       
         try: 
             self.cursor.execute(sql, tuple(datos))
@@ -45,7 +45,7 @@ class SoftwareModel:
             return None
 
     def update_software(self, datos):
-        sql = "UPDATE softwares SET tipo_so = %s, tipo_particion = %s, tipo_distribucion = %s, arquitectura = %s, es_dual_boot = %s, segundo_so = %s, programas = %s" \
+        sql = "UPDATE softwares SET tipo_so = %s, tipo_distribucion = %s, arquitectura = %s, es_dual_boot = %s, segundo_so = %s, programas = %s" \
             "WHERE id_software= %s"
 
         try: 
