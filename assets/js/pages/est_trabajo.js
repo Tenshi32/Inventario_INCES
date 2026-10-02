@@ -72,7 +72,7 @@ function consultarEstTrabajo() {
           <a class="dropdown-item py-2 VerDetalles text-primary" 
            data-id="${item.id_es_trabajo}"
 
-           data-id_usuario="${item.id_usuario}"
+           data-id_usuario="${item.cedula}"
            
            data-cd_pc="${item.cd_pc}"
            data-cd_monitor="${item.cd_monitor}"
@@ -128,9 +128,17 @@ function consultarEstTrabajo() {
 
                           <td class="pe-4 text-end">
                            
+                            <div class="dropdown d-inline-block" style="cursor:pointer;">
+                              <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; background: transparent;">
+                                <i class="bi bi-three-dots-vertical fs-5 text-muted"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end shadow-sm border-0">
 
-                                ${optionsActios(item, "", optionesConsulta)}
-                        
+                                ${optionesConsulta}
+
+                              </div>
+                            </div>
+                                
                           </td>
                         </tr>
                       `;
@@ -140,8 +148,6 @@ function consultarEstTrabajo() {
 
       initializeDataTable('#MyTable');
       document.getElementById("totalDevice").textContent = total;
-      document.getElementById("operativoCount").textContent = operativos;
-      document.getElementById("inoperativoCount").textContent = inoperativos;
       document.getElementById("lastId").textContent = ultimoCodigo;
 
     })
@@ -187,9 +193,9 @@ $(document).on("change", "#marca_producto", function () {
 
 })
 
-function BuscarUsuario() {
+function BuscarUsuario(valor= null, card= null) {
 
-  fetch("http://localhost:5000/Usuario/Ratrear?valorBuscar=" + document.getElementById("id_usuario").value, {
+  fetch("http://localhost:5000/Usuario/Ratrear?valorBuscar=" + (valor || document.getElementById("id_usuario").value), {
     method: "GET",
   })
     .then(response => {
@@ -201,7 +207,7 @@ function BuscarUsuario() {
     .then(data => {
 
       const item = data;
-      const tabla = document.getElementById("datosUsuario");
+      const tabla = card || document.getElementById("datosUsuario");
       console.log(item);
       let contenido = "";
 
@@ -234,7 +240,7 @@ function BuscarUsuario() {
 
 function BuscarDispositivos(campo, valor, tabla) {
 
-  fetch("http://localhost:5000/Dispositivos/RatrearEstTrabajo?valorBuscar=" + campo.value + "&tipoCategoria=" + valor, {
+  fetch("http://localhost:5000/Dispositivos/RatrearEstTrabajo?valorBuscar=" + campo + "&tipoCategoria=" + valor, {
     method: "GET",
   })
     .then(response => {
@@ -586,37 +592,38 @@ $('#tablaEstTrabajo').on("click", ".Editar", function (event) {
 $('#tablaEstTrabajo').on("click", ".VerDetalles", function (event) {
 
  event.preventDefault();
+ 
+  BuscarUsuario($(this).data("id_usuario"), document.getElementById('datosUsuario_ver'));
+  //Para buscar los datos de ..
+  BuscarDispositivos($(this).data("cd_pc"), 20, document.getElementById('datosCPU_ver'));
+  
+  BuscarDispositivos($(this).data("cd_monitor"), 17, document.getElementById('datosMonitor_ver'));
+  
+  BuscarDispositivos($(this).data("cd_mouse"), 18, document.getElementById('datosMouse_ver'));
+  
+  BuscarDispositivos($(this).data("cd_teclado"), 19, document.getElementById('datosTeclado_ver'));
 
-  $("#id_usuario_ver").text($(this).data("id_usuario"));
+  $("#posee_corneta_ver").text($(this).data("posee_corneta"));
+  if ($(this).data("posee_corneta") == "Si") {
+    BuscarDispositivos($(this).data("cd_corneta"), 21, document.getElementById('datosCorneta_ver'));  
+  }
+  $("#posee_regulador_ver").text($(this).data("posee_regulador"));
+  if ($(this).data("posee_regulador") == "Si") {
+    BuscarDispositivos($(this).data("cd_regulador"), 22, document.getElementById('datosRegulador_ver'));  
+  }
+  
+    
+  $("#tipo_distribucion_ver").text($(this).data("tipo_distribucion")+ " " +$(this).data("arquitectura"));
+  
 
-
-  $("#cd_cpu_ver").text($(this).data("cd_pc"));
-  BuscarDispositivos($(this).data("cd_pc"), 20, $("#datosCPU_ver"));
-
-  $("#cd_monitor_ver").text($(this).data("cd_monitor"));
-  BuscarDispositivos($(this).data("cd_monitor"), 17, $("#datosMonitor_ver"));
-
-  $("#cd_mouse_ver").text($(this).data("cd_mouse"));
-  BuscarDispositivos($(this).data("cd_mouse"), 18, $("#datosMouse_ver"));
-
-  $("#cd_teclado_ver").text($(this).data("cd_teclado"));
-  BuscarDispositivos($(this).data("cd_teclado"), 19, $("#datosTeclado_ver"));
-
-  /*$("#id_softwares").val($(this).data("id_softwares"));
-  $("#tipo_so").val($(this).data("tipo_so"));
-  $("#tipo_particion").val($(this).data("tipo_particion"));
-  $("#tipo_distribucion").val($(this).data("tipo_distribucion"));
-  $("#arquitectura").val($(this).data("arquitectura"));
-
-  $("#es_dual_boot").val($(this).data("es_dual_boot"));
-  // Lógica de Serial
-  const esDualBoot = $(this).data("es_dual_boot");
-  $("#es_dual_boot").val(esDualBoot).trigger("change"); // trigger fuerza a que se muestre el input_serial
-  if (esDualBoot == "Si") {
-    $("#segundo_so").val($(this).data("segundo_so"));
+  $("#es_dual_boot_ver").text($(this).data("es_dual_boot"));
+  if ($(this).data("es_dual_boot") == "Si") {
+    $("#segundo_so_ver").text($(this).data("segundo_so"));
+  }else{
+    $("#segundo_so_ver").text("");
   }
 
-  $("#programas").val($(this).data("programas"));*/
+  $("#programas_ver").text("Libre-Office, Microsoft-Office, Anydesk, Google Chrome, Firefox, "+$(this).data("programas"));
 
   // Abrir el modal de forma segura
   $("#EstTrabajoVerDetalles").modal("show");
