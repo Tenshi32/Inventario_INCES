@@ -37,3 +37,4 @@ function SessionActiva(){
   const nombre = sessionStorage.getItem('usuario_nombre') || '';
   $('.username').text(nombre);
 }
+

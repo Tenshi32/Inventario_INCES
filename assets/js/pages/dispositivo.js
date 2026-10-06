@@ -1,4 +1,5 @@
 function consultarDispositivo() {
+
   fetch("http://127.0.0.1:5000/Dispositivos/All", {
     method: "GET",
   })
@@ -11,13 +12,9 @@ function consultarDispositivo() {
       // 3. Guardar en sessionStorage transformando el JSON a string
       sessionStorage.setItem("dispositivosData", JSON.stringify(data));
 
-      const lista = Object.values(data);
-      const tabla = document.getElementById("tablaDispositivos");
+      const lista = data;
 
-      let contenido = "";
       let total = lista.length;
-      let operativos = 0;
-      let inoperativos = 0;
       let ultimoCodigo = "-";
 
       if ($.fn.DataTable.isDataTable('#MyTable')) {
@@ -28,59 +25,100 @@ function consultarDispositivo() {
         ultimoCodigo = lista[lista.length - 1].cd_dispositivo;
       }
 
-      lista.forEach(item => {
 
-        if (item.id_status === 1) operativos++;
-        if (item.id_status === 2) inoperativos++;
 
-        let textoAccion = (item.id_status !== 1) ? 'Operativo' : 'Inoperativo';
 
-        const optionEditar = `
-          <a class="dropdown-item py-2 DispositivoEditar text-primary" 
-             data-id_dispositivo="${item.id_dispositivo}"
-             data-cd_dispositivo="${item.cd_dispositivo}"
-             data-posee_marca="${item.posee_marca}"
-             data-marca="${item.id_marcas}"
-             data-posee_modelo="${item.posee_modelo}"
-             data-modelo="${item.id_modelo}"
-             data-posee_serial="${item.posee_serial}"
-             data-serial="${item.serial}"
-             data-id_tipo_dispositivo="${item.id_tipo_dispositivo}"
-             data-descripcion_general="${item.descripcion_general}"
-             data-observaciones_tecnicas="${item.observaciones_tecnicas}" 
-             data-status="${item.id_tipo_status}">
-             <i class="bi bi-pencil me-2"></i>Editar 
-          </a>
-        `;
+      document.getElementById("totalDevice").textContent = total;
+      document.getElementById("lastId").textContent = ultimoCodigo;
+    })
+    .catch(error => {
+      console.error("Hubo un problema con la consulta:", error);
+    });
+}
 
-        // Agrega esto junto a tus otras opciones de la tabla (ej. optionEditar)
-        const optionDetalle = `
-          <a class="dropdown-item py-2 DispositivoVerDetalle text-info" 
-             href="#"
-             data-cd_dispositivo="${item.cd_dispositivo}"
-             data-tipo_dispositivo="${item.tipo_dispositivo}"
-             data-statu="${item.statu}"
-             data-id_status="${item.id_status}"
-             data-posee_codigo="${item.posee_codigo}"
-             data-posee_marca="${item.posee_marca}"
-             data-id_marca="${item.id_marca}"
-             data-marca="${item.marca}"
-             data-posee_modelo="${item.posee_modelo}"
-             data-id_modelo="${item.id_modelo}"
-             data-modelo="${item.modelo}"
-             data-posee_serial="${item.posee_serial}"
-             data-serial="${item.serial}"
-             data-descripcion_general="${item.descripcion_general}"
-             data-observaciones_tecnicas="${item.observaciones_tecnicas}"
-             data-fecha_carga="${item.fecha_carga}"
-             data-fecha_modificacion="${item.fecha_modificacion}">
-             <i class="bx bx-show me-2"></i>Ver Detalle 
-          </a>
-        `;
+function consultarTipoDispositivo() {
 
-        let Actions = optionEditar + optionDetalle;
+  // 1. URL de tu servidor Flask
+  fetch("http://127.0.0.1:5000/tipo_dispositivos/All", {
+    method: "GET",
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Error en la red");
+      return response.json();
+    })
+    .then(data => {
 
-        contenido += `
+      // 2. Guardar en sessionStorage transformando el JSON a string
+      sessionStorage.setItem("tipoDispositivosData", JSON.stringify(data));
+
+    })
+    .catch(error => {
+      console.error("Hubo un problema con la consulta:", error);
+    });
+}
+
+function datosDispositivo() {
+
+  const tabla = document.getElementById("tablaDispositivos");
+  const listaCache = sessionStorage.getItem("dispositivosData");
+  const lista = JSON.parse(listaCache);
+
+  let operativos = 0;
+  let inoperativos = 0;
+  let contenido = "";
+
+  lista.forEach(item => {
+
+    const optionEditar = `
+              <a class="dropdown-item py-2 DispositivoEditar text-primary" 
+                 data-id_dispositivo="${item.id_dispositivo}"
+                 data-cd_dispositivo="${item.cd_dispositivo}"
+                 data-posee_marca="${item.posee_marca}"
+                 data-marca="${item.id_marcas}"
+                 data-posee_modelo="${item.posee_modelo}"
+                 data-modelo="${item.id_modelo}"
+                 data-posee_serial="${item.posee_serial}"
+                 data-serial="${item.serial}"
+                 data-id_tipo_dispositivo="${item.id_tipo_dispositivo}"
+                 data-descripcion_general="${item.descripcion_general}"
+                 data-observaciones_tecnicas="${item.observaciones_tecnicas}" 
+                 data-status="${item.id_tipo_status}">
+                 <i class="bi bi-pencil me-2"></i>Editar 
+              </a>
+            `;
+
+    const optionDetalle = `
+              <a class="dropdown-item py-2 DispositivoVerDetalle text-info" 
+                 href="#"
+                 data-cd_dispositivo="${item.cd_dispositivo}"
+                 data-tipo_dispositivo="${item.tipo_dispositivo}"
+                 data-statu="${item.statu}"
+                 data-id_status="${item.id_status}"
+                 data-posee_codigo="${item.posee_codigo}"
+                 data-posee_marca="${item.posee_marca}"
+                 data-id_marca="${item.id_marca}"
+                 data-marca="${item.marca}"
+                 data-posee_modelo="${item.posee_modelo}"
+                 data-id_modelo="${item.id_modelo}"
+                 data-modelo="${item.modelo}"
+                 data-posee_serial="${item.posee_serial}"
+                 data-serial="${item.serial}"
+                 data-descripcion_general="${item.descripcion_general}"
+                 data-observaciones_tecnicas="${item.observaciones_tecnicas}"
+                 data-fecha_carga="${item.fecha_carga}"
+                 data-fecha_modificacion="${item.fecha_modificacion}">
+                 <i class="bx bx-show me-2"></i>Ver Detalle 
+              </a>
+            `;
+
+    if (item.id_status === 1) operativos++;
+    if (item.id_status === 2) inoperativos++;
+
+    let textoAccion = (item.id_status !== 1) ? 'Operativo' : 'Inoperativo';
+
+    let Actions = optionEditar + optionDetalle;
+
+    contenido += `
           <tr class="border-bottom border-gray-100">
             <td class="ps-4 py-3">
               <span class="fw-bold fs-6">${item.cd_dispositivo}</span>
@@ -107,43 +145,14 @@ function consultarDispositivo() {
           </tr>
         `;
 
-      });
+  });
 
-      tabla.innerHTML = contenido;
+  tabla.innerHTML = contenido;
 
-      initializeDataTable('#MyTable');
+  document.getElementById("operativoCount").textContent = operativos;
+  document.getElementById("inoperativoCount").textContent = inoperativos;
 
-      document.getElementById("totalDevice").textContent = total;
-      document.getElementById("operativoCount").textContent = operativos;
-      document.getElementById("inoperativoCount").textContent = inoperativos;
-      document.getElementById("lastId").textContent = ultimoCodigo;
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function consultarTipoDispositivo() {
-
-  console.log("Consultando API Flask por red...");
-  // 1. URL de tu servidor Flask
-  fetch("http://127.0.0.1:5000/tipo_dispositivos/All", {
-    method: "GET",
-  })
-    .then(response => {
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-    })
-    .then(data => {
-
-      // 3. Guardar en sessionStorage transformando el JSON a string
-      sessionStorage.setItem("tipoDispositivosData", JSON.stringify(data));
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
+  initializeDataTable('#MyTable');
 }
 
 function SelectTipoDispositivos() {
@@ -178,20 +187,16 @@ function FiltroTipoDispositivos() {
 
   lista.forEach(item => {
 
-    if (item.estado_tipo_dispositivo == "1") {
-
-      if (item.tipo_dispositivo === "S/Categoria") {
-        contenido += `
+    if (item.tipo_dispositivo === "S/Categoria") {
+      contenido += `
           <option value="" selected>${item.tipo_dispositivo}</option>
         `;
 
-      } else {
+    } else {
 
-        contenido += `
+      contenido += `
           <option value="${item.tipo_dispositivo}">${item.tipo_dispositivo}</option>
         `;
-
-      }
 
     }
 
@@ -203,91 +208,98 @@ function FiltroTipoDispositivos() {
 
 // Evento dependiente de Select Marca -> Modelos
 $(document).on("change", "#marca_producto", function () {
-  const marcaId = $(this).val();
+  if ("#formDispositivo".length){
 
-  if (marcaId) {
-    selectDependiente("modelo_producto", "modelos", "modelo", marcaId);
+    const marcaId = $(this).val();
+
+    if (marcaId) {
+      selectDependiente("modelo_producto", "modelos", "modelo", marcaId);
+    }
   }
 
 });
 
-$(document).ready(function () {
+$("#dispositivo").ready(function () {
+  if ($("#pageDispositivo").length) {
 
-  selectModelos("marca_producto", "marcas", "marca");
+    selectModelos("marca_producto", "marcas", "marca");
 
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  initializeTooltips(tooltipTriggerList);
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    initializeTooltips(tooltipTriggerList);
 
-  consultarTipoDispositivo();
-  FiltroTipoDispositivos();
-  SelectTipoDispositivos();
-  
-  // Validación del Formulario
-  $("#formDispositivo").validate({
-    rules: {
-      cd_dispositivo: {
-        minlength: 3,
-        maxlength: 20
-      },
-      status: {
-        required: true
-      },
-      posee_marca: {
-        required: true
-      },
-      posee_modelo: {
-        required: true
-      },
-      posee_serial: {
-        required: true
-      },
-      serial_producto: {
-        minlength: 6
-      },
+    consultarDispositivo();
+    consultarTipoDispositivo();
 
-    },
-    messages: {
-      cd_dispositivo: {
-        minlength: "El código debe tener al menos 3 caracteres",
-        maxlength: "El código no puede exceder 20 caracteres"
-      },
-      status: {
-        required: "El estado es obligatorio"
-      },
-      posee_marca: {
-        required: "Indique si posee o no marca"
-      },
-      posee_modelo: {
-        required: "Indique si posee o no modelo"
-      },
-      posee_serial: {
-        required: "Indique si posee o no número de serie"
-      },
-      marca_producto: {
-        required: "La marca es obligatoria"
-      },
-      modelo_producto: {
-        required: "El modelo es obligatorio"
-      },
-      serial_producto: {
-        required: "El número de serie es obligatorio",
-        minlength: "El número de serie debe tener al menos 6 caracteres"
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element) {
-      $(element).removeClass('is-invalid');
-    }
-  });
+    datosDispositivo();
+    FiltroTipoDispositivos();
+    SelectTipoDispositivos();
 
-  consultarDispositivo();
+    // Validación del Formulario
+    $("#formDispositivo").validate({
+      rules: {
+        cd_dispositivo: {
+          minlength: 3,
+          maxlength: 20
+        },
+        status: {
+          required: true
+        },
+        posee_marca: {
+          required: true
+        },
+        posee_modelo: {
+          required: true
+        },
+        posee_serial: {
+          required: true
+        },
+        serial_producto: {
+          minlength: 6
+        },
+
+      },
+      messages: {
+        cd_dispositivo: {
+          minlength: "El código debe tener al menos 3 caracteres",
+          maxlength: "El código no puede exceder 20 caracteres"
+        },
+        status: {
+          required: "El estado es obligatorio"
+        },
+        posee_marca: {
+          required: "Indique si posee o no marca"
+        },
+        posee_modelo: {
+          required: "Indique si posee o no modelo"
+        },
+        posee_serial: {
+          required: "Indique si posee o no número de serie"
+        },
+        marca_producto: {
+          required: "La marca es obligatoria"
+        },
+        modelo_producto: {
+          required: "El modelo es obligatorio"
+        },
+        serial_producto: {
+          required: "El número de serie es obligatorio",
+          minlength: "El número de serie debe tener al menos 6 caracteres"
+        },
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element) {
+        $(element).removeClass('is-invalid');
+      }
+    });
+
+  }
 });
 
 // SUBMIT UNIFICADO (CREAR / EDITAR)

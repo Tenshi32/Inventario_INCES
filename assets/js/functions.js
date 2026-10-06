@@ -61,7 +61,6 @@ function initializeDataTable(IDtable) {
     }
   });
   
-
   $('#filtroTipo').off('change').on('change', function () {
     if (this.value == "") {
       table.column(1).search("").draw(); // Limpia el filtro interno y redibuja todo
@@ -145,7 +144,6 @@ function ActionToggle(statusActual, id, callback) {
   methodSend(FormnDepa, callback);
 }
 
-
 function ActionToggleDatosMaestros(statusActual, id, callback, EndPoint, campobd = null) {
 
   const nuevoStatus = (statusActual == 1) ? 2 : (statusActual == 2) ? 1 : 3;
@@ -153,7 +151,9 @@ function ActionToggleDatosMaestros(statusActual, id, callback, EndPoint, campobd
   // Creamos el contenedor de datos manual
   const datosManuales = new FormData();
 
-  datosManuales.append(campobd, id);
+  const campo = campobd || "id_dispositivo";
+
+  datosManuales.append(campo, id);
   datosManuales.append("id_status", nuevoStatus);
 
   const FormnDepa = {
@@ -280,7 +280,7 @@ function optionsActios(item, textoAccion, optionEditar) {
           <a class="dropdown-item Toggle text-danger py-1"
             data-id="${item.id_dispositivo}"
             data-status="3">
-            <i class="bi bi-trash"></i> Desincorporar
+            <i class="bi bi-trash"></i> Dañado
           </a>
       </div>
     </div>

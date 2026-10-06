@@ -1,6 +1,5 @@
 from controller.tipo_dispositivos_controller import TipoDispositivosController
-from flask import Blueprint, request, jsonify
-from model.db_connect import DbConnect
+from flask import request, jsonify
 
 def tipo_dispositivos(accion):
 

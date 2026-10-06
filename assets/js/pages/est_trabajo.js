@@ -287,17 +287,19 @@ function BuscarDispositivos(campo, valor, tabla) {
 
 $(document).ready(function () {
 
-  //selectModelos("marca_producto", "marcas", "marca");
+  if ($("#pageEst_trabajo").length) {
 
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    //selectModelos("marca_producto", "marcas", "marca");
 
-  initializeTooltips(tooltipTriggerList)
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 
-  initializeDataTable("#MyTable")
+    initializeTooltips(tooltipTriggerList)
 
-  $("#formEstTrabajo").validate({
+    initializeDataTable("#MyTable")
 
-    rules: {
+    $("#formEstTrabajo").validate({
+
+      rules: {
       // 1. Detalles del Usuario y Componentes Principales
       id_usuario: {
         required: true
@@ -356,9 +358,9 @@ $(document).ready(function () {
       programas: {
         required: false // Opcional
       }
-    },
+      },
 
-    messages: {
+      messages: {
 
       // 1. Detalles del Usuario y Componentes
       id_usuario: {
@@ -409,23 +411,24 @@ $(document).ready(function () {
       segundo_so: {
         required: "Especifique el segundo sistema operativo"
       }
-    },
+      },
 
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      }
+    });
 
-  consultarEstTrabajo()
-
+    consultarEstTrabajo()
+  }
+  
 });
 
 // ==========================================

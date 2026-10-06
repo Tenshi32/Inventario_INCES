@@ -1,11 +1,10 @@
 import mysql.connector
-import subprocess
 
 class DbConnect:
 
     def __init__(self):
         self.conn = None
-        self.mysql_params = {'host':'localhost','user':'root','password':'','database':'inces_inventario'}
+        self.mysql_params = {'host':'127.0.0.1','user':'root','password':'','database':'inces_inventario'}
 
     def connect(self):
         try:
@@ -16,7 +15,7 @@ class DbConnect:
             print('MySQL connection failed:', e)
             return None
         
-        """Exporta la base de datos a un archivo .sql"""
+    """Exporta la base de datos a un archivo .sql"""
 """     def exporte(self, output_file="backup_aragerinces.sql"):
         try:
             comando = (

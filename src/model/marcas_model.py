@@ -20,7 +20,7 @@ class MarcasModel:
 
     #buscador all de marcas
     def get_all_marcas(self):
-        sql = "SELECT * FROM marcas " \
+        sql = "SELECT id_marcas, marca FROM marcas " \
         "WHERE estado_marca != 3 ORDER BY id_marcas DESC"
         self.cursor.execute(sql)
 

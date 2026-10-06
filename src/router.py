@@ -15,8 +15,8 @@ from routers.dispositivos_router import dispositivos
 from routers.estaciones_router import estacionesTrabajo
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}) # Evita errores de bloqueo en el navegador 
-app.secret_key = '2026'
+CORS(app) # Evita errores de bloqueo en el navegador 
+
  
 
 #------------------- RUTAS ------------------
@@ -74,4 +74,4 @@ def estados_route(accion):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, threaded=True, host='127.0.0.1', port=5000)

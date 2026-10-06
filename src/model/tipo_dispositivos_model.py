@@ -3,12 +3,8 @@ from model.db_connect import DbConnect
 class TipoDispositivosModel:
 
     def __init__(self):
-        self.conn = DbConnect().connect()
+        self.db = DbConnect()
 
-        if self.conn is None:
-            raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
-
-        self.cursor = self.conn.cursor(dictionary=True)
 
     #buscador tipo de dispositivo especifico por id
     def get_tipo_dispositivo(self, id):
@@ -20,10 +16,16 @@ class TipoDispositivosModel:
 
     #buscador all de tipo de dispositivo 
     def get_all_tipo_dispositivos(self):
-        sql = "SELECT * FROM tipo_dispositivos"
-        self.cursor.execute(sql)
 
-        tipo_dispositivos = self.cursor.fetchall()
+        conn = self.db.connect()
+        cursor = conn.cursor(dictionary=True)
+
+        sql = "SELECT id_tipo_dispositivo, tipo_dispositivo, estado_tipo_dispositivo FROM tipo_dispositivos"
+        cursor.execute(sql)
+
+        tipo_dispositivos = cursor.fetchall()
+        conn.close()
+
         return tipo_dispositivos
 
     def create_tipo_dispositivo(self, datos):

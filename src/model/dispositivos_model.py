@@ -3,24 +3,25 @@ from model.db_connect import DbConnect
 class DispositivosModel:
 
     def __init__(self):
-        self.conn = DbConnect().connect()
-
-        if self.conn is None:
-            raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
-
-        self.cursor = self.conn.cursor(dictionary=True)
+        self.db = DbConnect().connect()
 
     #buscador todos los dispositivos
     def get_all_device(self):
-        sql = "SELECT * FROM dispositivos " \
+
+        cursor = self.db.cursor(dictionary=True)
+
+        sql = "SELECT tipo_status.*, modelos.*, marcas.*, tipo_dispositivos.*, dispositivos.cd_dispositivo, dispositivos.posee_marca, " \
+        "dispositivos.posee_modelo,dispositivos.posee_serial, dispositivos.serial, dispositivos.descripcion_general, dispositivos.observaciones_tecnicas FROM dispositivos " \
         "INNER JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo " \
         "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas " \
         "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos " \
         "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " \
-        "ORDER BY dispositivos.fecha_carga ASC"
-        self.cursor.execute(sql)
+        "ORDER BY dispositivos.fecha_carga ASC "
+        cursor.execute(sql)
 
-        all_device = self.cursor.fetchall()
+        all_device = cursor.fetchall()
+        cursor.close()
+
         return all_device
     
     #buscador dispositivos especifico por id
