@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, make_response
+from flask import Flask, request, jsonify, session, make_response, send_from_directory
 from flask_cors import CORS
 import os
 
@@ -14,9 +14,22 @@ from routers.modelos_router import modelos
 from routers.dispositivos_router import dispositivos
 from routers.estaciones_router import estacionesTrabajo
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../html', static_url_path='')
 CORS(app) # Evita errores de bloqueo en el navegador 
 
+
+# Ruta para la página principal
+@app.route('/')
+def home():
+    return send_from_directory(app.static_folder, 'index.html')
+
+# Catch-all: si usas enrutamiento en el cliente (SPA), redirige cualquier otra ruta desconocida a index.html
+@app.route('/<path:path>')
+def catch_all(path):
+    file_path = os.path.join(app.static_folder, path)
+    if os.path.exists(file_path):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, 'index.html')
  
 
 #------------------- RUTAS ------------------

@@ -2,7 +2,8 @@
   RewriteEngine On
   RewriteBase /
   RewriteRule ^html/index\.html$ - [L]
+  RewriteRule ^$ /html/index.html [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /html/index.html [L]
+  RewriteRule ^(.*)$ /html/index.html [L]
 </IfModule>
