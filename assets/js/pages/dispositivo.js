@@ -1,6 +1,6 @@
 function consultarDispositivo() {
 
-  fetch("http://127.0.0.1:5000/Dispositivos/All", {
+  fetch("https://inventario-inces.onrender.com/Dispositivos/All", {
     method: "GET",
   })
     .then(response => {
@@ -39,7 +39,7 @@ function consultarDispositivo() {
 function consultarTipoDispositivo() {
 
   // 1. URL de tu servidor Flask
-  fetch("http://127.0.0.1:5000/tipo_dispositivos/All", {
+  fetch("https://inventario-inces.onrender.com/tipo_dispositivos/All", {
     method: "GET",
   })
     .then(response => {
@@ -313,14 +313,14 @@ $("#formDispositivo").on("submit", function (event) {
   if (accion === "edit") {
     ActionCreateEdit(
       "formDispositivo",
-      "http://127.0.0.1:5000/Dispositivos/Editar",
+      "https://inventario-inces.onrender.com/Dispositivos/Editar",
       "PUT",
       consultarDispositivo
     );
   } else {
     ActionCreateEdit(
       "formDispositivo",
-      "http://127.0.0.1:5000/Dispositivos/Crear",
+      "https://inventario-inces.onrender.com/Dispositivos/Crear",
       "POST",
       consultarDispositivo
     );
