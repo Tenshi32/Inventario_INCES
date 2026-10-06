@@ -17,6 +17,8 @@ from routers.estaciones_router import estacionesTrabajo
 app = Flask(__name__, static_folder='../html', static_url_path='')
 CORS(app) # Evita errores de bloqueo en el navegador 
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 
 # Ruta para la página principal
 @app.route('/')
@@ -30,7 +32,10 @@ def catch_all(path):
     if os.path.exists(file_path):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, 'index.html')
- 
+
+@app.route('/assets/<path:filename>')
+def serve_assets(filename):
+    return send_from_directory(ASSETS_DIR, filename)
 
 #------------------- RUTAS ------------------
 
