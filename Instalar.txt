@@ -1,0 +1,5 @@
+Phytom
+pip install Flask
+pip install flask-cors
+
+pip install mysql-connector-python

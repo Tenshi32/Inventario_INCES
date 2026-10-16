@@ -22,30 +22,36 @@ class InternosController:
 
     def crear_interno(self, datos):
 
+        # info = self.modelo.get_usuarioInt(datos['cedulaInterno'])
+
+        # console
+
+    # if info:
         if datos['password'] == datos['passwordConfirm']:
-            # Crear el objeto hash SHA-256
-            resultado = hashlib.sha256(datos['password'].encode('utf-8'))
+            # # Crear el objeto hash SHA-256
+            # resultado = hashlib.sha256(datos['password'].encode('utf-8'))
 
-            # Obtener el hash en formato hexadecimal
-            hex_dig = resultado.hexdigest()
+            # # Obtener el hash en formato hexadecimal
+            # hex_dig = resultado.hexdigest()
 
-            valores = [
-                datos['cedulaInterno'],
-                datos['cedulaInterno'],
-                hex_dig,
-                datos['rol_in'],
-            ]
+            # valores = [
+            #     datos['cedulaInterno'],
+            #     datos['cedulaInterno'],
+            #     hex_dig,
+            #     datos['rol_in'],
+            # ]
 
-            retorno = self.modelo.create_interno(valores)
+            # retorno = self.modelo.create_interno(valores)
 
-            if retorno is not None:
-                return {"status": True, "mensaje": f"Interno creado con la cedula: V-{datos['cedulaInterno']}"}
-            else:
-                return {"status": False, "mensaje": "No se pudo crear el interno"}
-            
+            # if retorno is not None:
+            #     return {"status": True, "mensaje": f"Interno creado con la cedula: V-{datos['cedulaInterno']}"}
+            # else:
+            return {"status": False, "mensaje": "No se pudo crear el interno HELP"}
         else:
-
-            return {"status": False, "mensaje": "Las contraseñas no coinciden"}
+            return {"status": False, "mensaje": "Las contraseñas no coinciden" + datos['cedulaInterno']}
+    # else:
+        return {"status": False, "mensaje": f"El empleado con la cedula: V-{datos['cedulaInterno']} no existe"}
+        
 
     def editar_interno(self, datos):
 

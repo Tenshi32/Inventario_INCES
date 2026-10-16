@@ -24,7 +24,7 @@ function consultarInterno() {
         $('#MyTable').DataTable().destroy();
       }
 
-      // Si hay elementos, obtenemos el código del último switch registrado
+      // Hay que buscar por orden de fecha
       if (lista.length > 0) {
         // Asumiendo que el último elemento del array es el más reciente
         ultimoCodigo = lista[lista.length - 1].cedula;
@@ -127,7 +127,7 @@ function ValidacionUnicoUsuario(id_campo) {
 
       .then(data => {
         if (data != null) {
-          initializeToast("El Cedula o Telefono de activo ya Existe.", "danger");
+          initializeToast("La Cedula o Telefono ya Existe.", "danger");
         }
       })
 

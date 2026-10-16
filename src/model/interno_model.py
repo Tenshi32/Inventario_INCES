@@ -9,7 +9,13 @@ class InternoModel:
             raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
 
         self.cursor = self.conn.cursor(dictionary=True)
+
+    def get_usuarioInt(self, id):
+         sql = "SELECT * FROM usuarios WHERE cedula = %s "
+         self.cursor.execute(sql, (id,))
  
+         row = self.cursor.fetchone()
+         return row
     def get_interno(self, id):
         sql = "SELECT * FROM interno " \
         "INNER JOIN usuarios ON usuarios.cedula = interno.id_usuario_cedula"

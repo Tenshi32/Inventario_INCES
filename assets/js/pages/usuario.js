@@ -126,7 +126,7 @@ function ValidacionUnicoUsuario(id_campo) {
 
       .then(data => {
         if (data != null) {
-          initializeToast("El Cedula o Telefono de activo ya Existe.", "danger");
+          initializeToast("La Cedula o Telefono ya Existe.", "danger");
         }
       })
 
