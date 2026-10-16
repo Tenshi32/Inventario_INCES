@@ -12,7 +12,7 @@ class ModelosModel:
 
     #buscador modelo especifico por id
     def get_modelo(self, id):
-        sql = "SELECT * FROM modelos WHERE id_modelos = %s"
+        sql = "SELECT * FROM modelos WHERE id_modelos = %s AND id_modelos = 1"
         self.cursor.execute(sql, (id))
 
         row = self.cursor.fetchone()
@@ -29,13 +29,24 @@ class ModelosModel:
         return all_modelos
 
     def get_modelos_for_device(self, marca):
-        sql = "SELECT id_modelos, modelo FROM modelos WHERE id_marca = %s"
-        self.cursor.execute(sql, (marca,))
+        sql = "SELECT id_modelos, modelo FROM modelos WHERE id_marca = %s OR id_marca = %s"
+        self.cursor.execute(sql, (marca, 1))
 
         model_list = self.cursor.fetchall()
         return model_list
 
+    def existe_modelo(self, dato):
+        sqlValidar = "SELECT id_modelos FROM modelos WHERE UPPER(modelo) = UPPER(%s)"
+        self.cursor.execute(sqlValidar,(dato,))
+        return self.cursor.fetchone()
+
     def create_modelo(self, datos):
+
+        respuesta = self.existe_modelo(datos["modelo"])
+
+        if respuesta is not None:
+            return respuesta
+
         sql = "INSERT INTO modelos (id_marca, modelo, estado_modelo) " \
         "VALUES (%s, %s, %s)"
 

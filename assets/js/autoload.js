@@ -1,3 +1,4 @@
+
 $(document).on("click", "a[data-page]", function (e) {
     e.preventDefault();
     const pageToLoad = $(this).data("page");
@@ -32,6 +33,8 @@ document.addEventListener('keyup', e => {
     });
   }
 });
+
+
 
 function SessionActiva(){
   const nombre = sessionStorage.getItem('usuario_nombre') || '';

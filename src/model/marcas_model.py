@@ -3,12 +3,7 @@ from model.db_connect import DbConnect
 class MarcasModel:
 
     def __init__(self):
-        self.conn = DbConnect().connect()
-
-        if self.conn is None:
-            raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
-
-        self.cursor = self.conn.cursor(dictionary=True)
+        self.db = DbConnect().connect()
 
     #buscador marca especifica por id
     def get_marca(self, id):
@@ -20,14 +15,29 @@ class MarcasModel:
 
     #buscador all de marcas
     def get_all_marcas(self):
+        cursor = self.db.cursor(dictionary=True)
+
         sql = "SELECT id_marcas, marca FROM marcas " \
         "WHERE estado_marca != 3 ORDER BY id_marcas DESC"
-        self.cursor.execute(sql)
-
-        all_marcas = self.cursor.fetchall()
+        cursor.execute(sql)
+ 
+        all_marcas = cursor.fetchall() 
         return all_marcas
 
+    def existe_marca(self, dato):
+        cursor = self.db.cursor(dictionary=True)
+        sqlValidar = "SELECT id_marcas FROM marcas WHERE UPPER(marca) = UPPER(%s)"
+        cursor.execute(sqlValidar,(dato,))
+        return cursor.fetchone()
+
+
     def create_marca(self, datos):
+
+        respuesta = self.existe_marca(datos["marca"])
+
+        if respuesta is not None:
+            return respuesta
+
         sql = "INSERT INTO marcas (marca, estado_marca) " \
         "VALUES (%s, %s)"
 

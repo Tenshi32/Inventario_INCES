@@ -22,15 +22,16 @@ class MarcasController:
             datos['marca'],
             1,
         ]
+
         retorno = self.modelo.create_marca(valores)
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_switches']}
+            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_switches'], "IdFila": retorno}
         
         else:
 
-            return {"status": False, "mensaje": "No se pudo guardar el registro"}
+            return {"status": False, "mensaje": "No se pudo guardar la marca"}
 
     def editar_marca(self, datos):
         valores = [

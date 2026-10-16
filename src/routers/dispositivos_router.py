@@ -12,9 +12,26 @@ def dispositivos(accion):
     # GET -> Consultar
     if request.method == 'GET':
         if accion == 'All':
-            answer = ctrl.all_dispositivos()
-            return jsonify(answer)
+            offset = request.args.get('offset', default=0, type=int)
+            limit = request.args.get('limit', default=5, type=int)
+            search = request.args.get('search', default="")
+            estado = request.args.get('estado')
+            tipo = request.args.get('tipo')
+
+            answer = ctrl.all_dispositivos(offset, limit, search, estado, tipo)
+
+            return jsonify({
+            "recordsTotal": answer[1],
+            "recordsFiltered":  answer[1],
+            "data": answer[0]
+            })
         
+        if accion == 'Search':
+            valorBuscar = request.args.get('valorBuscar')
+            print("Datos que llegaron para buscar dispositivo por código:", valorBuscar)
+            answer = ctrl.rastrear_dispositivo(valorBuscar)
+            return jsonify(answer) 
+
         if accion == 'ExistenciaDispositivo':
             valorBuscar = request.args.get('valorBuscar')
             tipo_dispositivo = request.args.get('tipo_dispositivo')

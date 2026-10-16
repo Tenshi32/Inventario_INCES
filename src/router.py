@@ -14,28 +14,8 @@ from routers.modelos_router import modelos
 from routers.dispositivos_router import dispositivos
 from routers.estaciones_router import estacionesTrabajo
 
-app = Flask(__name__, static_folder='../html', static_url_path='')
+app = Flask(__name__)
 CORS(app) # Evita errores de bloqueo en el navegador 
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
-
-# Ruta para la página principal
-@app.route('/')
-def home():
-    return send_from_directory(app.static_folder, 'index.html')
-
-# Catch-all: si usas enrutamiento en el cliente (SPA), redirige cualquier otra ruta desconocida a index.html
-@app.route('/<path:path>')
-def catch_all(path):
-    file_path = os.path.join(app.static_folder, path)
-    if os.path.exists(file_path):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.route('/assets/<path:filename>')
-def serve_assets(filename):
-    return send_from_directory(ASSETS_DIR, filename)
 
 #------------------- RUTAS ------------------
 
@@ -56,7 +36,7 @@ def modelos_route(accion):
     return modelos(accion)
 
 #------------------- MARCAS ------------------
-@app.route('/marcas/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+@app.route('/Marcas/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def marcas_route(accion):
     return marcas(accion)
 

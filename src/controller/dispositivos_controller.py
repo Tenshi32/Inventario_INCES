@@ -1,4 +1,6 @@
 from model.dispositivos_model import DispositivosModel
+from controller.marcas_controller import MarcasController
+from controller.modelo_controller import ModelosController
 import random
 
 class DispositivosController:
@@ -8,8 +10,8 @@ class DispositivosController:
         self.modelo = DispositivosModel()
 
     #buscador todos los dispositivos
-    def all_dispositivos(self):
-        return self.modelo.get_all_device()
+    def all_dispositivos(self, offset, limit, search, estado, tipo):
+        return self.modelo.get_all_device(offset, limit, search, estado, tipo)
 
     #buscador dispositivos especifico por id
     def rastrear_dispositivo(self, id):
@@ -52,12 +54,12 @@ class DispositivosController:
         # Validar Marca
         if datos['posee_marca'] not in ["Si", "No"]:
             return {"status": False, "mensaje": "El campo 'posee_marca' debe ser 'Si' o 'No'."}
-        if datos['posee_marca'] == "Si" and (not datos['marca_producto'] or datos['marca_producto'] == "1"):
+        if datos['posee_marca'] == "Si" and (not datos['marca_producto']):
             return {"status": False, "mensaje": "Indicó que posee marca, pero no seleccionó una marca válida."}
         # Validar Modelo
         if datos['posee_modelo'] not in ["Si", "No"]:
             return {"status": False, "mensaje": "El campo 'posee_modelo' debe ser 'Si' o 'No'."}
-        if datos['posee_modelo'] == "Si" and (not datos['modelo_producto'] or datos['modelo_producto'] == "1"):
+        if datos['posee_modelo'] == "Si" and (not datos['modelo_producto']):
             return {"status": False, "mensaje": "Indicó que posee modelo, pero no seleccionó un modelo válido."}
         
         # Validar Serial
@@ -77,7 +79,18 @@ class DispositivosController:
     # crear dispositivo
     def crear_dispositivo(self, datos):
 
-        validaciones = self.validation_field(datos)
+        if ReponseModelo is not None: 
+            validaciones = self.validation_field(datos)
+
+        datos['marca'] = datos["marca_producto"]
+        ReponseMarca = MarcasController.crear_marca(datos)
+
+        datos['marca_modelo'] = ReponseMarca["IdFila"]
+        datos['modelo'] = datos["modelo_producto"]
+        
+        ReponseModelo = ModelosController.crear_modelo(datos)
+        datos['modelo_producto'] = ReponseModelo["IdFila"]
+
         
         if not validaciones["status"]:
             
@@ -109,7 +122,7 @@ class DispositivosController:
 
             if retorno is not None:
 
-                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo']}
+                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo'], "respuesta": datos}
 
             else:
 

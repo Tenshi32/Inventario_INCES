@@ -91,7 +91,6 @@
             <div class="col-md-4">
               <label class="form-label fw-semibold small">Filtrar</label>
               <input type="search" id="searchTable" class="form-control ps-5" placeholder="Buscar dispositivo...">
-              <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
             </div>
             <div class="col-md-4">
               <div class="form-group">
@@ -122,7 +121,7 @@
 
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table id="MyTable" class="table table-hover align-middle mb-0 text-nowrap">
+          <table id="MyTableDispositivo" class="table table-hover align-middle mb-0 text-nowrap">
             <thead class="border-bottom border-gray-200">
               <tr class="text-uppercase fs-7 fw-bold text-muted">
                 <th class="ps-4 py-3" style="letter-spacing: 0.5px;">Código</th>
@@ -189,6 +188,11 @@
                 </div>
               </div>
 
+              <span class="text-muted" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Crear nueva Marca y nuevo Modelo">
+                <i class="bi bi-question-plus text-success"></i>
+              </span>
+
               <!-- 2. Especificaciones de Marca / Modelo -->
               <div class="d-flex align-items-center gap-2 mb-1 mt-4">
                 <span
@@ -244,19 +248,27 @@
               <!-- Campos dinámicos condicionales -->
               <div class="col-md-4" id="input_marca" style="display: none;">
                 <div class="form-group">
+                  
+                  <i id="EventMarcaPlus" style="cursor: pointer;" class="bi bi-plus-circle text-success"></i>
+                  
                   <label class="form-label fw-semibold small">Marca <span class="text-danger">*</span></label>
-                  <select id="marca_producto" name="marca_producto" class="form-select">
-                    <option value="">Selecciona una marca</option>
-                  </select>
+                  <div id="divMarca">
+                    <select id="marca_producto" name="marca_producto" class="form-select">
+                      <option value="">Selecciona una marca</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
               <div class="col-md-4" id="input_modelo" style="display: none;">
                 <div class="form-group">
+                  <i id="EventModeloPlus" style="cursor: pointer;" class="bi bi-plus-circle text-success"></i>
                   <label class="form-label fw-semibold small">Modelo <span class="text-danger">*</span></label>
-                  <select id="modelo_producto" name="modelo_producto" class="form-select">
-                    <option value="">Selecciona un modelo</option>
-                  </select>
+                  <div id="divModelo">
+                    <select id="modelo_producto" name="modelo_producto" class="form-select">
+                      <option value="">Selecciona un modelo</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -374,4 +386,4 @@
   </div>
 </main>
 
-<script src="../assets/js/pages/dispositivo.js"></script>
+<script type="module" src="../assets/js/pages/dispositivo.js"></script>

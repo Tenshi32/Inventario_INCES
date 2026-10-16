@@ -15,14 +15,24 @@ function initializeSelect2(selectId) {
   }
 }
 
-function initializeDataTable(IDtable) {
+function initializeDataTable(IDtable, column, method) {
+
+  if ($.fn.DataTable.isDataTable(IDtable)) {
+    $(IDtable).DataTable().destroy();
+  }
+
   const table = $(IDtable).DataTable({
     pageLength: 5,
-    ordering: true,
+    ordering: false,
     responsive: true,
-    // Forzamos a DataTables a SOLO renderizar la tabla ('t'). 
-    // Quitamos los elementos por defecto ('l', 'f', 'i', 'p') ya que los manejamos nosotros.
     dom: 'tp',
+
+    processing: true,
+    serverSide: true,
+    ajax: method,
+
+    columns: column,
+
     language: {
       processing: "Procesando...",
       search: "Buscar:",
@@ -41,33 +51,25 @@ function initializeDataTable(IDtable) {
       }
     },
 
-
   });
 
   // Conectar tu input de búsqueda personalizado con el filtro de la tabla
+  // Cada vez que cambie el input de búsqueda, recargamos la tabla vía AJAX
   $('#searchTable').off('input').on('input', function () {
-    if (this.value == "") {
-      table.search("").draw(); // Limpia el filtro interno y redibuja todo
-    } else {
-      table.search(this.value).draw(); // Filtra normalmente
-    }
+    table.ajax.reload();
   });
 
+  // Cada vez que cambie el select de estado, recargamos la tabla
   $('#filtroEstado').off('change').on('change', function () {
-    if (this.value == "") {
-      table.column(5).search("").draw(); // Limpia el filtro interno y redibuja todo
-    } else {
-      table.column(5).search(this.value).draw();// Filtra normalmente
-    }
+    table.ajax.reload();
   });
-  
+
+  // Cada vez que cambie el select de tipo, recargamos la tabla
   $('#filtroTipo').off('change').on('change', function () {
-    if (this.value == "") {
-      table.column(1).search("").draw(); // Limpia el filtro interno y redibuja todo
-    } else {
-      table.column(1).search(this.value).draw();// Filtra normalmente
-    }
+    table.ajax.reload();
   });
+
+  return table;
 
 }
 
@@ -109,20 +111,6 @@ function initializeToast(message, estado) {
 //-------------FUNCIONES PARA ACCIONES DE CRUD-----------------//
 
 // Accion para crear o editar cualquier Formulario
-function ActionCreateEdit(IDForm, URL, Method, callback) {
-  if (!$("#" + IDForm).valid()) return;
-
-  const formSw = document.getElementById(IDForm);
-  const formData = (formSw instanceof FormData) ? formSw : new FormData(formSw);
-
-  let Form = {
-    UrlControl: URL,
-    Formulario: formData,
-    Method: Method,
-  };
-
-  methodSend(Form, callback);
-}
 
 // Accion para cambiar de estado en cualquier dispositivo
 function ActionToggle(statusActual, id, callback) {
@@ -157,7 +145,7 @@ function ActionToggleDatosMaestros(statusActual, id, callback, EndPoint, campobd
   datosManuales.append("id_status", nuevoStatus);
 
   const FormnDepa = {
-    UrlControl: "http://127.0.0.1:5000/"+ EndPoint +"/Toggle",
+    UrlControl: "http://127.0.0.1:5000/" + EndPoint + "/Toggle",
     Formulario: datosManuales,
     Method: "PUT",
   };
@@ -205,13 +193,13 @@ function ValidacionUnico(id_campo, id_categoria) {
 
 //Funciones para establecer el "Status" del Dispositivo y sus Opciones en la consulta
 function estadoBadge(status) {
-  if (status === 1) return 'bg-success';
-  if (status === 2) return 'bg-warning';
+  if (status === "Operativo") return 'bg-success';
+  if (status === "Inoperativo") return 'bg-warning';
   return 'bg-danger';
-
 }
 
 function optionsActiosUsuario(item, textoAccion, optionEditar) {
+
   icon = (item.id_status == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
   if (item.id_status !== 3) {
@@ -253,11 +241,12 @@ function optionsActiosUsuario(item, textoAccion, optionEditar) {
 
 }
 
-function optionsActios(item, textoAccion, optionEditar) {
+function optionsActios(item, Actions) {
 
-  icon = (item.id_tipo_status == 1) ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
+  console.log(item)
+  icon = (item.statu == "Operativo") ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
-  if (item.id_tipo_status !== 3) {
+  if (item.statu !== "Dañado") {
 
     console.log(item)
 
@@ -267,14 +256,14 @@ function optionsActios(item, textoAccion, optionEditar) {
         <i class="bi bi-three-dots-vertical fs-5 text-muted"></i>
       </button>
       <div class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-     
-        ${optionEditar}
+
+        ${Actions}
 
         <div class="dropdown-divider border-gray-100"></div>
           <a class="dropdown-item Toggle text-info py-1" 
             data-id="${item.id_dispositivo}"
             data-status="${item.id_tipo_status}" >
-            ${icon} ${textoAccion}
+            ${icon} ${item.statu}
           </a >
 
           <a class="dropdown-item Toggle text-danger py-1"
@@ -319,7 +308,7 @@ function methodSend(Obj, callback = null) {
 
         // Si pasamos una función, la ejecutamos ahora
         if (callback && typeof callback === "function") {
-          callback();
+          callback(data.respuesta); // Pasamos la respuesta al callback
         }
 
       } else if (data.status == false) {
@@ -377,6 +366,14 @@ async function loadContent(pageName, elementClicked = null) {
 
       const html = await response.text();
       contentArea.hide().html(html).fadeIn(500);
+
+      if (pageName == "dispositivo") {
+        // Importamos dinámicamente el módulo y ejecutamos su función
+        const dispositivoModule = await import('../js/pages/dispositivo.js');
+        dispositivoModule.renderPageDispositivos();
+
+      }
+
 
     } else {
 
@@ -446,7 +443,7 @@ function togglepassword() {
   }
 }
 
-function selectModelos(selectId, nameTable, nameColumn, ValorSelected = null) {
+function selectModelos(nameTable) {
   // 1. URL de tu servidor Flask
   const url = "http://127.0.0.1:5000/" + nameTable + "/All";
 
@@ -459,36 +456,8 @@ function selectModelos(selectId, nameTable, nameColumn, ValorSelected = null) {
     })
     .then(data => {
 
-      const select = document.getElementById(selectId);
-
-      let contenido = '<option value="1">Seleccione una opcion</option>';
-
-      // Convertimos el objeto en array
-      const lista = Object.values(data);
-
-      console.log(ValorSelected)
-
-      lista.forEach(item => {
-        // Manejo de estados (Activo/Inactivo)
-
-        let textoAccion = "id_" + nameTable;
-        if (ValorSelected && ValorSelected == item[textoAccion]) {
-
-          contenido += `
-          <option value="${item[textoAccion]}" selected>${item[nameColumn]}</option>
-          `;
-
-        } else {
-
-          contenido += `
-          <option value="${item[textoAccion]}">${item[nameColumn]}</option>
-          `;
-
-        }
-      });
-
-      // Inyectamos las filas
-      select.innerHTML = contenido;
+      let respuesta = data;
+      return respuesta;
 
     })
     .catch(error => {
@@ -496,7 +465,7 @@ function selectModelos(selectId, nameTable, nameColumn, ValorSelected = null) {
     });
 }
 
-function selectDependiente(selectId, nameTable, nameColumn, idForeignKey1) {
+function selectDependiente(nameTable, idForeignKey1) {
   // 1. URL de tu servidor Flask
   const url = "http://127.0.0.1:5000/" + nameTable + "/ForDivice?marca=" + idForeignKey1;
 
@@ -509,25 +478,7 @@ function selectDependiente(selectId, nameTable, nameColumn, idForeignKey1) {
     })
     .then(data => {
 
-      const select = document.getElementById(selectId);
-
-      let contenido = "";
-
-      // Convertimos el objeto en array
-      const lista = Object.values(data);
-
-      lista.forEach(item => {
-        // Manejo de estados (Activo/Inactivo)
-        let id_tabla = "id_" + nameTable
-        let textoAccion = (item.status !== "Operativo") ? 'Operativo' : 'Inoperativo';
-
-        contenido += `
-                <option value="${item[id_tabla]}">${item[nameColumn]}</option>
-            `;
-      });
-
-      // Inyectamos las filas
-      select.innerHTML = contenido;
+      return data;
 
     })
     .catch(error => {

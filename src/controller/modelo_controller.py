@@ -29,7 +29,7 @@ class ModelosController:
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado con nombre: " + datos['modelo']}
+            return {"status": True, "mensaje": "Registro creado con nombre: " + datos['modelo'], "IdFila": retorno}
         
         else:
 

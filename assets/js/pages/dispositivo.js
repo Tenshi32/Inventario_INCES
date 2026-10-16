@@ -1,306 +1,327 @@
-function consultarDispositivo() {
 
-  fetch("https://inventario-inces.onrender.com/Dispositivos/All", {
-    method: "GET",
-  })
-    .then(response => {
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-    })
-    .then(data => {
+import { initDataTable } from "../components/DatatableComponente.js"
+import { GetAjaxDevice, GetDevice, PostDevice, PutDevice } from "../services/DispositivoService.js"
+import { GetMarca } from "../services/MarcasService.js"
+import { GetTipoDispositivo } from "../services/TipoDispositivoService.js"
 
-      // 3. Guardar en sessionStorage transformando el JSON a string
-      sessionStorage.setItem("dispositivosData", JSON.stringify(data));
-
-      const lista = data;
-
-      let total = lista.length;
-      let ultimoCodigo = "-";
-
-      if ($.fn.DataTable.isDataTable('#MyTable')) {
-        $('#MyTable').DataTable().destroy();
-      }
-
-      if (lista.length > 0) {
-        ultimoCodigo = lista[lista.length - 1].cd_dispositivo;
-      }
-
-
-
-
-      document.getElementById("totalDevice").textContent = total;
-      document.getElementById("lastId").textContent = ultimoCodigo;
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
-
-function consultarTipoDispositivo() {
-
-  // 1. URL de tu servidor Flask
-  fetch("https://inventario-inces.onrender.com/tipo_dispositivos/All", {
-    method: "GET",
-  })
-    .then(response => {
-      if (!response.ok) throw new Error("Error en la red");
-      return response.json();
-    })
-    .then(data => {
-
-      // 2. Guardar en sessionStorage transformando el JSON a string
-      sessionStorage.setItem("tipoDispositivosData", JSON.stringify(data));
-
-    })
-    .catch(error => {
-      console.error("Hubo un problema con la consulta:", error);
-    });
-}
 
 function datosDispositivo() {
 
-  const tabla = document.getElementById("tablaDispositivos");
-  const listaCache = sessionStorage.getItem("dispositivosData");
-  const lista = JSON.parse(listaCache);
+  const column = [
+    {
+      data: 'cd_dispositivo', render: function (data, type, row) {
+        return `<span class="fw-bold fs-6">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'tipo_dispositivo', render: function (data, type, row) {
+        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'marca', render: function (data, type, row) {
+        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'modelo', render: function (data, type, row) {
+        return `<span class="badge bg-light text-dark border border-gray-200">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'serial', render: function (data, type, row) {
+        return `<span class="text-muted font-monospace small">${data || 'S/N'}</span>`;
+      }
+    },
+    {
+      data: 'statu', render: function (data, type, row) {
+        let status
+        status = (data == '1') ? "Operativo" : (data == '2') ? "Inoperativo" : "Dañado";
 
-  let operativos = 0;
-  let inoperativos = 0;
-  let contenido = "";
+        // Puedes darle formato de Badge HTML a la columna Status
+        return `
+          <span class="badge rounded-pill ${estadoBadge(status)} px-3 py-2">
+            ${status}
+          </span>`;
+      }
+    },
+    {
+      data: null, orderable: false, render: function (data, type, row) {
+        const optionEditar = `
+          <a class="dropdown-item py-2 DispositivoEditar text-primary" href="#" 
+             data-id_dispositivo="${row.id_dispositivo}">
+            <i class="bi bi-pencil me-2"></i>Editar 
+          </a>`;
 
-  lista.forEach(item => {
+        const optionDetalle = `
+          <a class="dropdown-item py-2 DispositivoVerDetalle text-info" href="#" 
+             data-id_dispositivo="${row.id_dispositivo}">
+            <i class="bx bx-show me-2"></i>Ver Detalle 
+          </a>`;
 
-    const optionEditar = `
-              <a class="dropdown-item py-2 DispositivoEditar text-primary" 
-                 data-id_dispositivo="${item.id_dispositivo}"
-                 data-cd_dispositivo="${item.cd_dispositivo}"
-                 data-posee_marca="${item.posee_marca}"
-                 data-marca="${item.id_marcas}"
-                 data-posee_modelo="${item.posee_modelo}"
-                 data-modelo="${item.id_modelo}"
-                 data-posee_serial="${item.posee_serial}"
-                 data-serial="${item.serial}"
-                 data-id_tipo_dispositivo="${item.id_tipo_dispositivo}"
-                 data-descripcion_general="${item.descripcion_general}"
-                 data-observaciones_tecnicas="${item.observaciones_tecnicas}" 
-                 data-status="${item.id_tipo_status}">
-                 <i class="bi bi-pencil me-2"></i>Editar 
-              </a>
-            `;
+        let Actions = optionEditar + optionDetalle;
 
-    const optionDetalle = `
-              <a class="dropdown-item py-2 DispositivoVerDetalle text-info" 
-                 href="#"
-                 data-cd_dispositivo="${item.cd_dispositivo}"
-                 data-tipo_dispositivo="${item.tipo_dispositivo}"
-                 data-statu="${item.statu}"
-                 data-id_status="${item.id_status}"
-                 data-posee_codigo="${item.posee_codigo}"
-                 data-posee_marca="${item.posee_marca}"
-                 data-id_marca="${item.id_marca}"
-                 data-marca="${item.marca}"
-                 data-posee_modelo="${item.posee_modelo}"
-                 data-id_modelo="${item.id_modelo}"
-                 data-modelo="${item.modelo}"
-                 data-posee_serial="${item.posee_serial}"
-                 data-serial="${item.serial}"
-                 data-descripcion_general="${item.descripcion_general}"
-                 data-observaciones_tecnicas="${item.observaciones_tecnicas}"
-                 data-fecha_carga="${item.fecha_carga}"
-                 data-fecha_modificacion="${item.fecha_modificacion}">
-                 <i class="bx bx-show me-2"></i>Ver Detalle 
-              </a>
-            `;
+        return `${optionsActios(row, Actions)}`;
+      }
+    }
+  ]
 
-    if (item.id_status === 1) operativos++;
-    if (item.id_status === 2) inoperativos++;
+  const ajaxConfig = GetAjaxDevice()
 
-    let textoAccion = (item.id_status !== 1) ? 'Operativo' : 'Inoperativo';
+  initDataTable('#MyTableDispositivo', column, ajaxConfig);
 
-    let Actions = optionEditar + optionDetalle;
+}
+
+async function datosMarcas() {
+
+  const select = document.getElementById("marca_producto");
+
+  let contenido;
+  let lista;
+  let data;
+
+  if (!sessionStorage.getItem("MarcasAll")) {
+
+    data = await GetMarca("All");
+    sessionStorage.setItem("MarcasAll", JSON.stringify(data));
+
+  } else {
+
+    data = JSON.parse(sessionStorage.getItem("MarcasAll"));
+
+  }
+
+  contenido = '<option value="1" selected>Seleccione una opcion</option>';
+
+  lista = Object.values(data);
+  
+  data.forEach(item => {
+    // Manejo de estados (Activo/Inactivo)
 
     contenido += `
-          <tr class="border-bottom border-gray-100">
-            <td class="ps-4 py-3">
-              <span class="fw-bold fs-6">${item.cd_dispositivo}</span>
-            </td>
-            <td class="text-secondary fw-medium">${item.tipo_dispositivo}</td>
-        
-
-            <td class="text-secondary fw-medium">${item.marca}</td>
-
-            <td>
-              <span class="badge bg-light text-dark border border-gray-200">${item.modelo}</span>
-            </td>
-
-            <td class="text-muted font-monospace small">${item.serial}</td>
-
-            <td class="text-center">
-              <span class="badge rounded-pill ${estadoBadge(item.id_status)} px-3 py-2">
-                ${item.statu}
-              </span>
-            </td>
-            <td class="pe-4 text-end">
-              ${optionsActios(item, textoAccion, Actions)}
-            </td>
-          </tr>
+        <option value="${item.id_marcas}">${item.marca}</option>
         `;
 
   });
 
-  tabla.innerHTML = contenido;
-
-  document.getElementById("operativoCount").textContent = operativos;
-  document.getElementById("inoperativoCount").textContent = inoperativos;
-
-  initializeDataTable('#MyTable');
-}
-
-function SelectTipoDispositivos() {
-
-  const datosGuardados = sessionStorage.getItem("tipoDispositivosData")
-
-  const data = JSON.parse(datosGuardados);
-
-  const lista = Object.values(data);
-  let contenido = ``;
-
-  lista.forEach(item => {
-
-    contenido += `
-      <option value="${item.id_tipo_dispositivo}">${item.tipo_dispositivo}</option>
-    `;
-
-  });
-
-  document.getElementById("tipo_dispositivo").innerHTML = contenido;
+  // Inyectamos las filas
+  select.innerHTML = contenido;
 
 }
 
-function FiltroTipoDispositivos() {
+async function datosTipoDispositivos() {
+  
+  let contenidofiltro;
+  let contenido;
+  let lista;
+  let data;
 
-  const datosGuardados = sessionStorage.getItem("tipoDispositivosData")
+  if (!sessionStorage.getItem("TipoDispositivoAll")) {
 
-  const data = JSON.parse(datosGuardados);
+    data = await GetTipoDispositivo("All");
+    sessionStorage.setItem("TipoDispositivoAll", JSON.stringify(data));
 
-  const lista = Object.values(data);
-  let contenido = ``;
+  } else {
+
+    data = JSON.parse(sessionStorage.getItem("TipoDispositivoAll"));
+
+  }
+
+  lista = Object.values(data);
 
   lista.forEach(item => {
 
     if (item.tipo_dispositivo === "S/Categoria") {
-      contenido += `
+      contenidofiltro += `
           <option value="" selected>${item.tipo_dispositivo}</option>
         `;
 
     } else {
 
-      contenido += `
-          <option value="${item.tipo_dispositivo}">${item.tipo_dispositivo}</option>
+      contenidofiltro += `
+          <option value="${item.id_tipo_dispositivo}">${item.tipo_dispositivo}</option>
         `;
 
     }
 
+    if (item.estado_tipo_dispositivo == "1") {
+
+      if (item.tipo_dispositivo === "S/Categoria") {
+        contenido += `
+          <option value="" selected>${item.tipo_dispositivo}</option>
+        `;
+
+      } else {
+
+        contenido += `
+          <option value="${item.id_tipo_dispositivo}">${item.tipo_dispositivo}</option>
+        `;
+
+      }
+    }
+
   });
 
-  document.getElementById("filtroTipo").innerHTML = contenido;
+  document.getElementById("filtroTipo").innerHTML = contenidofiltro;
+  document.getElementById("tipo_dispositivo").innerHTML = contenido;
 
 }
 
+
+// Función que inicializa todo lo del módulo de dispositivos
+export function renderPageDispositivos() {
+  if (!$("#pageDispositivo").length) return; // Si no estamos en la vista, no hace nada
+
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  initializeTooltips(tooltipTriggerList);
+
+  datosDispositivo();
+
+  datosMarcas();
+  datosTipoDispositivos();
+
+  // Validación del Formulario
+  $("#formDispositivo").validate({
+    rules: {
+      cd_dispositivo: { minlength: 3, maxlength: 20 },
+      status: { required: true },
+      posee_marca: { required: true },
+      posee_modelo: { required: true },
+      posee_serial: { required: true },
+      serial_producto: { minlength: 6 },
+    },
+    messages: {
+      cd_dispositivo: {
+        minlength: "El código debe tener al menos 3 caracteres",
+        maxlength: "El código no puede exceder 20 caracteres"
+      },
+      status: { required: "El estado es obligatorio" },
+      posee_marca: { required: "Indique si posee o no marca" },
+      posee_modelo: { required: "Indique si posee o no modelo" },
+      posee_serial: { required: "Indique si posee o no número de serie" },
+      marca_producto: { required: "La marca es obligatoria" },
+      modelo_producto: { required: "El modelo es obligatorio" },
+      serial_producto: {
+        required: "El número de serie es obligatorio",
+        minlength: "El número de serie debe tener al menos 6 caracteres"
+      },
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+}
+
+//Eventos para Crear Marcas y Modelos desde el Formulario
+
+//Eventos para habilitar los campos Text
+$(document).on("click", "#EventMarcaPlus", function () {
+
+  $("#marca_producto").remove(); // 
+
+  $("#divMarca").append(`<input type="text" class="form-control" id="marca_producto" name="marca_producto" placeholder="Nueva Marca..">`);
+
+  if ($("#modelo_producto").attr("type") != "text") {
+
+    $("#modelo_producto").remove(); // 
+
+    $("#divModelo").append(`<input type="text" class="form-control" id="modelo_producto" name="modelo_producto" placeholder="Nuevo Modelo..">`);
+
+  }
+
+  $(this).removeClass("bi-plus-circle text-success")
+  $(this).addClass("bi-x-circle text-danger")
+  $(this).attr("id", "EventMarcaMinus")
+
+  $("#EventModeloPlus").removeClass("bi-plus-circle text-success")
+  $("#EventModeloPlus").addClass("bi-x-circle text-danger")
+  $("#EventModeloPlus").attr("id", "EventModeloMinus")
+});
+
+$(document).on("click", "#EventModeloPlus", function () {
+
+  $("#modelo_producto").remove(); // 
+
+  $("#divModelo").append(`<input type="text" class="form-control" id="modelo_producto" name="modelo_producto" placeholder="Nuevo Modelo..">`);
+
+  $(this).removeClass("bi-plus-circle text-success")
+  $(this).addClass("bi-x-circle text-danger")
+  $(this).attr("id", "EventModeloMinus")
+
+});
+
+//Eventos para desabilitar los campos Text
+$(document).on("click", "#EventMarcaMinus", function () {
+
+  $("#marca_producto").remove(); // 
+
+  $("#divMarca").append(`
+    <select id="marca_producto" name="marca_producto" class="form-select">
+      <option value="">Selecciona una marca</option>
+    </select>`);
+
+  datosMarcas()
+
+  $(this).removeClass("bi-x-circle text-danger")
+  $(this).addClass("bi-plus-circle text-success")
+  $(this).attr("id", "EventMarcaPlus")
+
+});
+
+$(document).on("click", "#EventModeloMinus", function () {
+
+  $("#modelo_producto").remove(); // 
+
+  $("#divModelo").append(`
+    <select id="modelo_producto" name="modelo_producto" class="form-select">
+      <option value="">Selecciona un modelo</option>
+    </select>`);
+
+  $(this).removeClass("bi-x-circle text-danger")
+  $(this).addClass("bi-plus-circle text-success")
+  $(this).attr("id", "EventModeloPlus")
+
+});
+
+
+
+
 // Evento dependiente de Select Marca -> Modelos
 $(document).on("change", "#marca_producto", function () {
-  if ("#formDispositivo".length){
+  if ("#formDispositivo".length) {
 
     const marcaId = $(this).val();
 
-    if (marcaId) {
-      selectDependiente("modelo_producto", "modelos", "modelo", marcaId);
-    }
-  }
+    const datos = selectDependiente("modelos", marcaId)
 
-});
+    const ListaModelos = Object.values(datos);
 
-$("#dispositivo").ready(function () {
-  if ($("#pageDispositivo").length) {
+    const select = document.getElementById("modelo_producto");
 
-    selectModelos("marca_producto", "marcas", "marca");
+    let contenido = "";
 
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    initializeTooltips(tooltipTriggerList);
+    ListaModelos.forEach(item => {
 
-    consultarDispositivo();
-    consultarTipoDispositivo();
+      contenido += `
+          <option value="${item.id_modelos}">${item.modelo}</option>
+          `;
 
-    datosDispositivo();
-    FiltroTipoDispositivos();
-    SelectTipoDispositivos();
-
-    // Validación del Formulario
-    $("#formDispositivo").validate({
-      rules: {
-        cd_dispositivo: {
-          minlength: 3,
-          maxlength: 20
-        },
-        status: {
-          required: true
-        },
-        posee_marca: {
-          required: true
-        },
-        posee_modelo: {
-          required: true
-        },
-        posee_serial: {
-          required: true
-        },
-        serial_producto: {
-          minlength: 6
-        },
-
-      },
-      messages: {
-        cd_dispositivo: {
-          minlength: "El código debe tener al menos 3 caracteres",
-          maxlength: "El código no puede exceder 20 caracteres"
-        },
-        status: {
-          required: "El estado es obligatorio"
-        },
-        posee_marca: {
-          required: "Indique si posee o no marca"
-        },
-        posee_modelo: {
-          required: "Indique si posee o no modelo"
-        },
-        posee_serial: {
-          required: "Indique si posee o no número de serie"
-        },
-        marca_producto: {
-          required: "La marca es obligatoria"
-        },
-        modelo_producto: {
-          required: "El modelo es obligatorio"
-        },
-        serial_producto: {
-          required: "El número de serie es obligatorio",
-          minlength: "El número de serie debe tener al menos 6 caracteres"
-        },
-      },
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element) {
-        $(element).removeClass('is-invalid');
-      }
     });
 
+    // Inyectamos las filas
+    select.innerHTML = contenido;
   }
+
 });
+
 
 // SUBMIT UNIFICADO (CREAR / EDITAR)
 $("#formDispositivo").on("submit", function (event) {
@@ -309,25 +330,68 @@ $("#formDispositivo").on("submit", function (event) {
   if (!$(this).valid()) return false;
 
   const accion = $("#buttomMaster").attr("action");
+  const formData = new FormData(this);
 
   if (accion === "edit") {
-    ActionCreateEdit(
-      "formDispositivo",
-      "https://inventario-inces.onrender.com/Dispositivos/Editar",
-      "PUT",
-      consultarDispositivo
-    );
+    let Form = {
+      UrlControl: "http://127.0.0.1:5000/Dispositivos/Editar",
+      Formulario: formData,
+      Method: "PUT",
+    };
+
+    methodSend(Form, function (respuestaServidor) {
+      actualizarFilaDataTable(respuestaServidor);
+    });
   } else {
-    ActionCreateEdit(
-      "formDispositivo",
-      "https://inventario-inces.onrender.com/Dispositivos/Crear",
-      "POST",
-      consultarDispositivo
-    );
+    let Form = {
+      UrlControl: "http://127.0.0.1:5000/Dispositivos/Crear",
+      Formulario: formData,
+      Method: "POST",
+    };
+
+    methodSend(Form, function (respuestaServidor) {
+      agregarFilaDataTable(respuestaServidor);
+    });
   }
 
   $("#DispositivoModal").modal("hide");
 });
+
+function actualizarFilaDataTable(datosActualizados) {
+  const $fila = $("#formDispositivo").data("fila_editar");
+
+  if ($fila) {
+
+    const tabla = $("#MyTable").DataTable();
+
+    tabla.row($fila).data(datosActualizados).draw(false);
+
+  }
+}
+
+function agregarFilaDataTable(nuevoDispositivo) {
+  const tabla = $("#MyTable").DataTable();
+
+  const ListaTiposDispositivos = [];
+  const ListaMarcas = [];
+  const ListaModelos = [];
+
+  let datoTipo_dispositivo = ListaTiposDispositivos.find(item => item.id_tipo_dispositivo == nuevoDispositivo.tipo_dispositivo);
+  nuevoDispositivo.tipo_dispositivo = datoTipo_dispositivo.tipo_dispositivo;
+
+  let datoMarca = ListaMarcas.find(item => item.id_marcas == nuevoDispositivo.marca_producto);
+  nuevoDispositivo.marca = datoMarca.marca;
+
+  let datoModelo = ListaModelos.find(item => item.id_modelos == nuevoDispositivo.modelo_producto);
+  nuevoDispositivo.modelo = datoModelo.modelo;
+
+  nuevoDispositivo.serial = nuevoDispositivo.serial_producto;
+  nuevoDispositivo.statu = nuevoDispositivo.status;
+
+  console.log("Agregando nuevo dispositivo a la tabla:", nuevoDispositivo);
+  tabla.row.add(nuevoDispositivo).draw(false);
+
+}
 
 // ABRIR MODAL EN MODO CREAR
 $(document).on("click", "#openCreate", function (event) {
@@ -368,43 +432,58 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", function (event) {
   const form = document.getElementById("formDispositivo");
   if (form) form.reset();
 
+  const $filaActual = `#dispositivo-${$(this).data("id_dispositivo")}`;
+  $("#formDispositivo").attr("data-fila_editar", $filaActual);
+
+
   $("#ModalLabel").text("Editar Dispositivo");
 
   // Manejo correcto del ID Hidden
   $("#id_dispositivo").remove();
 
-  $("#formDispositivo").append(`<input type="hidden" id="id_dispositivo" name="id_dispositivo" value="${$(this).data("id_dispositivo")}">`);
+  $.ajax({
+    url: "http://127.0.0.1:5000/Dispositivos/Search?valorBuscar=" + $(this).data("id_dispositivo"),
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
 
-  $("#tipo_dispositivo").val($(this).data("id_tipo_dispositivo"));
+      $("#formDispositivo").append(`<input type="hidden" id="id_dispositivo" name="id_dispositivo" value="${data.id_dispositivo}">`);
 
-  $("#cd_dispositivo").val($(this).data("cd_dispositivo"));
-  $("#status").val($(this).data("status"));
+      $("#tipo_dispositivo").val(data.id_tipo_dispositivo);
 
-  // Marca
-  const poseeMarca = $(this).data("posee_marca");
-  const id_marca = $(this).data("marca");
-  $("#posee_marca").val(poseeMarca).trigger("change");
-  if (poseeMarca === "Si") {
-    selectModelos("marca_producto", "marcas", "marca", id_marca);
-    $("#marca_producto").val(id_marca);
-  }
+      $("#cd_dispositivo").val(data.cd_dispositivo);
+      $("#status").val(data.id_tipo_status);
 
-  // Modelo
-  const poseeModelo = $(this).data("posee_modelo");
-  $("#posee_modelo").val(poseeModelo).trigger("change");
-  if (poseeModelo === "Si") {
-    selectDependiente("modelo_producto", "modelos", "modelo", id_marca)
-    $("#modelo_producto").val($(this).data("modelo"));
-  }
-  // Serial
-  const poseeSerial = $(this).data("posee_serial");
-  $("#posee_serial").val(poseeSerial).trigger("change");
-  if (poseeSerial === "Si") {
-    $("#serial_producto").val($(this).data("serial"));
-  }
+      // Marca
+      const poseeMarca = data.posee_marca;
+      const id_marca = data.id_marcas;
+      $("#posee_marca").val(poseeMarca).trigger("change");
+      if (poseeMarca === "Si") {
+        selectModelos("marca_producto", "marcas", "marca", id_marca);
+        $("#marca_producto").val(id_marca);
+      }
 
-  $("#descripcion_general").val($(this).data("descripcion_general"));
-  $("#observaciones_tecnicas").val($(this).data("observaciones_tecnicas"));
+      // Modelo
+      const poseeModelo = data.posee_modelo;
+      $("#posee_modelo").val(poseeModelo).trigger("change");
+      if (poseeModelo === "Si") {
+        selectDependiente("modelo_producto", "modelos", "modelo", id_marca)
+        $("#modelo_producto").val(data.id_modelos);
+      }
+      // Serial
+      const poseeSerial = data.posee_serial;
+      $("#posee_serial").val(poseeSerial).trigger("change");
+      if (poseeSerial === "Si") {
+        $("#serial_producto").val(data.serial);
+      }
+
+      $("#descripcion_general").val(data.descripcion_general);
+      $("#observaciones_tecnicas").val(data.observaciones_tecnicas);
+    },
+    error: function (xhr, status, error) {
+      console.error("Hubo un problema con la consulta:", error);
+    }
+  });
 
   // Configurar botón principal
   $("#buttomMaster")
