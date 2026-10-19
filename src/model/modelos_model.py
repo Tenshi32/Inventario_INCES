@@ -3,12 +3,7 @@ from model.db_connect import DbConnect
 class ModelosModel:
 
     def __init__(self):
-        self.conn = DbConnect().connect()
-
-        if self.conn is None:
-            raise ConnectionError("No se pudo establecer la conexión a la base de datos.")
-
-        self.cursor = self.conn.cursor(dictionary=True)
+        self.db = DbConnect().connect()
 
     #buscador modelo especifico por id
     def get_modelo(self, id):
@@ -20,40 +15,51 @@ class ModelosModel:
 
     #buscador all de modelos
     def get_all_modelos(self):
+        cursor = self.db.cursor(dictionary=True)
+
         sql = "SELECT * FROM modelos " \
         "INNER JOIN marcas ON modelos.id_marca = marcas.id_marcas " \
         "WHERE modelos.estado_modelo != 3 ORDER BY id_modelos DESC"
-        self.cursor.execute(sql)
+        cursor.execute(sql)
 
-        all_modelos = self.cursor.fetchall()
+        all_modelos = cursor.fetchall()
         return all_modelos
 
     def get_modelos_for_device(self, marca):
-        sql = "SELECT id_modelos, modelo FROM modelos WHERE id_marca = %s OR id_marca = %s"
-        self.cursor.execute(sql, (marca, 1))
+        cursor = self.db.cursor(dictionary=True)
 
-        model_list = self.cursor.fetchall()
+        sql = "SELECT id_modelos, modelo FROM modelos WHERE id_marca = %s OR id_marca = %s"
+        cursor.execute(sql, (marca, 1))
+
+        model_list = cursor.fetchall()
+        cursor.close()
         return model_list
 
-    def existe_modelo(self, dato):
+    def existe_modelo(self, dato1):
+        cursor = self.db.cursor(dictionary=True)
         sqlValidar = "SELECT id_modelos FROM modelos WHERE UPPER(modelo) = UPPER(%s)"
-        self.cursor.execute(sqlValidar,(dato,))
-        return self.cursor.fetchone()
+        cursor.execute(sqlValidar,(dato1, ))
+        respuesta = cursor.fetchone()
+        cursor.close()
+        return respuesta
 
     def create_modelo(self, datos):
+ 
+        respuestaValidacion = self.existe_modelo(datos[1])
 
-        respuesta = self.existe_modelo(datos["modelo"])
-
-        if respuesta is not None:
-            return respuesta
-
+        if respuestaValidacion is not None and respuestaValidacion != "":
+            return respuestaValidacion["id_modelos"]
+        
+        cursor = self.db.cursor(dictionary=True)
         sql = "INSERT INTO modelos (id_marca, modelo, estado_modelo) " \
         "VALUES (%s, %s, %s)"
 
         try:
-            self.cursor.execute(sql, tuple(datos))
-            self.conn.commit()
-            return self.cursor.lastrowid
+            cursor.execute(sql, tuple(datos))
+            repuesta = cursor.lastrowid
+            self.db.commit()
+            cursor.close()
+            return repuesta
 
         except Exception as e:
             self.conn.rollback()

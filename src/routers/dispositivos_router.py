@@ -49,7 +49,7 @@ def dispositivos(accion):
     # POST -> Crear
     elif request.method == 'POST':
         if accion == 'Crear':
-            datos_recibidos = request.form.to_dict()
+            datos_recibidos = request.get_json(silent=True)
             print("Datos que llegaron para crear Dispositivo: ", datos_recibidos)
             answer = ctrl.crear_dispositivo(datos_recibidos)
             return jsonify(answer)
@@ -57,7 +57,7 @@ def dispositivos(accion):
     # PUT -> Editar / Toggle
     elif request.method == 'PUT':
         if accion == 'Editar':
-            datos_recibidos = request.form.to_dict()
+            datos_recibidos = request.get_json(silent=True)
             print("Datos que llegaron para editar Dispositivo: ", datos_recibidos)
             answer = ctrl.editar_dispositivo(datos_recibidos)
             return jsonify(answer)

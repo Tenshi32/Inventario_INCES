@@ -28,23 +28,28 @@ class MarcasModel:
         cursor = self.db.cursor(dictionary=True)
         sqlValidar = "SELECT id_marcas FROM marcas WHERE UPPER(marca) = UPPER(%s)"
         cursor.execute(sqlValidar,(dato,))
-        return cursor.fetchone()
+        respuesta = cursor.fetchone()
+        cursor.close()
+        return respuesta
 
 
     def create_marca(self, datos):
+    
+        respuestaValidacion = self.existe_marca(datos[0])
 
-        respuesta = self.existe_marca(datos["marca"])
-
-        if respuesta is not None:
-            return respuesta
-
+        if respuestaValidacion is not None and respuestaValidacion != "":
+            return respuestaValidacion["id_marcas"]
+        
+        cursor = self.db.cursor(dictionary=True)
         sql = "INSERT INTO marcas (marca, estado_marca) " \
         "VALUES (%s, %s)"
 
         try:
-            self.cursor.execute(sql, tuple(datos))
-            self.conn.commit()
-            return self.cursor.lastrowid
+            cursor.execute(sql, tuple(datos))
+            repuesta = cursor.lastrowid
+            self.db.commit()
+            cursor.close()
+            return repuesta
 
         except Exception as e:
             self.conn.rollback()

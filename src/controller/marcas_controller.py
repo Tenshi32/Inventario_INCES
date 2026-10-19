@@ -27,7 +27,7 @@ class MarcasController:
 
         if retorno is not None:
 
-            return {"status": True, "mensaje": "Registro creado id: " + datos['cd_switches'], "IdFila": retorno}
+            return {"status": True, "mensaje": "Registro Creado", "IdFila": retorno}
         
         else:
 

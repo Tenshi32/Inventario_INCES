@@ -10,6 +10,7 @@ from routers.tipo_consumibles_router import tipo_consumibles
 from routers.usuario_router import usuario
 from routers.marcas_router import marcas
 from routers.estados_router import estados
+from routers.status_router import status
 from routers.modelos_router import modelos
 from routers.dispositivos_router import dispositivos
 from routers.estaciones_router import estacionesTrabajo
@@ -31,7 +32,7 @@ def usuario_route(accion):
     return usuario(accion)
 
 #------------------- MODELOS ------------------
-@app.route('/modelos/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+@app.route('/Modelos/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def modelos_route(accion):
     return modelos(accion)
 
@@ -69,6 +70,11 @@ def tipo_consumibles_route(accion):
 @app.route('/estados/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
 def estados_route(accion):
     return estados(accion)
+
+#------------------- STATUS ------------------
+@app.route('/Status/<accion>', methods=['POST', 'GET', 'DELETE', 'PUT', 'OPTIONS'])
+def status_route(accion):
+    return status(accion)
 
 
 if __name__ == '__main__':

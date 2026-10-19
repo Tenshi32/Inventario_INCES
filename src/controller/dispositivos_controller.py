@@ -8,6 +8,8 @@ class DispositivosController:
     def __init__(self):
         # Instantiate the model here (lazy DB connection inside model)
         self.modelo = DispositivosModel()
+        self.marcas = MarcasController()
+        self.modelos = ModelosController()
 
     #buscador todos los dispositivos
     def all_dispositivos(self, offset, limit, search, estado, tipo):
@@ -79,19 +81,21 @@ class DispositivosController:
     # crear dispositivo
     def crear_dispositivo(self, datos):
 
+        ReponseMarca = self.marcas.crear_marca(datos)
+
+        if ReponseMarca is not None: 
+
+            datos["marca_modelo"] = ReponseMarca["IdFila"]
+
+            ReponseModelo = self.modelos.crear_modelo(datos)
+
         if ReponseModelo is not None: 
+
+            datos["modelo_producto"] = ReponseModelo["IdFila"]
+            datos["marca_producto"] = ReponseMarca["IdFila"]
+
             validaciones = self.validation_field(datos)
-
-        datos['marca'] = datos["marca_producto"]
-        ReponseMarca = MarcasController.crear_marca(datos)
-
-        datos['marca_modelo'] = ReponseMarca["IdFila"]
-        datos['modelo'] = datos["modelo_producto"]
-        
-        ReponseModelo = ModelosController.crear_modelo(datos)
-        datos['modelo_producto'] = ReponseModelo["IdFila"]
-
-        
+            
         if not validaciones["status"]:
             
             return validaciones
@@ -108,7 +112,7 @@ class DispositivosController:
                 datos['posee_modelo'],
                 datos['marca_producto'],
                 datos['modelo_producto'],
-                datos['tipo_dispositivo'],
+                datos['id_tipo_dispositivo'],
                 datos['posee_serial'],
                 datos['serial_producto'],
 
@@ -122,7 +126,7 @@ class DispositivosController:
 
             if retorno is not None:
 
-                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo'], "respuesta": datos}
+                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo']}
 
             else:
 
@@ -131,7 +135,20 @@ class DispositivosController:
     # editar dispositivo
     def editar_dispositivo(self, datos):
 
-        validaciones = self.validation_field(datos)
+        ReponseMarca = self.marcas.crear_marca(datos)
+
+        if ReponseMarca is not None: 
+
+            datos["marca_modelo"] = ReponseMarca["IdFila"]
+
+            ReponseModelo = self.modelos.crear_modelo(datos)
+
+        if ReponseModelo is not None: 
+
+            datos["modelo_producto"] = ReponseModelo["IdFila"]
+            datos["marca_producto"] = ReponseMarca["IdFila"]
+            
+            validaciones = self.validation_field(datos)
         
         if not validaciones["status"]:
             
@@ -147,7 +164,7 @@ class DispositivosController:
             datos['posee_modelo'],
             datos['marca_producto'],
             datos['modelo_producto'],
-            datos['tipo_dispositivo'],
+            datos['id_tipo_dispositivo'],
             datos['posee_serial'],
             datos['serial_producto'],
 

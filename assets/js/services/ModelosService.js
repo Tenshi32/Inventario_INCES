@@ -1,23 +1,12 @@
-export async function obtenerTipoCategoria() {
-  try {
-    
-    const url = await "http://127.0.0.1:5000/" + nameTable + "/All";
+/** 
+ * ModelosService.js 
+ */
 
-    await fetch(url, {
-      method: "GET",
-    });
+// Importas tu función genérica (si está en otro archivo) o la mantienes arriba
+import { request } from './RequestService.js';
 
-    if (!response.ok) {
-      throw new Error("Error en la red");
-    }
-    const data = await response.json();
-    return data;
+const path = "Modelos"
 
-  } catch (error) {
-
-    console.error("Hubo un problema con la consulta:", error);
-    return null; // O un array vacío [] según lo que prefieras manejar en caso de error
-
-  }
-  
+export function GetModelo(endpoint) {
+  return request(`${path}/${endpoint}`, "GET");
 }

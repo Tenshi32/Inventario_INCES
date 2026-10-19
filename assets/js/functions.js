@@ -193,9 +193,10 @@ function ValidacionUnico(id_campo, id_categoria) {
 
 //Funciones para establecer el "Status" del Dispositivo y sus Opciones en la consulta
 function estadoBadge(status) {
-  if (status === "Operativo") return 'bg-success';
-  if (status === "Inoperativo") return 'bg-warning';
-  return 'bg-danger';
+  if (status === 1) return 'bg-success';
+  if (status === 2) return 'bg-warning';
+  if (status === 3) return 'bg-danger';
+  return 'bg-secondary';
 }
 
 function optionsActiosUsuario(item, textoAccion, optionEditar) {
@@ -243,12 +244,9 @@ function optionsActiosUsuario(item, textoAccion, optionEditar) {
 
 function optionsActios(item, Actions) {
 
-  console.log(item)
   icon = (item.statu == "Operativo") ? '<i class="bi bi-toggle-off"></i> ' : '<i class="bi bi-toggle-on"></i> ';
 
   if (item.statu !== "Dañado") {
-
-    console.log(item)
 
     let optionAction = `
     <div class="dropdown d-inline-block" style="cursor:pointer;">

@@ -11,13 +11,13 @@ class DispositivosModel:
     def get_all_device(self, offset, limit, search, estado, tipo):
 
         cursor = self.db.cursor(dictionary=True)
-        sql = ("SELECT tipo_status.statu, modelos.modelo, marcas.marca, tipo_dispositivos.tipo_dispositivo, "
+        sql = ("SELECT tipo_status.statu, tipo_status.id_tipo_status, modelos.modelo, marcas.marca, tipo_dispositivos.tipo_dispositivo, "
         "dispositivos.id_dispositivo, dispositivos.cd_dispositivo, dispositivos.serial "
         "FROM dispositivos "
-        "INNER JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo "
-        "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas "
-        "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos "
-        "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status "
+        "LEFT JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo "
+        "LEFT JOIN marcas ON dispositivos.id_marca = marcas.id_marcas "
+        "LEFT JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos "
+        "LEFT JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status "
         "ORDER BY dispositivos.fecha_carga ASC LIMIT %s OFFSET %s")
 
         
@@ -43,10 +43,10 @@ class DispositivosModel:
         "dispositivos.cd_dispositivo, dispositivos.posee_marca, dispositivos.posee_modelo, dispositivos.posee_serial, "
         "dispositivos.serial, dispositivos.descripcion_general, dispositivos.observaciones_tecnicas "
         "FROM dispositivos "
-        "INNER JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo "
-        "INNER JOIN marcas ON dispositivos.id_marca = marcas.id_marcas "
-        "INNER JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos "
-        "INNER JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " 
+        "LEFT JOIN tipo_dispositivos ON dispositivos.id_tipo_dispositivo = tipo_dispositivos.id_tipo_dispositivo "
+        "LEFT JOIN marcas ON dispositivos.id_marca = marcas.id_marcas "
+        "LEFT JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos "
+        "LEFT JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status " 
         "WHERE dispositivos.id_dispositivo = %s")
         cursor.execute(sql, (id, ));
 
