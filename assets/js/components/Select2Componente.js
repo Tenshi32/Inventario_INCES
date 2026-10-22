@@ -10,7 +10,19 @@ export function initSelect2(selectId, modalId) {
   if (select) {
     $(select).select2({
       width: '100%',
-      dropdownParent: $(`#${modalId}`)
+      dropdownParent: $(`#${modalId}`),
+    });
+  }
+}
+
+export function initSelect2Buscador(selectId, modalId, peticion) {
+  const select = document.getElementById(selectId);
+  if (select) {
+    $(select).select2({
+      width: '100%',
+      dropdownParent: $(`#${modalId}`),
+      minimumInputLength: 2,
+      ajax: peticion
     });
   }
 }

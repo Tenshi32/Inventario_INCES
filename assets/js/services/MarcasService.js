@@ -7,45 +7,22 @@ import { request } from './RequestService.js';
 
 const pathMarcas = "Marcas"
 
-export function GetAjaxMarca(){
-    return {
-    url: `${window.CONFIG.API_URL}/Dispositivos/All`, // La ruta a tu script o backend
-    type: 'GET',
-    data: function (d) {
-
+export function GetAjaxMarca(endpoint) {
+  return {
+    url: `${window.CONFIG.API_URL}/${pathMarcas}/${endpoint}`,
+    dataType: 'json',
+    delay: 350, // Pequeño retraso integrado (debounce) para no saturar al tipear rápido
+    data: function (params) {
       return {
-        // Mapeas los nombres que tu backend en Python espera recibir
-        offset: d.start,                      // Índice de inicio (OFFSET)
-        limit: d.length,                      // Cantidad de filas a traer (LIMIT)
-        search: $('#searchTable').val() || '', // Captura el valor del input de búsqueda
-        estado: $('#filtroEstado').val() || '', // Captura el estado seleccionado
-        tipo: $('#filtroTipo').val() || ''       // Opcional: término de búsqueda
+        q: params.term // Parámetro que lee Flask (ej: ?q=texto)
       };
     },
-
-    // Interceptamos la respuesta del backend para actualizar los contadores en pantalla
-    dataSrc: function (json) {
-      // 1. Actualizamos totales generales (vienen del backend)
-      document.getElementById("totalDevice").textContent = json.recordsTotal || 0;
-
-      // 2. Si el backend te devuelve los conteos de estados, los pintas aquí
-      if (json.conteo) {
-        document.getElementById("operativoCount").textContent = json.conteo.operativos || 0;
-        document.getElementById("inoperativoCount").textContent = json.conteo.inoperativos || 0;
-      }
-
-      // 3. Obtenemos el último código de los datos actuales de la página
-      if (json.data && json.data.length > 0) {
-        let ultimoCodigo = json.data[json.data.length - 1].cd_dispositivo;
-        document.getElementById("lastId").textContent = ultimoCodigo || "-";
-      } else {
-        document.getElementById("lastId").textContent = "-";
-      }
-
-      // Retornamos estrictamente el array que DataTables necesita para pintar la tabla
-      return json.data;
-    }
-
+    processResults: function (data) {
+      return {
+        results: data.results // Select2 espera un arreglo con formato { id, text }
+      };
+    },
+    cache: true
   }
 }
 
@@ -53,15 +30,15 @@ export function GetMarca(endpoint) {
   return request(`${pathMarcas}/${endpoint}`, "GET");
 }
 
-export async function PostMarca(datos) {
-  return await request(`${pathMarcas}/Crear`, "POST", datos);
+export function PostMarca(datos) {
+  return request(`${pathMarcas}/Crear`, "POST", datos);
 }
 
-export async function PutMarca(datos, endpoint) {
-  return await request(`${pathMarcas}/${endpoint}`, "PUT", datos);
+export function PutMarca(datos, endpoint) {
+  return request(`${pathMarcas}/${endpoint}`, "PUT", datos);
 }
 
 // ¡E incluso puedes agregar un DELETE gratis y muy fácil!
-export async function DeleteMarca(endpoint) {
-  return await request(`${pathMarcas}/${endpoint}`, "DELETE");
+export function DeleteMarca(endpoint) {
+  return request(`${pathMarcas}/${endpoint}`, "DELETE");
 }

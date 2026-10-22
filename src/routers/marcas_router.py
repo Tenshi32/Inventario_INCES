@@ -13,6 +13,10 @@ def marcas(accion):
         if accion == 'All':
             answer = ctrl.all_marcas()
             return jsonify(answer)
+        if accion == 'Buscar':
+            query = request.args.get('q', '').strip()
+            answer = ctrl.rastrear_marca(query)
+            return jsonify({"results": answer})
 
     # POST -> Crear
     elif request.method == 'POST':

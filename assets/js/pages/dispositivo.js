@@ -1,150 +1,35 @@
 
+import { initTooltips } from "../components/TooltipsComponente.js"
 import { initDataTable } from "../components/DatatableComponente.js"
-import { initSelect2, destroySelect2 } from "../components/Select2Componente.js"
+import { initToast } from "../components/ToastComponente.js"
+import { initSelect2, destroySelect2, initSelect2Buscador } from "../components/Select2Componente.js"
 import { GetAjaxDevice, GetDevice, PostDevice, PutDevice } from "../services/DispositivoService.js"
-import { GetModelo } from "../services/ModelosService.js"
+import { GetAjaxModelo, GetModelo } from "../services/ModelosService.js"
 
+import { GetAjaxMarca, GetMarca } from "../services/MarcasService.js"
+import { GetTipoDispositivo } from "../services/TipoDispositivoService.js"
 
 let ModelosBuscados = [];
-
-function datosDispositivo() {
-
-  const column = [
-    {
-      data: 'cd_dispositivo', render: function (data, type, row) {
-        return `<span class="fw-bold fs-6">${data || '-'}</span>`;
-      }
-    },
-    {
-      data: 'tipo_dispositivo', render: function (data, type, row) {
-        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
-      }
-    },
-    {
-      data: 'marca', render: function (data, type, row) {
-        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
-      }
-    },
-    {
-      data: 'modelo', render: function (data, type, row) {
-        return `<span class="badge bg-light text-dark border border-gray-200">${data || '-'}</span>`;
-      }
-    },
-    {
-      data: 'serial', render: function (data, type, row) {
-        return `<span class="text-muted font-monospace small">${data || 'S/N'}</span>`;
-      }
-    },
-    {
-      data: 'id_tipo_status', render: function (data, type, row) {
-
-        let ListaTipoStatus = JSON.parse(localStorage.getItem("TipoStatusAll"));
-
-        let datoTipoStatus = ListaTipoStatus.find(item => item.id_tipo_status == data);
-
-        let status = datoTipoStatus.statu;
-        // Puedes darle formato de Badge HTML a la columna Status
-        return `
-          <span class="badge ${estadoBadge(data)} px-3 py-2">
-            ${status}
-          </span>`;
-      }
-    },
-    {
-      data: null, orderable: false, render: function (data, type, row) {
-        const optionEditar = `
-          <a class="dropdown-item py-2 DispositivoEditar text-primary" href="#" 
-             data-id_dispositivo="${row.id_dispositivo}">
-            <i class="bi bi-pencil me-2"></i>Editar 
-          </a>`;
-
-        const optionDetalle = `
-          <a class="dropdown-item py-2 DispositivoVerDetalle text-info" href="#" 
-             data-id_dispositivo="${row.id_dispositivo}">
-            <i class="bx bx-show me-2"></i>Ver Detalle 
-          </a>`;
-
-        let Actions = optionEditar + optionDetalle;
-
-        return `${optionsActios(row, Actions)}`;
-      }
-    }
-  ]
-
-  const ajaxConfig = GetAjaxDevice()
-
-  initDataTable('#MyTableDispositivo', column, ajaxConfig);
-
-}
+let TipoDispositivoBuscados = [];
 
 function datosMarcas() {
 
-  const select = document.getElementById("marca_producto");
-
-  let contenido;
-  let lista;
-  let data;
-
-  data = JSON.parse(localStorage.getItem("MarcasAll"));
-
-  contenido = '<option value="1" selected>Seleccione una opcion</option>';
-
-  lista = Object.values(data);
-
-  data.forEach(item => {
-    // Manejo de estados (Activo/Inactivo)
-
-    contenido += `
-        <option value="${item.id_marcas}">${item.marca}</option>
-        `;
-
-  });
-
-  // Inyectamos las filas
-  select.innerHTML = contenido;
+  let PeticionAjax = GetAjaxMarca("Buscar")
+  initSelect2Buscador("marca_producto", "DispositivoModal", PeticionAjax);
 
 }
 
-function datosTipoStatus() {
-
-  const select = document.getElementById("status");
-
-  let contenido;
-  let lista;
-  let data;
-
-  data = JSON.parse(localStorage.getItem("TipoStatusAll"));
-
-  contenido = '<option value="1" selected>Seleccione una opcion</option>';
-
-  lista = Object.values(data);
-
-  data.forEach(item => {
-    // Manejo de estados (Activo/Inactivo)
-
-    contenido += `
-        <option value="${item.id_tipo_status}">${item.statu}</option>
-        `;
-
-  });
-
-  // Inyectamos las filas
-  select.innerHTML = contenido;
-
-}
-
-function datosTipoDispositivos() {
+async function datosTipoDispositivos() {
 
   let contenidofiltro;
   let contenido;
-  let lista;
   let data;
 
-  data = JSON.parse(localStorage.getItem("TipoDispositivoAll"));
+  data = await GetTipoDispositivo("All");
 
-  lista = Object.values(data);
+  TipoDispositivoBuscados = Object.values(data);
 
-  lista.forEach(item => {
+  TipoDispositivoBuscados.forEach(item => {
 
     if (item.tipo_dispositivo === "S/Categoria") {
       contenidofiltro += `
@@ -182,20 +67,85 @@ function datosTipoDispositivos() {
 
 }
 
+// Funciones que trae del servidor los datos 
+function datosDispositivo() {
+
+  const column = [
+    {
+      data: 'cd_dispositivo', render: function (data, _type, row) {
+        return `<span class="fw-bold fs-6">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'tipo_dispositivo', render: function (data, type, row) {
+        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'marca', render: function (data, type, row) {
+        return `<span class="text-secondary fw-medium">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'modelo', render: function (data, type, row) {
+        return `<span class="badge bg-light text-dark border border-gray-200">${data || '-'}</span>`;
+      }
+    },
+    {
+      data: 'serial', render: function (data, type, row) {
+        return `<span class="text-muted font-monospace small">${data || 'S/N'}</span>`;
+      }
+    },
+    {
+      data: null, orderable: false, render: function (data, type, row) {
+
+        // Puedes darle formato de Badge HTML a la columna Status
+        return `
+          <span class="badge ${estadoBadge(row.id_tipo_status)} px-3 py-2">
+            ${row.statu}
+          </span>`;
+      }
+    },
+    {
+      data: null, orderable: false, render: function (data, type, row) {
+        const optionEditar = `
+          <a class="dropdown-item py-2 DispositivoEditar text-primary" href="#" 
+             data-id_dispositivo="${row.id_dispositivo}">
+            <i class="bi bi-pencil me-2"></i>Editar 
+          </a>`;
+
+        const optionDetalle = `
+          <a class="dropdown-item py-2 DispositivoVerDetalle text-info" href="#" 
+             data-id_dispositivo="${row.id_dispositivo}" data-all="${row}">
+            <i class="bx bx-show me-2"></i>Ver Detalle 
+          </a>`;
+
+        let Actions = optionEditar + optionDetalle;
+
+        return `${optionsActios(row, Actions)}`;
+      }
+    }
+  ]
+
+  const ajaxConfig = GetAjaxDevice()
+
+  initDataTable('#MyTableDispositivo', column, ajaxConfig);
+
+}
+
 // Función que inicializa todo lo del módulo de dispositivos
 export function renderPageDispositivos() {
   if (!$("#pageDispositivo").length) return; // Si no estamos en la vista, no hace nada
 
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  initializeTooltips(tooltipTriggerList);
+  initTooltips(tooltipTriggerList);
 
-  initSelect2("marca_producto", "DispositivoModal");
   initSelect2("modelo_producto", "DispositivoModal");
   datosDispositivo();
 
   datosMarcas();
-  datosTipoStatus();
   datosTipoDispositivos();
+
 
   // Validación del Formulario
   $("#formDispositivo").validate({
@@ -235,6 +185,7 @@ export function renderPageDispositivos() {
       $(element).removeClass('is-invalid');
     }
   });
+
 }
 
 //Eventos para Crear Marcas y Modelos desde el Formulario
@@ -317,8 +268,9 @@ $(document).on("click", "#EventModeloMinus", function () {
 $(document).on("change", "#marca_producto", async function () {
 
   if ("#formDispositivo".length) {
-
     const marcaId = $(this).val();
+
+    ModelosBuscados =[]
 
     const datos = await GetModelo("ForDivice?marca=" + marcaId)
 
@@ -359,11 +311,11 @@ $("#formDispositivo").on("submit", function (event) {
 
   if (accion === "edit") {
 
-    actualizarFilaDataTable(nuevoDispositivo);
+    actualizarFilaDataTable(nuevoDispositivo, ModelosBuscados, TipoDispositivoBuscados);
 
   } else {
 
-    agregarFilaDataTable(nuevoDispositivo, ModelosBuscados);
+    agregarFilaDataTable(nuevoDispositivo, ModelosBuscados, TipoDispositivoBuscados);
 
   }
 
@@ -371,44 +323,33 @@ $("#formDispositivo").on("submit", function (event) {
 
 });
 
-function actualizarFilaDataTable(nuevoDispositivo, ModelosBuscados) {
-
+async function actualizarFilaDataTable(nuevoDispositivo, ModelosBuscados, TipoDispositivoBuscados) {
 
   const tabla = $("#MyTableDispositivo").DataTable();
 
-  const ListaTiposDispositivos = JSON.parse(localStorage.getItem("TipoDispositivoAll"));
-  const ListaMarcas = JSON.parse(localStorage.getItem("MarcasAll"));
-  const ListaTipoStatus = JSON.parse(localStorage.getItem("TipoStatusAll"));
+  let datoTipo_dispositivo = TipoDispositivoBuscados.find(item => item.id_tipo_dispositivo == nuevoDispositivo.tipo_dispositivo);
 
-  let datoTipo_dispositivo = ListaTiposDispositivos.find(item => item.id_tipo_dispositivo == nuevoDispositivo.tipo_dispositivo);
-  nuevoDispositivo.tipo_dispositivo = datoTipo_dispositivo.tipo_dispositivo;
   nuevoDispositivo.id_tipo_dispositivo = datoTipo_dispositivo.id_tipo_dispositivo;
 
-  // 2. Manejo de la Marca (Puede ser nueva o existente)
+  // 2. Manejo de la Marca
   if (!nuevoDispositivo.marca_producto) {
     nuevoDispositivo.marca = "S/Marca";
   } else {
-    let datoMarca = ListaMarcas.find(item => item.id_marcas == nuevoDispositivo.marca_producto);
-    nuevoDispositivo.marca = datoMarca ? datoMarca.marca : (nuevoDispositivo.marca || "S/Marca");
+
+    nuevoDispositivo.marca = $('#marca_producto').select2('data') ? $('#marca_producto').select2('data')[0].text : nuevoDispositivo.marca_producto;
   }
 
-  // 3. Manejo del Modelo (Puede ser nuevo, existente o S/Modelo)
+  // 3. Manejo del Modelo
   if (!nuevoDispositivo.modelo_producto) {
     nuevoDispositivo.modelo = "S/Modelo";
-  } else {
-    // Intentamos buscarlo en ModelosBuscados o en el localStorage si lo tuvieras
-    let datoModelo = ModelosBuscados ? ModelosBuscados.find(item => item.id_modelos == nuevoDispositivo.modelo_producto) : null;
+  } else { 
 
-    nuevoDispositivo.modelo = datoModelo ? datoModelo.modelo : (nuevoDispositivo.modelo || "S/Modelo");
+    nuevoDispositivo.modelo = $('#modelo_producto').select2('data') ? $('#modelo_producto').select2('data')[0].text : nuevoDispositivo.modelo_producto;
   }
-
-  let datoTipoStatus = ListaTipoStatus.find(item => item.id_tipo_status == nuevoDispositivo.status);
-  nuevoDispositivo.statu = datoTipoStatus.statu;
-  nuevoDispositivo.id_tipo_status = nuevoDispositivo.status;
 
   nuevoDispositivo.serial = nuevoDispositivo.serial_producto;
 
-  PutDevice(nuevoDispositivo, "Editar")
+  let Retorno = await PutDevice(nuevoDispositivo, "Editar")
 
   let filaEncontrada = null;
   tabla.rows().every(function (rowIdx, tableLoop, rowLoop) {
@@ -423,44 +364,37 @@ function actualizarFilaDataTable(nuevoDispositivo, ModelosBuscados) {
 
 }
 
-function agregarFilaDataTable(nuevoDispositivo, ModelosBuscados) {
+async function agregarFilaDataTable(nuevoDispositivo, ModelosBuscados, TipoDispositivoBuscados) {
 
   const tabla = $("#MyTableDispositivo").DataTable();
 
-  const ListaTiposDispositivos = JSON.parse(localStorage.getItem("TipoDispositivoAll"));
-  const ListaMarcas = JSON.parse(localStorage.getItem("MarcasAll"));
-  const ListaTipoStatus = JSON.parse(localStorage.getItem("TipoStatusAll"));
+  let datoTipo_dispositivo = TipoDispositivoBuscados.find(item => item.id_tipo_dispositivo == nuevoDispositivo.tipo_dispositivo);
 
-  let datoTipo_dispositivo = ListaTiposDispositivos.find(item => item.id_tipo_dispositivo == nuevoDispositivo.tipo_dispositivo);
-  nuevoDispositivo.tipo_dispositivo = datoTipo_dispositivo.tipo_dispositivo;
   nuevoDispositivo.id_tipo_dispositivo = datoTipo_dispositivo.id_tipo_dispositivo;
 
-  // 2. Manejo de la Marca (Puede ser nueva o existente)
+  // 2. Manejo de la Marca
   if (!nuevoDispositivo.marca_producto) {
     nuevoDispositivo.marca = "S/Marca";
   } else {
-    let datoMarca = ListaMarcas.find(item => item.id_marcas == nuevoDispositivo.marca_producto);
-    nuevoDispositivo.marca = datoMarca ? datoMarca.marca : (nuevoDispositivo.marca || "S/Marca");
+
+    nuevoDispositivo.marca = $('#marca_producto').select2('data') ? $('#marca_producto').select2('data')[0].text : nuevoDispositivo.marca_producto;
   }
 
-  // 3. Manejo del Modelo (Puede ser nuevo, existente o S/Modelo)
+  // 3. Manejo del Modelo
   if (!nuevoDispositivo.modelo_producto) {
     nuevoDispositivo.modelo = "S/Modelo";
   } else {
-    // Intentamos buscarlo en ModelosBuscados o en el localStorage si lo tuvieras
-    let datoModelo = ModelosBuscados ? ModelosBuscados.find(item => item.id_modelos == nuevoDispositivo.modelo_producto) : null;
-
-    nuevoDispositivo.modelo = datoModelo ? datoModelo.modelo : (nuevoDispositivo.modelo || "S/Modelo");
+    
+    nuevoDispositivo.modelo = $('#modelo_producto').select2('data') ? $('#modelo_producto').select2('data')[0].text : nuevoDispositivo.modelo_producto;
   }
-
-  let datoTipoStatus = ListaTipoStatus.find(item => item.id_tipo_status == nuevoDispositivo.status);
-  nuevoDispositivo.statu = datoTipoStatus.statu;
-  nuevoDispositivo.id_tipo_status = nuevoDispositivo.status;
 
   nuevoDispositivo.serial = nuevoDispositivo.serial_producto;
 
-  PostDevice(nuevoDispositivo)
-  tabla.row.add(nuevoDispositivo).draw(false);
+  let Retorno = await PostDevice(nuevoDispositivo)
+
+  console.log(Retorno)
+
+  tabla.row.add(Retorno.retorno).draw(false);
 
 }
 
@@ -522,21 +456,38 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", async function (event)
   $("#status").val(data.id_tipo_status);
 
   // Marca
-
   const poseeMarca = data.posee_marca;
   const id_marca = data.id_marcas;
+
   $("#posee_marca").val(poseeMarca).trigger("change");
   if (poseeMarca === "Si") {
-    $("#marca_producto").val(id_marca);
+    let $selectMarca = $("#marca_producto");
+    // 1. Verificamos si la opción ya existe en el select
+    if ($selectMarca.find(`option[value="${id_marca}"]`).length === 0) {
+      // Si no existe (porque es AJAX o no está precargada), la creamos al vuelo
+      let nuevaOption = new Option(data.marca, id_marca, true, true);
+      $selectMarca.append(nuevaOption);
+    }
+
+    $selectMarca.val(id_marca).trigger("change");
   }
 
   // Modelo
+  const id_modelo = data.id_modelos;
   const poseeModelo = data.posee_modelo;
+
   $("#posee_modelo").val(poseeModelo).trigger("change");
 
   if (poseeModelo === "Si") {
-    $("#marca_producto").val(id_marca).trigger("change");
-    $("#modelo_producto").val(data.id_modelos);
+
+    let $selectModelo = $("#modelo_producto");
+    
+    if ($selectModelo.find(`option[value="${id_modelo}"]`).length === 0) {
+      let optionModelo = new Option(data.modelo, id_modelo, true, true);
+      $selectModelo.append(optionModelo);
+    }
+
+    $selectModelo.val(id_modelo).trigger("change");
   }
 
   // Serial
@@ -560,19 +511,22 @@ $("#tablaDispositivos").on("click", ".DispositivoEditar", async function (event)
   $("#DispositivoModal").modal("show");
 });
 
-$("#tablaDispositivos").on("click", ".DispositivoVerDetalle", function (event) {
+$("#tablaDispositivos").on("click", ".DispositivoVerDetalle", async function (event) {
+  
   event.preventDefault();
-
+  let data = await GetDevice("Search?valorBuscar=" + $(this).data("id_dispositivo"));
+  
+  console.log(data)
   // 1. Extraer datos del elemento cliqueado
-  const codigo = $(this).data("cd_dispositivo");
-  const tipo = $(this).data("tipo_dispositivo");
-  const estadoTexto = $(this).data("statu");
-  const statusId = $(this).data("id_status");
-  const serial = $(this).data("serial");
-  const marca = $(this).data("marca");
-  const modelo = $(this).data("modelo");
-  const descripcion = $(this).data("descripcion_general");
-  const observaciones = $(this).data("observaciones_tecnicas");
+  const codigo = data.cd_dispositivo;
+  const tipo = data.tipo_dispositivo;
+  const estadoTexto = data.statu;
+  const statusId = data.id_status;
+  const serial = data.serial;
+  const marca = data.marca;
+  const modelo = data.modelo;
+  const descripcion = data.descripcion_general;
+  const observaciones = data.observaciones_tecnicas;
 
   // 2. Asignar los datos simples a las etiquetas correspondientes
   $("#detail_codigo").text(codigo);
@@ -608,5 +562,5 @@ $("#tablaDispositivos").on("click", ".Toggle", function (event) {
   const id = $(this).data("id");
   const statusActual = $(this).data("status");
 
-  ActionToggle(statusActual, id, consultarDispositivo);
+  ActionToggle(statusActual, id);
 });

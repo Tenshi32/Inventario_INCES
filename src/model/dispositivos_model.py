@@ -18,7 +18,7 @@ class DispositivosModel:
         "LEFT JOIN marcas ON dispositivos.id_marca = marcas.id_marcas "
         "LEFT JOIN modelos ON dispositivos.id_modelo = modelos.id_modelos "
         "LEFT JOIN tipo_status ON dispositivos.id_status = tipo_status.id_tipo_status "
-        "ORDER BY dispositivos.fecha_carga ASC LIMIT %s OFFSET %s")
+        "ORDER BY dispositivos.fecha_carga DESC LIMIT %s OFFSET %s")
 
         
         sql_count = ("SELECT COUNT(*) AS total FROM dispositivos")
@@ -87,7 +87,9 @@ class DispositivosModel:
         try: 
             cursor.execute(sql, tuple(datos))
             self.db.commit()
-            return cursor.lastrowid
+
+            retorno = self.get_device(datos[0])
+            return retorno
 
         except Exception as e:
             self.db.rollback()
@@ -106,7 +108,9 @@ class DispositivosModel:
         try: 
             cursor.execute(sql, tuple(datos))
             self.db.commit()
-            return cursor.rowcount
+            
+            retorno = self.get_device(datos[12])
+            return retorno
 
         except Exception as e:
             self.db.rollback()

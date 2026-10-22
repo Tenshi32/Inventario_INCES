@@ -331,64 +331,59 @@ function methodSend(Obj, callback = null) {
 }
 
 // Función para cargar el contenido
-async function loadContent(pageName, elementClicked = null) {
+async function loadContent(pageName, currentController = null) {
 
   const contentArea = $("#content-area");
-
-  if (elementClicked) {
-
-    $(".nav-link").removeClass("active");
-    elementClicked.closest(".nav-link").addClass("active");
-
-  }
-
   const loader = $("#loader-overlay");
+
+  if (currentController) {
+    currentController.abort();
+  }
+  currentController = new AbortController();
+
   loader.fadeIn(200);
 
-  // 1. Validación de seguridad
-  /*     const regex = /^[a-zA-Z0-9\-\/]+$/;
-      if (!regex.test(pageName)) {
-          pageName = "../public/404";
-      } */
-
-  // 2. Construir la ruta (Ajusta la ruta a tu carpeta de páginas)
-  const filepath = `${pageName}.html`;
+  const sanitizedPage = pageName.replace(/[^a-zA-Z0-9\-_]/g, "");
+  const filepath = `${sanitizedPage}.html`; // Ajusta la ruta según tu estructura
 
   // 3. Simular el "include" usando fetch
   try {
 
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const response = await fetch(filepath);
+    const response = await fetch(filepath, { signal: currentController.signal });
 
-    if (response.ok) {
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
 
-      const html = await response.text();
-      contentArea.hide().html(html).fadeIn(500);
+    const html = await response.text();
+    contentArea.hide().html(html).fadeIn(300);
 
-      if (pageName == "dispositivo") {
-        // Importamos dinámicamente el módulo y ejecutamos su función
-        const dispositivoModule = await import('../js/pages/dispositivo.js');
+    if (sanitizedPage === "dispositivo") {
+      const dispositivoModule = await import('../js/pages/dispositivo.js');
+      if (typeof dispositivoModule.renderPageDispositivos === 'function') {
         dispositivoModule.renderPageDispositivos();
-
       }
-
-
-    } else {
-
-      throw new Error("Página no encontrada");
-
     }
 
   } catch (error) {
+    if (error.name === 'AbortError') {
+      console.log('Navegación interrumpida por el usuario.');
+      return; // No mostrar error si fue cancelado a propósito
+    }
 
-    // Equivalente al include del 404.php
-    $.get("404.html", function (data) {
-      contentArea.html(data);
-    });
+    console.error("No se pudo cargar la vista:", error);
+
+    // Carga limpia del 404 usando también fetch en lugar de mezclar jQuery
+    try {
+      const errorResponse = await fetch('404.html');
+      const errorHtml = await errorResponse.text();
+      contentArea.html(errorHtml);
+    } catch (err) {
+      contentArea.html("<div class='alert alert-danger'>Página no encontrada y sin vista de error disponible.</div>");
+    }
 
   } finally {
-    // 2. Ocultar el loader SIEMPRE (haya error o no)
-    loader.fadeOut(300);
+    loader.fadeOut(200);
   }
 }
 

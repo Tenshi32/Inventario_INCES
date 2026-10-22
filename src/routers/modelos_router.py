@@ -15,6 +15,7 @@ def modelos(accion):
             return jsonify(answer)
 
         if accion == 'ForDivice':
+            query = request.args.get('q', '').strip()
             marca = request.args.get('marca')
             answer = ctrl.modelos_for_device(marca)
             return jsonify(answer)

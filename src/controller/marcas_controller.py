@@ -14,7 +14,7 @@ class MarcasController:
     def rastrear_marca(self, id):
         if not id:
             return None
-        return self.modelo.get_marca(id)
+        return self.modelo.get_marcas(id)
 
     def crear_marca(self, datos):
 

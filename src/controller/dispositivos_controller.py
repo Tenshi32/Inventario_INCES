@@ -84,17 +84,16 @@ class DispositivosController:
         ReponseMarca = self.marcas.crear_marca(datos)
 
         if ReponseMarca is not None: 
-
             datos["marca_modelo"] = ReponseMarca["IdFila"]
 
-            ReponseModelo = self.modelos.crear_modelo(datos)
 
+        ReponseModelo = self.modelos.crear_modelo(datos)
         if ReponseModelo is not None: 
-
             datos["modelo_producto"] = ReponseModelo["IdFila"]
             datos["marca_producto"] = ReponseMarca["IdFila"]
 
-            validaciones = self.validation_field(datos)
+
+        validaciones = self.validation_field(datos)
             
         if not validaciones["status"]:
             
@@ -126,7 +125,7 @@ class DispositivosController:
 
             if retorno is not None:
 
-                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo']}
+                return {"status": True, "mensaje": "Registro creado el dispositivo de id: " + datos['id_dispositivo'], "retorno": retorno}
 
             else:
 
@@ -138,17 +137,15 @@ class DispositivosController:
         ReponseMarca = self.marcas.crear_marca(datos)
 
         if ReponseMarca is not None: 
-
             datos["marca_modelo"] = ReponseMarca["IdFila"]
 
-            ReponseModelo = self.modelos.crear_modelo(datos)
+        datos["marca_producto"] = ReponseMarca["IdFila"]
+        ReponseModelo = self.modelos.crear_modelo(datos)
 
         if ReponseModelo is not None: 
-
             datos["modelo_producto"] = ReponseModelo["IdFila"]
-            datos["marca_producto"] = ReponseMarca["IdFila"]
             
-            validaciones = self.validation_field(datos)
+        validaciones = self.validation_field(datos)
         
         if not validaciones["status"]:
             
@@ -180,7 +177,7 @@ class DispositivosController:
 
             if retorno is not None:
             
-                return {"status": True, "mensaje": "se edito el dispositivo de id: " + datos['id_dispositivo']}
+                return {"status": True, "mensaje": "se edito el dispositivo de id: " + datos['id_dispositivo'], "retorno": retorno}
             
             else:
             

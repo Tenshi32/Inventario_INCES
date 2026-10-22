@@ -1,67 +1,25 @@
-import { GetMarca } from "../js/services/MarcasService.js"
-import { GetTipoDispositivo } from "../js/services/TipoDispositivoService.js"
-import { GetStatus } from "../js/services/StatusService.js"
 
 $(document).on("click", "a[data-page]", function (e) {
   e.preventDefault();
   const pageToLoad = $(this).data("page");
-  loadContent(pageToLoad, $(this));
+
+  $(".nav-link").removeClass("active");
+  $(this).closest(".nav-link").addClass("active");
+
+  loadContent(pageToLoad);
   sessionStorage.setItem('lastPage', pageToLoad);
 });
 
 $(document).ready(function () {
 
-  const pageToLoad = sessionStorage.getItem('lastPage') || 'dispositivo';
+  const pageToLoad = sessionStorage.getItem('lastPage') || 'home';
   loadContent(pageToLoad);
 
   const nombre = sessionStorage.getItem('usuario_nombre');
   $('.username').text(nombre);
-  
-
-  datosMarcas();
-  datosTipoDispositivos();
-  datosTipoStatus();
 
 });
 
-async function datosMarcas() {
-
-  let data;
-
-  if (!localStorage.getItem("MarcasAll")) {
-
-    data = await GetMarca("All");
-    localStorage.setItem("MarcasAll", JSON.stringify(data));
-    //localStorage.removeItem("MarcasAll");
-  } 
-
-}
-
-async function datosTipoDispositivos() {
-
-  let data;
-
-  if (!localStorage.getItem("TipoDispositivoAll")) {
-
-    data = await GetTipoDispositivo("All");
-    localStorage.setItem("TipoDispositivoAll", JSON.stringify(data));
-
-  } 
-
-}
-
-async function datosTipoStatus() {
-
-  let data;
-
-  if (!localStorage.getItem("TipoStatusAll")) {
-
-    data = await GetStatus("All");
-    localStorage.setItem("TipoStatusAll", JSON.stringify(data));
-
-  } 
-
-}
 
 document.addEventListener('keyup', e => {
   // Verificamos si el evento proviene del input con id "buscador"

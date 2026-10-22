@@ -32,8 +32,8 @@ export async function GetDevice(endpoint) {
   return await request(`${pathDipositivo}/${endpoint}`, "GET");
 }
 
-export async function PostDevice(datos) {
-  return await request(`${pathDipositivo}/Crear`, "POST", datos);
+export function PostDevice(datos) {
+  return request(`${pathDipositivo}/Crear`, "POST", datos);
 }
 
 export async function PutDevice(datos, endpoint) {

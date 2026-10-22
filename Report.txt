@@ -1,0 +1,335 @@
+REPORTE DE ESTRUCTURA DEL SISTEMA
+Sistema de Inventario INCES
+Fecha de revisión: 21-10-2026
+
+1. RESUMEN EJECUTIVO
+
+El repositorio implementa un sistema web de inventario con una interfaz
+basada en HTML, CSS y JavaScript, una API construida con Flask y una base
+de datos MySQL/MariaDB. La organización del backend sigue una separación
+por capas: rutas, controladores y modelos. El módulo de dispositivos es
+el eje principal de la aplicación; también existen módulos para usuarios,
+dependencias, estados, marcas, modelos, consumibles, servicios y estaciones
+de trabajo.
+
+La estructura es comprensible y permite localizar las responsabilidades
+principales. Antes de ampliar o desplegar el sistema conviene resolver la
+configuración de entorno, revisar la autenticación efectiva de la API,
+uniformar la documentación de rutas y establecer pruebas automatizadas.
+
+2. ALCANCE Y ESTRUCTURA OBSERVADA
+
+Archivos y directorios principales:
+
+- src/router.py: aplicación Flask y registro de rutas HTTP.
+- src/routers/: recepción de acciones HTTP y delegación a controladores.
+- src/controller/: validaciones y lógica de aplicación por entidad.
+- src/model/: conexión y operaciones de persistencia en MySQL.
+- html/: páginas del frontend, incluyendo dispositivos, consumibles,
+  usuarios, dependencias y estaciones de trabajo.
+- assets/js/: scripts de páginas, componentes de interfaz y servicios HTTP.
+- assets/css/ y assets/vendors/: estilos propios y bibliotecas de terceros.
+- inces_inventario.sql: definición y datos iniciales de la base de datos.
+- Diccionario de Datos.docx: documentación complementaria de datos.
+- README.md: descripción del sistema y guía de ejecución.
+- requirements.txt: dependencias Python del backend.
+
+El inventario del repositorio contiene 44 archivos fuente Python, 49
+archivos JavaScript, 27 HTML, 9 CSS y un archivo SQL. Estas cifras cuentan
+archivos identificados por extensión y no equivalen necesariamente a
+módulos funcionales únicos.
+
+3. ARQUITECTURA Y FLUJO
+
+Flujo típico de una operación:
+
+1. Una página HTML carga su script JavaScript correspondiente.
+2. El script de página usa servicios compartidos o realiza la interacción
+   con componentes de la interfaz.
+3. RequestService.js forma la URL a partir de window.CONFIG.API_URL,
+   envía la petición con fetch y procesa la respuesta JSON.
+4. src/router.py recibe la URL y entrega la acción al router del módulo.
+5. El router invoca el controlador, que aplica reglas de la operación.
+6. El modelo ejecuta las consultas mediante mysql-connector-python.
+
+Esta separación mejora la localización de cambios por entidad. El backend
+está organizado de manera funcional, no como un paquete formal con
+configuración centralizada por ambiente.
+
+4. MÓDULOS FUNCIONALES IDENTIFICADOS
+
+Frontend:
+
+- Páginas para dispositivos, consumibles, usuarios, internos, estaciones
+  de trabajo y datos maestros.
+- Scripts JavaScript organizados entre páginas, servicios, componentes,
+  autenticación/sesión y datos maestros.
+- Bibliotecas incluidas localmente: Bootstrap, jQuery, DataTables,
+  Select2, SweetAlert y complementos de validación, entre otras.
+
+Backend con rutas registradas en src/router.py:
+
+- Dependencias
+- Usuarios
+- Modelos y marcas
+- Dispositivos
+- Estaciones de trabajo
+- Tipos de servicios
+- Tipos de dispositivos
+- Tipos de consumibles
+- Estados
+- Status de dispositivos
+
+También hay controladores o modelos para auditoría, internos, hardware y
+software. No todos esos módulos aparecen registrados como rutas en el
+archivo principal, por lo que su disponibilidad desde la API no se debe
+presumir sin revisar el uso de cada uno.
+
+Base de datos:
+
+El dump define 19 tablas: auditoria_sistema, consumibles, dependencia,
+dispositivos, estados, es_trabajo, hardwares, interno, marcas, modelos,
+pisos, redes, rol, softwares, tipo_consumible, tipo_dispositivos,
+tipo_servicios, tipo_status y usuarios. El modelo cubre inventario,
+clasificación de equipos, ubicaciones, usuarios y servicios. El dump
+incluye datos iniciales, por ejemplo para dependencias.
+
+5. OBSERVACIONES Y OPORTUNIDADES DE MEJORA
+
+Prioridad alta - configuración por ambiente:
+
+- La conexión MySQL está definida directamente en
+  src/model/db_connect.py con host, usuario root, contraseña vacía y
+  nombre de base de datos.
+- La URL de la API está definida en assets/js/config.js como dirección
+  local. Para otros ambientes habría que cambiar el código o el archivo
+  servido.
+- La aplicación se ejecuta con debug=True en src/router.py y habilita
+  CORS globalmente. Conviene separar la configuración de desarrollo y
+  producción, restringir CORS a los orígenes necesarios y no habilitar el
+  modo de depuración en producción.
+
+Prioridad alta - autenticación y autorización:
+
+- Existe una página y lógica de inicio de sesión en el frontend, pero en
+  los puntos de entrada y scripts revisados no se identifica un flujo
+  completo verificable de autenticación de API y autorización por rol.
+- La presencia de datos de sesión en el navegador no demuestra por sí
+  sola que las operaciones estén protegidas. Confirmar el mecanismo en
+  todos los endpoints antes de exponer la API fuera de un entorno local.
+
+Prioridad media - coherencia entre documentación y código:
+
+- README.md presenta algunas rutas con capitalización distinta a la usada
+  en src/router.py, por ejemplo modelos y marcas. En ambientes sensibles
+  a mayúsculas, las rutas deben documentarse con su forma exacta.
+- La documentación menciona entidades y relaciones que deberían
+  mantenerse sincronizadas con el dump SQL y las rutas realmente
+  registradas.
+
+Prioridad media - validación y consistencia de datos:
+
+- En la tabla consumibles, cantidad_stock y stock_minimo están declarados
+  como varchar(12), aunque representan cantidades numéricas. Un tipo
+  numérico permitiría validaciones y operaciones de inventario más
+  consistentes; cualquier cambio requeriría migración y revisión de datos.
+- La validación de datos está repartida entre routers y controladores.
+  Conviene definir reglas consistentes para campos requeridos, tipos,
+  errores HTTP y mensajes de respuesta en todos los módulos.
+
+Prioridad media - pruebas y operación:
+
+- requirements.txt declara Flask, CORS, conector MySQL y Gunicorn; no se
+  observa en la estructura revisada una suite de pruebas automatizadas ni
+  una configuración de despliegue documentada.
+- Añadir pruebas de controladores/modelos y de rutas críticas, además de
+  instrucciones claras para configurar la base de datos y arrancar la API
+  en desarrollo y producción.
+
+6. RECOMENDACIONES DE SECUENCIA
+
+1. Centralizar configuración sensible y variable por ambiente
+   (credenciales, host de base de datos, URL de API, CORS y modo debug).
+2. Verificar e implementar autenticación y autorización del lado servidor
+   para todas las rutas que modifican o consultan información restringida.
+3. Alinear README.md y Diccionario de Datos.docx con las rutas y tablas
+   existentes actualmente.
+4. Añadir pruebas para operaciones de dispositivos y dependencias, y
+   ampliar cobertura a los módulos restantes.
+5. Evaluar tipos, restricciones y relaciones de la base de datos antes
+   de aplicar migraciones; mantener un procedimiento de respaldo.
+
+7. CONCLUSIÓN
+
+El sistema cuenta con una base funcional y una estructura modular
+reconocible, con separación entre interfaz, API, lógica de aplicación y
+persistencia. La principal mejora estructural recomendada es formalizar
+la configuración y la seguridad del backend, seguida de pruebas y
+sincronización de la documentación. Las observaciones de este reporte
+describen la estructura inspeccionada y no constituyen una auditoría
+exhaustiva de cada función ni una verificación de despliegue en producción.
+
+8. REVISIÓN DEL JAVASCRIPT PROPIO
+
+Alcance: se revisaron los scripts propios de assets/js (páginas, servicios,
+componentes, configuración y datos maestros). Se excluyeron las bibliotecas
+de terceros que están en assets/vendors y los archivos minificados de
+Bootstrap. El frontend mezcla JavaScript nativo con jQuery, DataTables,
+Select2 y Bootstrap; no es una aplicación escrita exclusivamente en
+JavaScript vanilla.
+
+Fallas funcionales e integración observadas:
+
+- Configuración local de la API: config.js define API_URL como
+  http://127.0.0.1:5000, y varios scripts evitan esa configuración y llaman
+  directamente a localhost o 127.0.0.1. En producción, esos nombres apuntan
+  al equipo de cada usuario, no necesariamente al servidor de la aplicación.
+  Las llamadas fallarán para usuarios remotos salvo que cada script se
+  reconfigure y la API sea accesible desde sus navegadores.
+
+- Rutas que no coinciden con el servidor Flask revisado: los scripts de
+  consumibles llaman a /Consumible, los de internos a /Interno, y los de
+  sesión a /UsuarioData; esas rutas no aparecen registradas en src/router.py.
+  La API principal registra /tipo_consumibles, pero no /Consumible. También
+  hay llamadas a /marcas y /modelos en minúsculas desde datos maestros,
+  mientras que el servidor registra /Marcas y /Modelos. Flask distingue
+  mayúsculas y minúsculas en la ruta. Estas operaciones pueden responder
+  404 al usar esta aplicación Flask tal como está registrada.
+
+- Edición de dispositivos: las opciones Editar y Ver Detalle que se
+  construyen en pages/dispositivo.js tienen atributos data-id_dispositivo
+  vacíos. Los manejadores luego usan ese atributo para consultar el
+  dispositivo; por tanto no reciben el identificador de la fila y la carga
+  del registro puede fallar.
+
+- Opciones de tipos de dispositivo: en datosTipoDispositivos() las variables
+  de contenido se declaran sin texto inicial y se concatenan con +=. El
+  primer resultado puede incluir la palabra "undefined" antes de las
+  opciones del selector.
+
+- Guardado de dispositivos sin esperar el resultado: PostDevice y PutDevice
+  se invocan sin await. La interfaz agrega o actualiza la fila antes de
+  confirmar que la API guardó correctamente. Un error de red o validación
+  puede dejar la tabla mostrando datos no persistidos; al editar una fila
+  fuera de la página actual, la búsqueda de la fila visible también puede
+  no encontrarla.
+
+- Búsquedas y filtros inconsistentes: la tabla de dispositivos envía search,
+  estado y tipo a la API, pero el modelo de dispositivos revisado solo
+  aplica LIMIT/OFFSET y no usa esos filtros. La respuesta informa
+  recordsFiltered igual a recordsTotal. La interfaz puede aparentar que
+  filtra, pero el resultado y el conteo no representan el filtro solicitado.
+
+- Datos del servidor insertados como HTML: varias pantallas construyen
+  cadenas HTML interpolando valores recibidos de la API y las asignan a
+  innerHTML. Además de romper el formato con caracteres especiales, no se
+  debe insertar así texto que provenga de usuarios o de datos editables.
+  Conviene renderizar texto con textContent y crear elementos/atributos
+  mediante APIs DOM; si se conserva una plantilla HTML, escapar
+  correctamente cada valor.
+
+- Configuración de DataTables compartida: DatatableComponente.js activa
+  serverSide siempre, pero pantallas como usuarios inicializan la tabla sin
+  configuración AJAX y después descargan y dibujan registros en el
+  navegador. El modo de paginación del cliente y el del servidor quedan
+  mezclados; debe escogerse uno por pantalla y configurarse de forma
+  explícita.
+
+- Manejo de cambios de página: functions.js añade una espera fija de 500 ms
+  antes de solicitar el HTML. Esto suma medio segundo aunque la red responda
+  inmediatamente. Al navegar varias veces rápido, también conviene cancelar
+  la carga anterior para que una respuesta tardía no reemplace la página
+  elegida más recientemente.
+
+- Eventos globales repetidos: est_trabajo.js registra un manejador delegado
+  en document. El HTML de las páginas se inserta dinámicamente y se carga su
+  JavaScript; si se visita repetidamente la página, ese manejador global
+  puede acumularse y ejecutar varias veces la misma acción. Los manejadores
+  globales deben registrarse una sola vez o limpiarse al salir de la vista.
+
+- Las llamadas comunes están fragmentadas: RequestService.js centraliza
+  parte de las solicitudes, pero otras páginas usan fetch con URL fija y
+  manejo distinto de errores. Esto hace fácil que nuevas rutas, headers,
+  autenticación y tratamiento de respuestas queden inconsistentes. Reutilizar
+  un cliente HTTP compartido también facilita agregar timeout, cancelación
+  de solicitudes y mensajes de error claros.
+
+9. RENDIMIENTO ESPERADO CON 100 O MÁS USUARIOS
+
+No se ejecutó una prueba de carga y, por tanto, no es posible afirmar un
+número de usuarios soportado ni tiempos de respuesta de producción. "100
+usuarios" simultáneos depende del patrón de uso: 100 personas con la página
+abierta e inactiva generan una carga muy diferente a 100 personas buscando
+o guardando datos al mismo tiempo.
+
+La ejecución actual observada en src/router.py usa app.run(debug=True),
+que es el servidor de desarrollo de Flask y no debe emplearse para producción.
+Aunque requirements.txt incluye Gunicorn, no se encontró una configuración
+de despliegue que demuestre que esté siendo utilizada. Además, los modelos
+abren conexiones MySQL al construirse y no se aprecia un pool de conexiones.
+En una ráfaga concurrente, el límite de workers, conexiones disponibles,
+capacidad de la base de datos y consultas será más determinante que la
+ejecución del JavaScript en cada navegador.
+
+Patrones de carga a considerar:
+
+- La pantalla de dispositivos dispara tres consultas de catálogos y una
+  consulta inicial de la tabla. Como referencia, 100 aperturas simultáneas
+  de esa pantalla pueden producir alrededor de 400 solicitudes iniciales
+  a la API, sin contar solicitudes adicionales de otras pantallas o
+  interacciones.
+- El input de búsqueda recarga la tabla en cada evento input, sin debounce.
+  Teclear una palabra puede generar varias solicitudes seguidas por usuario;
+  las respuestas anteriores pueden llegar después de las nuevas.
+- Las pantallas de usuarios, internos, consumibles y estaciones descargan
+  conjuntos completos para construir filas en el navegador. A medida que
+  crece el inventario, aumenta el tiempo de respuesta, el uso de memoria y
+  el trabajo de DataTables en cada cliente.
+- Las peticiones de dispositivos incluyen un conteo total y una consulta
+  con varios JOIN por carga de página. Al no aplicar los filtros enviados,
+  tampoco se obtiene una paginación filtrada fiable. Los índices apropiados
+  y el coste real deben verificarse con el plan de ejecución de MySQL.
+
+Evaluación cualitativa: con pocos registros y uso moderado, el navegador
+puede sentirse razonablemente fluido en las vistas sencillas. No hay
+evidencia suficiente para considerar el sistema listo para garantizar
+100 usuarios concurrentes en producción. Con uso simultáneo y datos
+crecientes, los riesgos principales son la ráfaga de solicitudes, las
+listas completas, las recargas por tecla, las conexiones a MySQL y el
+servidor de desarrollo. Esto es una valoración basada en el código, no un
+resultado medido.
+
+Recomendaciones antes del despliegue con 100+ usuarios:
+
+1. Sustituir el servidor de desarrollo por un servidor WSGI de producción
+   detrás de un proxy inverso; dimensionar workers según CPU, memoria y
+   duración de las consultas. Configurar y probar el despliegue real.
+2. Poner todas las llamadas detrás de una URL de API configurable por
+   ambiente, y verificar que las rutas frontend coincidan exactamente
+   con las registradas en Flask.
+3. Implementar paginación, búsqueda y filtros reales en el backend para
+   todas las tablas grandes. Devolver recordsTotal y recordsFiltered
+   correctos y limitar el tamaño máximo de página.
+4. Aplicar debounce de aproximadamente 300-500 ms al buscador; ignorar o
+   cancelar solicitudes obsoletas. Evitar peticiones si el valor no cambió.
+5. Usar un pool de conexiones MySQL o un mecanismo equivalente de conexión
+   por solicitud que cierre y libere recursos correctamente. Configurar
+   límites coherentes entre workers, pool y max_connections de MySQL.
+6. Medir consultas lentas y revisar EXPLAIN e índices para filtros,
+   relaciones, ordenamientos y búsquedas que realmente use la interfaz.
+   No añadir índices sin validar su impacto sobre las escrituras.
+7. Hacer que las acciones de crear/editar esperen la respuesta y actualizar
+   la tabla solo tras éxito; mostrar al usuario errores y permitir reintento
+   seguro.
+8. Ejecutar una prueba de carga en un entorno parecido a producción con
+   rampa hasta 100 usuarios virtuales, mezcla realista de lecturas,
+   búsquedas y escrituras, y pausas entre acciones. Registrar latencia
+   p50/p95/p99, tasa de error, solicitudes por segundo, CPU/memoria de API
+   y base de datos, conexiones activas y consultas lentas. Después probar
+   por encima de 100 para encontrar el punto de saturación.
+
+Como objetivo inicial de aceptación (a confirmar con los responsables del
+sistema), se pueden definir lecturas p95 por debajo de 2 segundos, escrituras
+p95 por debajo de 3 segundos y errores inferiores al 1 % durante la carga
+esperada. Esos valores son metas sugeridas para una prueba futura, no
+rendimientos medidos actualmente.

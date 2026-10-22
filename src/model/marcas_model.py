@@ -13,6 +13,16 @@ class MarcasModel:
         row = self.cursor.fetchone()
         return row
 
+        #buscador marca especifica por id
+    def get_marcas(self, id):
+        cursor = self.db.cursor(dictionary=True)
+        sql = ("SELECT id_marcas AS id, marca AS text FROM marcas WHERE marca LIKE UPPER(%s) LIMIT 10")
+        search_term = f"%{id}%"
+        cursor.execute(sql, (search_term, ))
+
+        row = cursor.fetchall()
+        return row
+
     #buscador all de marcas
     def get_all_marcas(self):
         cursor = self.db.cursor(dictionary=True)
