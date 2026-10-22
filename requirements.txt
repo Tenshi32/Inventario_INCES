@@ -1,4 +1,240 @@
-Flask==3.1.0
-flask_cors==5.0.0
-mysql-connector-python==8.0.33
-gunicorn>=23.0.0
+ESPECIFICACIÓN DE REQUERIMIENTOS
+Sistema de Inventario de Dispositivos y Equipos
+Versión: 1.0
+Fecha: 22-10-2026
+
+NOTA SOBRE ESTE ARCHIVO
+La base de datos MySQL/MariaDB y sus entidades ya existen en
+inces_inventario.sql. La especificación describe el comportamiento esperado;
+no significa que todos los requerimientos estén implementados o verificados.
+
+1. PROPÓSITO Y ALCANCE
+
+El sistema permitirá registrar, consultar y administrar dispositivos y
+equipos institucionales, así como los catálogos y datos relacionados con su
+identificación, clasificación, estado y ubicación. La aplicación utilizará
+la base de datos existente y deberá conservar la integridad de los datos
+históricos.
+
+El repositorio ya cuenta con una base de datos y módulos para dispositivos,
+usuarios, dependencias, marcas, modelos, tipos, estados, consumibles,
+estaciones de trabajo y otros datos técnicos. Según el avance reportado,
+crear dispositivos, editarlos y consultar sus detalles ya funciona en la
+interfaz. El resto de los requisitos debe validarse contra el comportamiento
+actual antes de considerarse completado.
+
+2. ACTORES
+
+- Administrador: administra usuarios, permisos y catálogos del sistema.
+- Operador de inventario: registra y actualiza equipos, ubicaciones y
+  estados según los permisos asignados.
+- Usuario de consulta: consulta inventario y detalles sin modificar datos.
+
+Los perfiles son una propuesta funcional. Sus permisos específicos deberán
+ser aprobados por los responsables del sistema y aplicados en el servidor.
+
+3. REQUERIMIENTOS FUNCIONALES
+
+RF-01. Inicio de sesión
+El sistema deberá permitir que un usuario se identifique antes de acceder a
+las funciones restringidas y deberá informar cuando las credenciales sean
+incorrectas o la cuenta no esté habilitada.
+
+RF-02. Control de acceso por perfil
+El sistema deberá permitir asignar roles y limitar cada operación de
+consulta, creación, edición, cambio de estado y administración a los perfiles
+autorizados. La autorización deberá comprobarse en el backend, no solamente
+en la interfaz.
+
+RF-03. Registro de dispositivos
+El operador autorizado deberá poder crear un dispositivo indicando los
+datos disponibles: código institucional, tipo, marca, modelo, serial,
+descripción, observaciones técnicas y estado. El sistema deberá permitir
+registrar equipos que no tengan marca, modelo, código o serial cuando esos
+datos no existan.
+
+RF-04. Validación de dispositivos
+Antes de guardar, el sistema deberá validar los campos requeridos, el formato
+y longitud permitidos, la existencia de los catálogos seleccionados y la
+unicidad de los identificadores que la organización defina como únicos. Los
+campos opcionales deberán aceptarse sin producir valores inválidos.
+
+RF-05. Edición de dispositivos
+El operador autorizado deberá poder modificar la información de un
+dispositivo existente. El sistema deberá guardar los cambios en la base de
+datos y presentar el resultado de la operación al usuario.
+
+RF-06. Consulta de detalles
+El usuario autorizado deberá poder abrir el detalle de un dispositivo y
+consultar sus identificadores, tipo, marca, modelo, serial, estado,
+descripción y observaciones técnicas disponibles.
+
+RF-07. Búsqueda y listado
+El sistema deberá permitir listar dispositivos con paginación y buscar por
+código, serial u otros campos acordados. Deberá permitir filtrar por tipo,
+estado y ubicación cuando dicha información esté asociada al equipo. Los
+resultados y sus totales deberán corresponder a los filtros aplicados.
+
+RF-08. Estado del dispositivo
+El operador autorizado deberá poder consultar y actualizar el estado de un
+equipo utilizando el catálogo de estados vigente. El sistema deberá reflejar
+el estado actualizado tanto en el listado como en el detalle.
+
+RF-09. Catálogos de dispositivos
+El administrador deberá poder consultar y mantener los catálogos de tipos
+de dispositivos, marcas, modelos y estados, incluyendo su activación o
+desactivación. Los registros referenciados por equipos no deberán eliminarse
+de forma que se pierda la integridad referencial o el historial.
+
+RF-10. Dependencias y ubicaciones
+El sistema deberá permitir administrar las dependencias institucionales y
+los datos de ubicación disponibles en la base de datos, como estado y piso.
+Cuando un equipo tenga ubicación o dependencia asignada, esta deberá poder
+consultarse desde su ficha y utilizarse como criterio de búsqueda.
+
+RF-11. Estaciones de trabajo y componentes
+El sistema deberá permitir consultar y administrar las estaciones de trabajo
+y las asociaciones de dispositivos o componentes técnicos que el modelo de
+datos existente soporte. La interfaz deberá mostrar las relaciones
+disponibles sin duplicar ni perder los registros asociados.
+
+RF-12. Usuarios e internos
+El administrador deberá poder consultar y mantener los registros de usuarios
+e internos soportados por la base de datos, incluyendo los datos de
+identificación y estado necesarios para su operación. La información
+personal solo deberá mostrarse a perfiles autorizados.
+
+RF-13. Consumibles
+El sistema deberá permitir consultar y administrar los consumibles, su tipo,
+modelo, condición y cantidades de existencias. Deberá validar que las
+cantidades sean valores numéricos no negativos y permitir identificar
+existencias iguales o inferiores al stock mínimo.
+
+RF-14. Tipos de servicios
+El sistema deberá permitir consultar y administrar el catálogo de tipos de
+servicios definido en la base de datos. Si se incorpora el registro de
+intervenciones o mantenimientos, deberá asociarse a un equipo y conservar
+la fecha, tipo de servicio, responsable y observaciones; esta ampliación
+dependerá de que se defina y valide el modelo de datos correspondiente.
+
+RF-15. Auditoría
+El sistema deberá registrar las operaciones de creación, modificación y
+eliminación o desactivación de datos críticos, incluyendo usuario
+responsable, fecha y hora, entidad afectada e información anterior y nueva
+cuando esté disponible. Los registros de auditoría no deberán ser
+modificables por usuarios ordinarios.
+
+RF-16. Eliminación segura
+El sistema deberá confirmar las operaciones de eliminación y advertir
+cuando existan relaciones dependientes. Para equipos y catálogos con
+historial, deberá preferirse la desactivación o baja lógica a la eliminación
+física, de acuerdo con las políticas institucionales.
+
+RF-17. Mensajes y errores
+El sistema deberá informar si una operación fue exitosa o no, presentar
+mensajes comprensibles y conservar los datos ingresados cuando ocurra un
+error recuperable. No deberá mostrar como guardados datos que el backend no
+haya confirmado.
+
+RF-18. Reportes y exportación
+El sistema deberá permitir generar listados de inventario con los filtros
+aplicados y exportarlos a un formato acordado, por ejemplo CSV o Excel. Los
+reportes deberán respetar los permisos de acceso y reflejar los datos
+persistidos en la base de datos.
+
+4. REQUERIMIENTOS NO FUNCIONALES
+
+RNF-01. Persistencia e integridad
+La aplicación deberá utilizar la base de datos MySQL/MariaDB existente,
+mantener claves y relaciones válidas y ejecutar las operaciones relacionadas
+de forma transaccional cuando corresponda. No deberá sobrescribir ni migrar
+datos existentes sin respaldo y aprobación.
+
+RNF-02. Seguridad
+Las comunicaciones deberán protegerse mediante HTTPS en los ambientes
+desplegados. Las contraseñas deberán almacenarse con hash seguro; las
+consultas deberán parametrizarse; y las entradas deberán validarse tanto en
+el cliente como en el servidor. Los secretos de conexión no deberán quedar
+expuestos en el código fuente ni en el navegador.
+
+RNF-03. Autenticación y sesión
+Las sesiones deberán expirar después de un período de inactividad definido,
+protegerse contra el acceso no autorizado y poder cerrarse explícitamente.
+Las rutas privadas deberán verificar la identidad y los permisos en cada
+operación.
+
+RNF-04. Rendimiento
+Como objetivo inicial sujeto a aprobación y medición, con 100 usuarios
+concurrentes y una carga representativa, al menos el 95 % de las consultas
+de listado y detalle deberá responder en menos de 2 segundos y el 95 % de
+las escrituras en menos de 3 segundos. Estos valores son metas de aceptación,
+no resultados de rendimiento ya medidos.
+
+RNF-05. Escalabilidad
+Las listas deberán usar paginación en el servidor cuando el volumen de datos
+lo requiera. Las consultas y conexiones a la base de datos deberán
+configurarse para el entorno de despliegue y probarse bajo concurrencia.
+
+RNF-06. Disponibilidad y recuperación
+El responsable de operación deberá definir objetivos de disponibilidad,
+frecuencia de respaldos, tiempo de recuperación y pérdida máxima de datos
+aceptable. Los respaldos deberán almacenarse de forma protegida y probarse
+periódicamente mediante restauraciones verificables.
+
+RNF-07. Usabilidad y accesibilidad
+La interfaz deberá estar en español, mostrar etiquetas y errores claros y
+mantener una navegación consistente. Las acciones principales deberán
+utilizarse con teclado y presentar estados de carga, éxito y error.
+
+RNF-08. Compatibilidad
+La interfaz deberá probarse en versiones vigentes de Chrome, Edge y Firefox,
+y adaptarse a resoluciones de escritorio y tabletas usadas por la
+institución.
+
+RNF-09. Mantenibilidad
+El sistema deberá conservar la separación entre interfaz, rutas,
+controladores y modelos. Las rutas, configuración, reglas de validación y
+errores deberán documentarse; los cambios deberán acompañarse de pruebas
+para las operaciones afectadas.
+
+RNF-10. Trazabilidad y monitoreo
+Los errores de aplicación y base de datos deberán registrarse con contexto
+suficiente para su diagnóstico, sin guardar contraseñas, tokens ni datos
+personales innecesarios. Los registros deberán permitir identificar fecha,
+operación y resultado.
+
+RNF-11. Calidad de datos
+Los datos deberán almacenarse con tipos adecuados, restricciones de
+integridad y reglas de negocio consistentes. Las migraciones deberán
+documentarse, revisarse y probarse sobre una copia antes de aplicarse a
+producción.
+
+RNF-12. Despliegue
+En producción, la API deberá ejecutarse con un servidor WSGI y configuración
+apropiada al ambiente. El modo de depuración no deberá estar habilitado y el
+acceso de red a la base de datos deberá limitarse a los componentes
+autorizados.
+
+5. CRITERIOS GENERALES DE ACEPTACIÓN
+
+- Los casos de uso deberán probarse con datos válidos, inválidos y
+  duplicados, así como con usuarios autorizados y no autorizados.
+- Crear o editar un dispositivo deberá persistir los datos y permitir
+  consultarlos nuevamente desde la aplicación.
+- Los listados deberán mostrar resultados y totales coherentes con los
+  filtros y la paginación seleccionados.
+- Una falla de red o de base de datos deberá comunicarse claramente y no
+  presentarse como una operación exitosa.
+- Las pruebas de seguridad, respaldo, restauración y carga deberán ejecutarse
+  en un ambiente de pruebas antes de aprobar el despliegue.
+
+6. PENDIENTES DE DEFINICIÓN CON LOS RESPONSABLES
+
+- Campos obligatorios y reglas exactas de unicidad para código y serial.
+- Perfiles definitivos y permisos de cada operación.
+- Flujo institucional de asignación, traslado, préstamo, reparación y baja
+  de equipos, si aplica.
+- Formatos de reportes y exportación requeridos.
+- Objetivos aprobados de disponibilidad, rendimiento, respaldo y
+  recuperación.
+- Política de retención de datos personales, inventario y auditoría.

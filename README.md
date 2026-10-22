@@ -1,330 +1,166 @@
-# Sistema de Inventario INCI / INSI
+# Sistema de Inventario INCES
 
-Este repositorio contiene un sistema de gestión de inventario y dependencias para la organización, con una arquitectura basada en Flask para la API, una interfaz web estática con Bootstrap y un esquema de base de datos MySQL para registrar equipos, dependencias, usuarios, tipos de dispositivos y consumibles.
+Aplicación web para la consulta y administración del inventario institucional. El repositorio contiene una interfaz basada en HTML, CSS y JavaScript, una API desarrollada con Flask y un esquema MySQL/MariaDB.
 
-## Visión general
+La base de datos ya está definida en [`inces_inventario.sql`](inces_inventario.sql). La aplicación se organiza en páginas y servicios frontend, rutas Flask, controladores y modelos de persistencia.
 
-El proyecto está orientado a controlar recursos tecnológicos y administrativos del inventario institucional, incluyendo:
+## Estado actual
 
-- Dependencias y ubicaciones
-- Usuarios del sistema
-- Dispositivos y estados
-- Marcas, modelos y tipos de dispositivos
-- Consumibles
-- Servicios y estaciones de trabajo
-- Estados regionales y gestión de inventario
+- El módulo de **Dispositivos** permite crear y editar registros, y consultar sus detalles desde la interfaz.
+- El listado de dispositivos utiliza DataTables con solicitudes a la API y controles de búsqueda y filtros. La implementación actual del backend no aplica todos los filtros que recibe; los resultados deben verificarse antes de depender de ellos.
+- Hay páginas frontend para dispositivos, consumibles, estaciones de trabajo, usuarios, internos y datos maestros.
+- La API registra rutas para dispositivos, usuarios, dependencias, marcas, modelos, estaciones de trabajo, tipos de dispositivos, tipos de consumibles, tipos de servicios, estados y status.
+- La presencia de una página, un controlador o una tabla no significa que todas sus operaciones estén terminadas o conectadas correctamente.
+- No se encontró una suite automatizada de pruebas ni evidencia de una prueba de carga o despliegue de producción. El soporte para una cantidad específica de usuarios no está medido.
 
-La estructura actual permite que el sistema funcione con una API backend y una capa frontend que consume esos servicios desde páginas HTML y scripts JavaScript.
+## Tecnologías
 
----
+- Python y Flask
+- Flask-CORS
+- MySQL Connector/Python
+- MySQL o MariaDB
+- HTML, CSS y JavaScript
+- Bootstrap, jQuery, DataTables, Select2 y SweetAlert
 
-## Arquitectura del sistema
+## Estructura del repositorio
 
-### 1. Backend
+```text
+assets/
+  css/                  Estilos
+  js/
+    components/         Componentes de interfaz
+    dateMaster/         Scripts de datos maestros
+    pages/              Lógica JavaScript de las páginas
+    services/           Servicios de comunicación con la API
+    config.js           URL actual de la API
+  vendors/              Bibliotecas frontend locales
+html/                   Páginas HTML
+src/
+  controller/           Validaciones y lógica de aplicación
+  model/                Consultas y conexión a MySQL/MariaDB
+  routers/              Manejo de acciones de cada entidad
+  router.py             Aplicación Flask y registro de rutas
+inces_inventario.sql    Esquema y datos iniciales de la base de datos
+Report.txt              Reporte de estructura y observaciones
+requirements.txt        Especificación de requerimientos del sistema
+```
 
-La lógica principal del backend se encuentra en la carpeta [src](src):
+## Módulos visibles y entidades
 
-- [src/router.py](src/router.py): archivo principal que levanta la aplicación Flask y registra las rutas de la API.
-- [src/controller](src/controller): controladores que reciben la lógica de negocio por entidad.
-- [src/model](src/model): acceso a base de datos y consultas SQL.
-- [src/routers](src/routers): definiciones de rutas y validación por acción (Crear, Editar, Toggle, All, etc.).
+La navegación de [`html/index.html`](html/index.html) incluye las páginas de dispositivos, consumibles, estaciones de trabajo, datos maestros y usuarios. También existen páginas para internos y otras vistas de soporte.
 
-### 2. Frontend
+El dump SQL define 19 tablas: `auditoria_sistema`, `consumibles`, `dependencia`, `dispositivos`, `estados`, `es_trabajo`, `hardwares`, `interno`, `marcas`, `modelos`, `pisos`, `redes`, `rol`, `softwares`, `tipo_consumible`, `tipo_dispositivos`, `tipo_servicios`, `tipo_status` y `usuarios`.
 
-La interfaz del sistema está construida con páginas HTML, CSS y JavaScript en:
+Algunas entidades —por ejemplo hardware, software, auditoría e internos— tienen modelos o controladores, pero no todas cuentan con rutas registradas en la aplicación Flask principal. Verifica el código antes de asumir que una tabla o módulo es accesible desde la interfaz.
 
-- [html](html)
-- [assets/css](assets/css)
-- [assets/js](assets/js)
+## Requisitos previos
 
-El frontend incluye pantallas como:
+- Python instalado.
+- MySQL o MariaDB en ejecución.
+- Un servidor web estático para servir la carpeta del proyecto; en el entorno de desarrollo puede utilizarse Apache de XAMPP.
+- Las bibliotecas Python necesarias para el backend: Flask, Flask-CORS y MySQL Connector/Python.
 
-- [html/home.html](html/home.html)
-- [html/login.html](html/login.html)
-- [html/dispositivo.html](html/dispositivo.html)
-- [html/consumibles.html](html/consumibles.html)
-- [html/est_trabajo.html](html/est_trabajo.html)
-- [html/internos.html](html/internos.html)
-- [html/usuario.html](html/usuario.html)
-- [html/dateMaster.html](html/dateMaster.html)
+### Importante sobre `requirements.txt`
 
-### 3. Base de datos
+Actualmente [`requirements.txt`](requirements.txt) contiene la especificación de requerimientos funcionales y no funcionales del sistema, **no** una lista de paquetes Python. Por ello, no se puede usar con `pip install -r requirements.txt`. Instala las dependencias Python individualmente en un entorno virtual o prepara un archivo separado de dependencias antes de automatizar la instalación.
 
-La base de datos del proyecto se encuentra en:
+## Configuración local
 
-- [inces_inventario.sql](inces_inventario.sql)
+### 1. Preparar la base de datos
 
-Este dump SQL define las tablas principales del sistema y sus relaciones.
+Importa [`inces_inventario.sql`](inces_inventario.sql) en MySQL/MariaDB mediante phpMyAdmin o el cliente `mysql`. El dump crea la base de datos `inces_inventario` y contiene estructura y datos iniciales.
 
----
+La conexión está actualmente escrita directamente en [`src/model/db_connect.py`](src/model/db_connect.py):
 
-## Módulos y entidades del sistema
+```text
+host: 127.0.0.1
+usuario: root
+contraseña: vacía
+base de datos: inces_inventario
+```
 
-### Dependencias
+Estos valores solo corresponden a una instalación local compatible. Actualiza la configuración de acuerdo con tu entorno y no expongas credenciales en un despliegue real.
 
-La gestión de dependencias permite registrar unidades o sedes institucionales, su estado y su piso asociado.
+### 2. Instalar dependencias Python
 
-Archivos relevantes:
+Desde la raíz del repositorio, crea y activa un entorno virtual e instala Flask, Flask-CORS y MySQL Connector/Python. Por ejemplo, en Windows PowerShell:
 
-- [src/controller/dependencias_controller.py](src/controller/dependencias_controller.py)
-- [src/model/dependencias_model.py](src/model/dependencias_model.py)
-- [src/routers/dependencias_router.py](src/routers/dependencias_router.py)
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install Flask Flask-Cors mysql-connector-python
+```
 
-Funcionalidades principales:
-
-- Listar dependencias
-- Crear dependencia
-- Editar dependencia
-- Cambiar estado activo/inactivo
-
-### Usuarios
-
-La entidad usuarios almacena la información técnica y funcional del personal que interactúa con el sistema.
-
-Archivos relevantes:
-
-- [src/controller/usuario_controller.py](src/controller/usuario_controller.py)
-- [src/model/usuario_model.py](src/model/usuario_model.py)
-- [src/routers/usuario_router.py](src/routers/usuario_router.py)
-
-Incluye:
-
-- Registro de cédula, nombre, apellido, correo, cargo y teléfono
-- Consulta por identificación
-- Estado del usuario
-- Actualización y cambio de estado
-
-### Dispositivos
-
-Es el módulo central del inventario. Permite registrar y consultar equipos tecnológicos, sus propiedades y su estado operativo.
-
-Archivos relevantes:
-
-- [src/controller/dispositivos_controller.py](src/controller/dispositivos_controller.py)
-- [src/model/dispositivos_model.py](src/model/dispositivos_model.py)
-- [src/routers/dispositivos_router.py](src/routers/dispositivos_router.py)
-
-Campos principales del inventario:
-
-- código del equipo
-- marca y modelo
-- tipo de dispositivo
-- serial
-- descripción general
-- observaciones técnicas
-- estado del equipo
-
-### Marcas y modelos
-
-Estos módulos permiten clasificar los activos según sus características de fabricante y referencia.
-
-Archivos:
-
-- [src/controller/marcas_controller.py](src/controller/marcas_controller.py)
-- [src/model/marcas_model.py](src/model/marcas_model.py)
-- [src/routers/marcas_router.py](src/routers/marcas_router.py)
-- [src/controller/modelo_controller.py](src/controller/modelo_controller.py)
-- [src/model/modelos_model.py](src/model/modelos_model.py)
-- [src/routers/modelos_router.py](src/routers/modelos_router.py)
-
-### Tipo de dispositivos
-
-Controla la categoría del equipo o activo tecnológico.
-
-Archivos:
-
-- [src/controller/tipo_dispositivos_controller.py](src/controller/tipo_dispositivos_controller.py)
-- [src/model/tipo_dispositivos_model.py](src/model/tipo_dispositivos_model.py)
-- [src/routers/tipo_dispositivos_router.py](src/routers/tipo_dispositivos_router.py)
-
-Ejemplos de tipos: Switches, Laptop, Escáner, Impresora, UPS, Router, Monitor, Teclado, CPU, etc.
-
-### Tipo de consumibles
-
-Permite clasificar artículos de consumo y materiales de soporte para equipos.
-
-Archivos:
-
-- [src/controller/tipo_consumibles_controller.py](src/controller/tipo_consumibles_controller.py)
-- [src/model/tipo_consumibles_model.py](src/model/tipo_consumibles_model.py)
-- [src/routers/tipo_consumibles_router.py](src/routers/tipo_consumibles_router.py)
-
-### Tipo de servicios
-
-Gestiona los servicios asociados a red o infraestructura que apoyan a la organización.
-
-Archivos:
-
-- [src/controller/tipo_servicios_controller.py](src/controller/tipo_servicios_controller.py)
-- [src/model/tipo_servicios_model.py](src/model/tipo_servicios_model.py)
-- [src/routers/tipo_servicios_router.py](src/routers/tipo_servicios_router.py)
-
-### Estados y ubicaciones
-
-Se gestiona la información geográfica y general del sistema, como estados y pisos.
-
-Archivos:
-
-- [src/controller/estados_controller.py](src/controller/estados_controller.py)
-- [src/model/estado_model.py](src/model/estado_model.py)
-- [src/routers/estados_router.py](src/routers/estados_router.py)
-
-También se cuenta con la entidad de pisos para categorizar ubicaciones internas dentro de una dependencia.
-
----
-
-## Endpoints principales
-
-La API es expuesta a través del archivo [src/router.py](src/router.py). Las rutas registradas incluyen:
-
-- `/dependencia/<accion>`
-- `/Usuario/<accion>`
-- `/modelos/<accion>`
-- `/marcas/<accion>`
-- `/Dispositivos/<accion>`
-- `/EstacionesTrabajo/<accion>`
-- `/tipo_servicios/<accion>`
-- `/tipo_dispositivos/<accion>`
-- `/tipo_consumibles/<accion>`
-- `/estados/<accion>`
-
-Acciones comunes:
-
-- `All`: listar todos los registros
-- `Crear`: registrar nuevo dato
-- `Editar`: actualizar datos
-- `Toggle`: cambiar estado o activar/desactivar
-- `Existencia`: consultar si un registro ya existe
-
-La API utiliza `POST`, `GET`, `PUT`, `DELETE` y maneja solicitudes `OPTIONS` para compatibilidad con navegadores.
-
----
-
-## Esquema de base de datos
-
-La base de datos principal está nombrada como `inces_inventario` y cuenta con tablas como:
-
-- `usuarios`
-- `interno`
-- `rol`
-- `dependencia`
-- `pisos`
-- `estados`
-- `dispositivos`
-- `marcas`
-- `modelos`
-- `tipo_dispositivos`
-- `tipo_servicios`
-- `tipo_consumible`
-- `consumibles`
-- `softwares`
-- `redes`
-- `auditoria_sistema`
-- `tipo_status`
-
-### Relaciones principales
-
-- `dependencia` → `estados`
-- `dependencia` → `pisos`
-- `dispositivos` → `marcas`
-- `dispositivos` → `modelos`
-- `dispositivos` → `tipo_dispositivos`
-- `dispositivos` → `tipo_status`
-- `interno` → `usuarios`
-- `interno` → `rol`
-- `consumibles` → `tipo_consumible`
-
----
-
-## Configuración de la base de datos
-
-La conexión a la base de datos se establece en [src/model/db_connect.py](src/model/db_connect.py):
-
-- Host: `localhost`
-- Usuario: `root`
-- Base de datos: `inces_inventario`
-- Contraseña: vacía
-
-Este archivo utiliza `mysql.connector` para conectarse a MySQL/MariaDB.
-
----
-
-## Cómo ejecutar el proyecto
+### 3. Iniciar la API
 
 Desde la raíz del repositorio:
 
-```bash
-python src/router.py
+```powershell
+python .\src\router.py
 ```
 
-Esto levantará la aplicación Flask en el puerto 5000.
+La API de desarrollo escucha en `http://127.0.0.1:5000`. El archivo [`assets/js/config.js`](assets/js/config.js) también apunta actualmente a esa URL.
 
-La aplicación queda disponible en:
+### 4. Servir el frontend
+
+Sirve el repositorio mediante Apache u otro servidor de archivos estáticos. En el XAMPP descrito por la estructura local, la página principal suele estar disponible en:
 
 ```text
-http://localhost:5000
+http://localhost/Proyects/Inventario_INCES/html/index.html
 ```
 
-> El proyecto usa CORS y está preparado para consumir datos desde páginas HTML del frontend.
+La ruta exacta depende del nombre de la carpeta bajo `htdocs`. No abras la página como archivo local si el navegador bloquea las solicitudes o los módulos JavaScript. El frontend y la API se sirven por separado.
 
----
+## API registrada
 
-## Tecnologías usadas
+Las rutas se registran en [`src/router.py`](src/router.py). La capitalización forma parte de la ruta y debe respetarse:
 
-- Python
-- Flask
-- MySQL / MariaDB
-- HTML5
-- CSS3
-- Bootstrap
-- JavaScript
-- jQuery
-- SQL
+| Ruta base | Entidad |
+|---|---|
+| `/dependencia/<accion>` | Dependencias |
+| `/Usuario/<accion>` | Usuarios |
+| `/Modelos/<accion>` | Modelos |
+| `/Marcas/<accion>` | Marcas |
+| `/Dispositivos/<accion>` | Dispositivos |
+| `/EstacionesTrabajo/<accion>` | Estaciones de trabajo |
+| `/tipo_servicios/<accion>` | Tipos de servicios |
+| `/tipo_dispositivos/<accion>` | Tipos de dispositivos |
+| `/tipo_consumibles/<accion>` | Tipos de consumibles |
+| `/estados/<accion>` | Estados |
+| `/Status/<accion>` | Status de dispositivos |
 
----
+Las acciones disponibles dependen de cada router. En dispositivos, el código contempla, entre otras, `GET /Dispositivos/All`, `GET /Dispositivos/Search`, `POST /Dispositivos/Crear` y `PUT /Dispositivos/Editar`. Consulta el router correspondiente para conocer los parámetros y el formato de datos exactos.
 
-## Estado actual del proyecto
+Los routers `interno`, `hardware`, `software` y `auditoria` no están registrados como endpoints en [`src/router.py`](src/router.py), aunque existan archivos relacionados en el repositorio.
 
-El sistema ya tiene una base funcional para:
+## Observaciones y limitaciones conocidas
 
-- registro de dependencias
-- administración de usuarios
-- inventario de dispositivos
-- clasificación por marcas, modelos y tipos
-- control de estados y consumibles
-- consumo de datos mediante API REST
-- vista web con administración por páginas HTML
+- La aplicación Flask se inicia con `debug=True` y escucha en `127.0.0.1`; es configuración de desarrollo, no de producción.
+- CORS se habilita globalmente. Restringe los orígenes permitidos antes de desplegar.
+- La conexión a la base de datos tiene credenciales fijas en el código. No se observa configuración centralizada por ambiente.
+- La página de login y código de sesión del frontend no demuestran por sí solos que los endpoints estén protegidos con autenticación y autorización del lado del servidor.
+- El frontend contiene llamadas directas a direcciones locales y rutas que no coinciden con las rutas registradas. Algunas pantallas pueden no funcionar correctamente con el backend actual.
+- El backend de dispositivos acepta parámetros de búsqueda, estado y tipo, pero el modelo y los totales deben revisarse para confirmar que esos filtros se apliquen correctamente.
+- No se ha medido el rendimiento con usuarios concurrentes. No se debe asumir soporte para 100 usuarios sin desplegar y ejecutar una prueba de carga representativa.
+- La implementación de creación, edición y detalle de dispositivos está conectada; los mensajes y la recuperación ante errores de guardado todavía requieren pruebas y validación de extremo a extremo.
 
-Aun así, el proyecto sigue en evolución y presenta varios detalles de implementación que pueden mejorarse, como:
+Consulta [`Report.txt`](Report.txt) para el análisis estructural y las recomendaciones que se documentaron para el estado actual del repositorio.
 
-- normalización de nombres y convenciones de código
-- validación más robusta de formularios
-- manejo centralizado de errores
-- seguridad de autenticación y sesiones
-- mejor organización de archivos del frontend y backend
-- limpieza de endpoints y denominaciones inconsistentes
+## Pruebas y validación
 
----
+No se identifica actualmente una suite de pruebas automatizadas en el repositorio. Como mínimo, antes de aceptar cambios en el módulo de dispositivos, verifica manualmente:
 
-## Recomendaciones futuras
+1. Crear un dispositivo con y sin marca, modelo o serial.
+2. Editar un dispositivo existente y volver a consultar sus datos.
+3. Abrir el detalle del equipo correcto desde una fila de la tabla.
+4. Comprobar validaciones y respuestas ante datos incompletos o errores de API.
+5. Confirmar persistencia en la base de datos y consistencia del listado.
 
-Para seguir desarrollando el sistema, se recomienda:
+Las pruebas de seguridad, compatibilidad, respaldo/restauración y carga deben realizarse en un ambiente de pruebas separado antes de considerar un despliegue productivo.
 
-1. Consolidar una API más uniforme y consistente entre controladores y modelos.
-2. Añadir autenticación con sesiones y roles reales.
-3. Mejorar la auditoría con trazabilidad de cambios por usuario y fecha.
-4. Centralizar validaciones de formularios en el backend.
-5. Añadir pruebas automatizadas para endpoints y lógica de negocio.
-6. Documentar cada módulo con ejemplos de uso y payloads JSON.
+## Documentación relacionada
 
----
-
-## Resumen
-
-Este repositorio representa un sistema de inventario institucional funcional, orientado a la gestión de activos, ubicaciones, dependencias y usuarios, con una base de datos bien estructurada y una interfaz web simple pero operativa. El backend en Flask permite la lógica de negocio y la persistencia, mientras que el frontend estático ofrece una experiencia de usuario rápida para las tareas de administración.
-
----
-
-## Contribución
-
-Este proyecto puede continuar ampliándose para incluir más módulos, más seguridad y mejores reportes. Si se trabaja en una nueva versión, o si se desea ampliar funcionalidad, es recomendable mantener la estructura actual y documentar cada cambio en el código y en la base de datos.
+- [`Report.txt`](Report.txt): reporte de estructura, observaciones del JavaScript y consideraciones de rendimiento.
+- [`requirements.txt`](requirements.txt): requerimientos funcionales y no funcionales.
+- [`Diccionario de Datos.docx`](Diccionario%20de%20Datos.docx): diccionario de datos complementario.
+- [`inces_inventario.sql`](inces_inventario.sql): esquema y datos iniciales de la base de datos.

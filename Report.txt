@@ -1,6 +1,6 @@
 REPORTE DE ESTRUCTURA DEL SISTEMA
 Sistema de Inventario INCES
-Fecha de revisión: 21-10-2026
+Fecha de revisión: 22-10-2026
 
 1. RESUMEN EJECUTIVO
 
@@ -16,6 +16,11 @@ La estructura es comprensible y permite localizar las responsabilidades
 principales. Antes de ampliar o desplegar el sistema conviene resolver la
 configuración de entorno, revisar la autenticación efectiva de la API,
 uniformar la documentación de rutas y establecer pruebas automatizadas.
+
+Avance funcional reportado: en el módulo de dispositivos ya funcionan las
+operaciones de crear, editar y consultar el detalle de un registro desde la
+interfaz. Este avance se refleja en pages/dispositivo.js y sus servicios;
+no representa una prueba de despliegue ni una validación automatizada.
 
 2. ALCANCE Y ESTRUCTURA OBSERVADA
 
@@ -154,8 +159,9 @@ Prioridad media - pruebas y operación:
    para todas las rutas que modifican o consultan información restringida.
 3. Alinear README.md y Diccionario de Datos.docx con las rutas y tablas
    existentes actualmente.
-4. Añadir pruebas para operaciones de dispositivos y dependencias, y
-   ampliar cobertura a los módulos restantes.
+4. Añadir pruebas de regresión para la creación, edición y consulta de
+   detalles de dispositivos que ya están implementadas, además de pruebas
+   para dependencias y los módulos restantes.
 5. Evaluar tipos, restricciones y relaciones de la base de datos antes
    de aplicar migraciones; mantener un procedimiento de respaldo.
 
@@ -163,11 +169,14 @@ Prioridad media - pruebas y operación:
 
 El sistema cuenta con una base funcional y una estructura modular
 reconocible, con separación entre interfaz, API, lógica de aplicación y
-persistencia. La principal mejora estructural recomendada es formalizar
-la configuración y la seguridad del backend, seguida de pruebas y
-sincronización de la documentación. Las observaciones de este reporte
-describen la estructura inspeccionada y no constituyen una auditoría
-exhaustiva de cada función ni una verificación de despliegue en producción.
+persistencia. En dispositivos ya funcionan crear, editar y ver detalles;
+el siguiente paso es cubrir esas operaciones con pruebas y completar el
+manejo de errores de la interfaz. La principal mejora estructural
+recomendada sigue siendo formalizar la configuración y la seguridad del
+backend, seguida de pruebas y sincronización de la documentación. Las
+observaciones de este reporte describen la estructura inspeccionada y no
+constituyen una auditoría exhaustiva de cada función ni una verificación
+de despliegue en producción.
 
 8. REVISIÓN DEL JAVASCRIPT PROPIO
 
@@ -196,23 +205,25 @@ Fallas funcionales e integración observadas:
   mayúsculas y minúsculas en la ruta. Estas operaciones pueden responder
   404 al usar esta aplicación Flask tal como está registrada.
 
-- Edición de dispositivos: las opciones Editar y Ver Detalle que se
-  construyen en pages/dispositivo.js tienen atributos data-id_dispositivo
-  vacíos. Los manejadores luego usan ese atributo para consultar el
-  dispositivo; por tanto no reciben el identificador de la fila y la carga
-  del registro puede fallar.
+- Dispositivos - avance funcional: las opciones Editar y Ver Detalle
+  incluyen el identificador de la fila y consultan el registro mediante la
+  API. También están conectadas las operaciones de crear (POST) y editar
+  (PUT). Según el avance reportado, las tres acciones funcionan desde la
+  interfaz.
 
 - Opciones de tipos de dispositivo: en datosTipoDispositivos() las variables
   de contenido se declaran sin texto inicial y se concatenan con +=. El
   primer resultado puede incluir la palabra "undefined" antes de las
   opciones del selector.
 
-- Guardado de dispositivos sin esperar el resultado: PostDevice y PutDevice
-  se invocan sin await. La interfaz agrega o actualiza la fila antes de
-  confirmar que la API guardó correctamente. Un error de red o validación
-  puede dejar la tabla mostrando datos no persistidos; al editar una fila
-  fuera de la página actual, la búsqueda de la fila visible también puede
-  no encontrarla.
+- Manejo de errores al guardar dispositivos: las funciones de creación y
+  edición esperan la respuesta de la API antes de modificar la tabla, pero
+  el evento de envío no espera a esas funciones y cierra el modal de
+  inmediato. Además, no se comprueba el campo status de la respuesta antes
+  de actualizar la tabla. Ante errores de red o validación, conviene
+  mantener el formulario disponible y mostrar claramente el resultado; al
+  editar una fila que no esté en la página actual, también debe contemplarse
+  que esa fila no esté cargada en DataTables.
 
 - Búsquedas y filtros inconsistentes: la tabla de dispositivos envía search,
   estado y tipo a la API, pero el modelo de dispositivos revisado solo
@@ -318,9 +329,10 @@ Recomendaciones antes del despliegue con 100+ usuarios:
 6. Medir consultas lentas y revisar EXPLAIN e índices para filtros,
    relaciones, ordenamientos y búsquedas que realmente use la interfaz.
    No añadir índices sin validar su impacto sobre las escrituras.
-7. Hacer que las acciones de crear/editar esperen la respuesta y actualizar
-   la tabla solo tras éxito; mostrar al usuario errores y permitir reintento
-   seguro.
+7. Completar el manejo de errores al crear/editar dispositivos: mantener el
+   modal abierto hasta recibir y validar el resultado de la API, actualizar
+   la tabla solo si la respuesta indica éxito y permitir reintentar la
+   operación.
 8. Ejecutar una prueba de carga en un entorno parecido a producción con
    rampa hasta 100 usuarios virtuales, mezcla realista de lecturas,
    búsquedas y escrituras, y pausas entre acciones. Registrar latencia

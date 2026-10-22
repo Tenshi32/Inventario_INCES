@@ -1,10 +1,9 @@
 
 import { initTooltips } from "../components/TooltipsComponente.js"
 import { initDataTable } from "../components/DatatableComponente.js"
-import { initToast } from "../components/ToastComponente.js"
 import { initSelect2, destroySelect2, initSelect2Buscador } from "../components/Select2Componente.js"
 import { GetAjaxDevice, GetDevice, PostDevice, PutDevice } from "../services/DispositivoService.js"
-import { GetAjaxModelo, GetModelo } from "../services/ModelosService.js"
+import { GetModelo } from "../services/ModelosService.js"
 
 import { GetAjaxMarca, GetMarca } from "../services/MarcasService.js"
 import { GetTipoDispositivo } from "../services/TipoDispositivoService.js"
