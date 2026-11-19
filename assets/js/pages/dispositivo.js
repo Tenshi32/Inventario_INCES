@@ -562,4 +562,5 @@ $("#tablaDispositivos").on("click", ".Toggle", function (event) {
   const statusActual = $(this).data("status");
 
   ActionToggle(statusActual, id);
+  
 });
